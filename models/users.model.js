@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const errorsHandler = require("../middleware/modelsMiddleware/errorsHandler.middleware");
+const userCheck = require("../middleware/modelsMiddleware/userCheck.middleware");
 
 const userSchema = mongoose.Schema({
     mail: {
@@ -21,6 +22,7 @@ const userSchema = mongoose.Schema({
     }
 }, { timestamps: true });
 
+userSchema.pre(['updateOne', 'update', 'findOneAndUpdate', 'save'], userCheck);
 userSchema.post(['updateOne', 'update', 'findOneAndUpdate', 'save'], errorsHandler);
 
 module.exports = mongoose.model("Users", userSchema);

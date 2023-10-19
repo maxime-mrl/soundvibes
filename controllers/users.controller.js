@@ -3,7 +3,6 @@ const usersModel = require("../models/users.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
-const minPasslength = 6;
 
 /* -------------------------------------------------------------------------- */
 /*                             HANDLE REGISTERING                             */
@@ -15,29 +14,11 @@ exports.registerUser = asyncHandler(async (req, res) => {
         message: `fields missing: ${(!username ? "username " : "")}${(!mail ? "mail " : "")}${(!age ? "age " : "")}${(!password ? "password" : "")}`,
         status: 400
     };
-    // check password length
-    if (password.length < minPasslength) throw {
-        message: `Your password should be at least ${minPasslength} character long`,
-        status: 400
-    };
-    // check username validity (specifically avoid length because it's arleady handled by mongoose model)
-    if (!/^[-a-z0-9\/]+$/i.test(username)) throw {
-        message: `Please enter a valid username`,
-        status: 400
-    };
-    // check mail validity
-    if (!/^[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+$/.test(mail)) throw { // regex from ihateregex.io
-        message: `Please enter a valid email`,
-        status: 400
-    };
     // check age
     if (age < 13) throw {
         message: `Come back see us in ${13 - age} years ;)`,
         status: 200
     };
-    // hash password
-    const hashed = await hashPassword(password);
-
     // Create user
     const user = await usersModel.create({ mail, username, password: hashed });
 
@@ -104,37 +85,10 @@ exports.updateUser = asyncHandler(async (req, res) => {
         throw err;
     }
     /* ------------------------------- UPDATE DATA ------------------------------ */
-    // username
-    if (username) {
-        // check username validity (specifically avoid length because it's arleady handled by mongoose model)
-        if (!/^[-a-z0-9\/]+$/i.test(username)) throw {
-            message: `Please enter a valid username`,
-            status: 400
-        };
-        user.username = username;
-    }
-    // mail
-    if (mail) {
-        // check mail validity
-        if (!/^[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+$/.test(mail)) throw { // regex from ihateregex.io
-            message: `Please enter a valid email`,
-            status: 400
-        };
-        user.mail = mail
-    }
-    // password
-    if (password) {
-        if (password.length < minPasslength) throw {
-            message: `Your password should be at least ${minPasslength} character long`,
-            status: 400
-        };
-        user.password = hashPassword(password);
-    }
-    
     const updatedUser = await usersModel.findByIdAndUpdate(user._id, {
-        mail: user.mail,
-        username: user.username,
-        password: user.password
+        mail: mail || user.mail,
+        username: username || user.username,
+        password: password || confirmPassword
     }, { new: true });
     res.status(200).json({
         _id: updatedUser._id,
@@ -158,9 +112,4 @@ function generateToken(id) {
     return jwt.sign({id}, process.env.JWT_SECRET, {
         expiresIn: "30d"
     });
-}
-
-async function hashPassword(password) {
-    const salt = await bcrypt.genSalt(10);
-    return await bcrypt.hash(password, salt);
 }
