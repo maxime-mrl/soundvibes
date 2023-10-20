@@ -14,7 +14,7 @@ module.exports = async function(next) {
     }
     // check username validity (specifically avoid length because it's arleady handled by mongoose model)
     if (user.username) {
-        if (!/^[-a-z0-9\/]+$/i.test(user.username)) throw {
+        if (!/^[-a-z0-9]+$/i.test(user.username)) throw {
             message: `Please enter a valid username`,
             status: 400
         };

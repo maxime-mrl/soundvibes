@@ -25,6 +25,10 @@ const musicSchema = mongoose.Schema({
         trim: true,
         // required: true,
         default: "test-genre"
+    },
+    similar: {
+        type: Array,
+        default: []
     }
 }, { timestamps: true });
 
