@@ -20,7 +20,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
         status: 200
     };
     // Create user
-    const user = await usersModel.create({ mail, username, password: hashed });
+    const user = await usersModel.create({ mail, username, password });
 
     if (user) {
         res.status(201).json({
@@ -74,7 +74,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
     const user = await usersModel.findOne(req.user);
     // necessary datas are presents
     if (!confirmPassword || !user) {
-        const err = new Error("Invalid datas");
+        const err = new Error("Invalid data");
         err.status = 400;
         throw err;
     }
@@ -96,6 +96,37 @@ exports.updateUser = asyncHandler(async (req, res) => {
         token: generateToken(updatedUser._id)
     });
 });
+
+exports.setRight = asyncHandler(async (req, res) => {
+    if (!req.user.right || req.user.right < 2) throw {
+        message: `You are not authorized to do this!`,
+        status: 403
+    };
+    const { right } = req.body;
+    const targetParams = {}
+    if (req.body.mail) targetParams.mail = req.body.mail;
+    if (req.body.id) targetParams._id = req.body.id;
+    if (req.body.username) targetParams.username = req.body.username;
+    if (!right || Object.keys(targetParams).length === 0) throw {
+        message: "invalid data",
+        code: 400
+    }
+    const targetUser = await usersModel.findOne(targetParams);
+    if (!targetUser) throw {
+        message: "User not found",
+        status: 404
+    }
+    const updatedUser = await usersModel.findByIdAndUpdate(targetUser._id, { right }, { new: true })
+    console.log(updatedUser)
+    res.status(200).json({
+        updatedId: updatedUser._id,
+        newRight: updatedUser.right
+    })
+    // if (!targetUser) throw {
+    //     message: `User not found`,
+    //     status: 404
+    // }
+})
 
 /* -------------------------------------------------------------------------- */
 /*                             DELETE USER ACCOUNT                            */
