@@ -7,10 +7,12 @@ tokenError.status = 401;
 
 exports.protect = asyncHandler(async (req, res, next) => {
     let token;
+    console.log(req.headers.authorization)
     if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
         try {
             // get token from header
             token = req.headers.authorization.split(" ")[1];
+            console.log(token)
             // verify token
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             // get user from token without password

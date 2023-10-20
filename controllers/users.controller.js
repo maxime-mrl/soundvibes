@@ -69,6 +69,9 @@ exports.getUser = asyncHandler(async (req, res) => {
     });
 });
 
+/* -------------------------------------------------------------------------- */
+/*                                 UPDATE USER                                */
+/* -------------------------------------------------------------------------- */
 exports.updateUser = asyncHandler(async (req, res) => {
     const { username, mail, password, confirmPassword } = req.body;
     const user = await usersModel.findOne(req.user);
@@ -97,6 +100,9 @@ exports.updateUser = asyncHandler(async (req, res) => {
     });
 });
 
+/* -------------------------------------------------------------------------- */
+/*                            CHANGE RIGHT OF USER                            */
+/* -------------------------------------------------------------------------- */
 exports.setRight = asyncHandler(async (req, res) => {
     if (!req.user.right || req.user.right < 2) throw {
         message: `You are not authorized to do this!`,
