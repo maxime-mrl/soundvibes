@@ -4,6 +4,7 @@ const db = require("./config/db");
 const router = require("./routes");
 const fileUpload = require("express-fileupload");
 const errorHandler = require("./controllers/errors.controller");
+const path = require('path');
 
 const port = process.env.PORT;
 const app = express();
@@ -11,9 +12,8 @@ const app = express();
 // express config
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(fileUpload({
-    createParentPath: true
-}))
+app.use(fileUpload({ createParentPath: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use("/api", router);
 app.use(errorHandler);
 

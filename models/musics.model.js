@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-// const errorsHandler = require("../middleware/modelsMiddleware/errorsHandler.middleware");
-// const userCheck = require("../middleware/modelsMiddleware/userCheck.middleware");
 
 const musicSchema = mongoose.Schema({
     title: {
@@ -31,8 +29,5 @@ const musicSchema = mongoose.Schema({
         default: []
     }
 }, { timestamps: true });
-
-// userSchema.pre(['updateOne', 'update', 'findOneAndUpdate', 'save'], userCheck);
-// userSchema.post(['updateOne', 'update', 'findOneAndUpdate', 'save'], errorsHandler);
 
 module.exports = mongoose.model("Musics", musicSchema);

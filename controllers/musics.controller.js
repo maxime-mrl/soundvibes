@@ -1,6 +1,9 @@
 const asyncHandler = require("express-async-handler");
 const musicModel = require("../models/musics.model");
 const sizeOf = require('buffer-image-size');
+const fs = require("fs");
+const path = require("path");
+const rootPath = require("../rootPath");
 
 exports.postMusic = asyncHandler(async (req, res) => {
     // not used for test
@@ -9,7 +12,6 @@ exports.postMusic = asyncHandler(async (req, res) => {
     //     status: 403
     // }
     /* ------------------------------ INPUTS CHECK ------------------------------ */
-    console.log(req.body)
     const { title, artist, genre } = req.body;
     const year = parseInt(req.body.year)
     if (!title || !artist || !year || !genre) throw {
@@ -66,10 +68,76 @@ exports.postMusic = asyncHandler(async (req, res) => {
     const newSong = await musicModel.create({ title, artist, year, genre });
     if (!newSong) throw new Error("Error while adding song to the database");
 
-    await audio.mv(`${"."}/songs/${newSong._id}/audio.mp3`);
-    await cover.mv(`${"."}/songs/${newSong._id}/cover.jpg`);
+    await audio.mv(`${rootPath}/public/songs/${newSong._id}/audio.mp3`);
+    await cover.mv(`${rootPath}/public/songs/${newSong._id}/cover.jpg`);
     res.status(200).json({
         status: `Song ${newSong.title} successfully added!`,
         id: newSong._id,
     })
+})
+
+exports.deleteMusic = asyncHandler(async (req, res) => {
+    try {
+        /* ------------------------- CHECK REQUEST VALIDITY ------------------------- */
+        if (!req.user.right || req.user.right < 1) throw {
+            message: `You are not authorized to do this!`,
+            status: 403
+        };
+        const { id } = req.params
+        if (!id) throw {
+            message: "missing music id",
+            status: 400
+        }
+        if (!await musicModel.findById(id)) throw {
+            message: "music not found",
+            status: 404
+        }
+        /* --------------------------------- DELETE --------------------------------- */
+        const query = await musicModel.deleteOne({ _id: id });
+        if (!query.acknowledged) throw new Error(query);
+        fs.unlinkSync(path.join(rootPath, "public", "songs", id, "audio.mp3"));
+        fs.unlinkSync(path.join(rootPath, "public", "songs", id, "cover.jpg"));
+        fs.rmdirSync(path.join(rootPath, "public", "songs", id));
+        res.status(200).json({
+            deleted: id
+        });
+    } catch (err) {
+        if (err.code == 'ENOENT') throw {
+            message: "no such file or directory",
+        }
+        throw(err)
+    }
+})
+
+exports.getInfos = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    if (!id) throw {
+        message: "missing music id",
+        status: 400
+    }
+    try {
+        const music = await musicModel.findOne({ _id: id });
+        if (!music) throw {
+            message: "music not found",
+            code: 404
+        }
+        console.log(music)
+        res.status(200).json({
+            title: music.title,
+            artist: music.artist,
+            genre: music.genre,
+            year: music.year,
+        })
+    } catch(err) {
+        if (err.kind === "ObjectId") throw {
+            message: "Invalid ID",
+            code: 400
+        }
+        console.log(err)
+        throw err
+    }
+})
+
+exports.searchMusic = asyncHandler(async (req, res) => {
+    res.end("Work in progress")
 })
