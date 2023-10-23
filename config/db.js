@@ -10,11 +10,11 @@ exports.connect = async () => { // try to connect database
     }
 }
 
-exports.connectPromise = () => new Promise(async (resolve, reject) => { // try to connect database
+exports.connectPromise = async (resolve, reject) => { // try to connect database
     try {
         const conn = await mongoose.connect(process.env.MONGO_URI);
-        resolve(`Connected to mongoDB: ${conn.connection.host}`);
+        return `Connected to mongoDB: ${conn.connection.host}`;
     } catch (err) {
-        reject(err);
+        throw err;
     }
-});
+};

@@ -61,19 +61,50 @@ exports.postMusic = asyncHandler(async (req, res) => {
     /* -------------------------- CHECK SONG UNIQUENESS ------------------------- */
     const similarMusic = await musicModel.findOne({ title, artist, year, genre });
     if (similarMusic) throw {
-        message: `this music from ${similarMusic.artist} named ${similarMusic.title} (id: ${similarMusic._id}) arleady exist`,
+        message: `this music from ${similarMusic.artist} named ${similarMusic.title} (id: ${similarMusic.id}) arleady exist`,
         status: 200
     }
     /* -------------------------------- SAVE SONG ------------------------------- */
     const newSong = await musicModel.create({ title, artist, year, genre });
     if (!newSong) throw new Error("Error while adding song to the database");
 
-    await audio.mv(`${rootPath}/public/songs/${newSong._id}/audio.mp3`);
-    await cover.mv(`${rootPath}/public/songs/${newSong._id}/cover.jpg`);
+    await audio.mv(`${rootPath}/public/songs/${newSong.id}/audio.mp3`);
+    await cover.mv(`${rootPath}/public/songs/${newSong.id}/cover.jpg`);
     res.status(200).json({
         status: `Song ${newSong.title} successfully added!`,
-        id: newSong._id,
+        id: newSong.id,
     })
+})
+
+exports.playMusic = asyncHandler(async (req, res) => {
+    const music = await musicInfos(req.params); // retrieve infos such as cover, id etc
+    const musicPath = `${rootPath}/public/songs/${music.id}/audio.mp3`
+    const { size:length } = fs.statSync(musicPath);
+    const range = req.headers.range;
+    let readStream;
+    console.log(range)
+    res.setHeader('Content-type', 'audio/mpeg');
+    res.setHeader('Accept-Ranges', 'bytes');
+    if (range) { // adapted from https://gist.github.com/DingGGu/8144a2b96075deaf1bac
+        let [start, end] = range.replace(/bytes=/, "").split("-");
+        if ((typeof start !== 'string' && start.length > 1) || (typeof end !== 'string' && end.length > 1)) throw {
+            message: "Incomplete chunked encoding",
+            status: 500,
+        }
+        start = parseInt(start);
+        end = end ? parseInt(end) : length - 1;
+        const contentLength = (end - start) + 1;
+        res.status(206);
+        res.setHeader('Content-length', contentLength);
+        res.header('Content-Range', `bytes ${start}-${end}/${length}`);
+        readStream = fs.createReadStream(musicPath, {start: start, end: end});
+    } else {
+        res.status(200);
+        res.setHeader('Content-length', length);
+        res.header('Content-Range', `bytes 0-${length-1}/${length}`);
+        readStream = fs.createReadStream(musicPath);
+    }
+    readStream.pipe(res);
 })
 
 exports.deleteMusic = asyncHandler(async (req, res) => {
@@ -94,10 +125,8 @@ exports.deleteMusic = asyncHandler(async (req, res) => {
         }
         /* --------------------------------- DELETE --------------------------------- */
         const query = await musicModel.deleteOne({ _id: id });
-        if (!query.acknowledged) throw new Error(query);
-        fs.unlinkSync(path.join(rootPath, "public", "songs", id, "audio.mp3"));
-        fs.unlinkSync(path.join(rootPath, "public", "songs", id, "cover.jpg"));
-        fs.rmdirSync(path.join(rootPath, "public", "songs", id));
+        if (query.deletedCount !== 1) throw new Error(query);
+        fs.rmSync(path.join(rootPath, "public", "songs", id), { recursive: true, force: true });
         res.status(200).json({
             deleted: id
         });
@@ -110,7 +139,22 @@ exports.deleteMusic = asyncHandler(async (req, res) => {
 })
 
 exports.getInfos = asyncHandler(async (req, res) => {
-    const { id } = req.params
+    const music = await musicInfos(req.params);
+    res.status(200).json({
+        title: music.title,
+        artist: music.artist,
+        genre: music.genre,
+        year: music.year,
+        cover: music.cover
+    })
+})
+
+exports.searchMusic = asyncHandler(async (req, res) => {
+    res.end("Work in progress")
+});
+
+
+async function musicInfos({ id }) {
     if (!id) throw {
         message: "missing music id",
         status: 400
@@ -121,13 +165,8 @@ exports.getInfos = asyncHandler(async (req, res) => {
             message: "music not found",
             code: 404
         }
-        console.log(music)
-        res.status(200).json({
-            title: music.title,
-            artist: music.artist,
-            genre: music.genre,
-            year: music.year,
-        })
+        music.cover = fs.readFileSync(`${rootPath}/public/songs/${music.id}/cover.jpg`).toString('base64');
+        return music;
     } catch(err) {
         if (err.kind === "ObjectId") throw {
             message: "Invalid ID",
@@ -136,8 +175,4 @@ exports.getInfos = asyncHandler(async (req, res) => {
         console.log(err)
         throw err
     }
-})
-
-exports.searchMusic = asyncHandler(async (req, res) => {
-    res.end("Work in progress")
-})
+}
