@@ -29,5 +29,12 @@ const musicSchema = mongoose.Schema({
         default: 0
     }
 }, { timestamps: true });
+musicSchema.index({ title: 'text', artist: 'text' }, {
+    default_language: "none",
+    weight: {
+        title: 2,
+        artist: 1
+    }
+});
 
 module.exports = mongoose.model("Musics", musicSchema);

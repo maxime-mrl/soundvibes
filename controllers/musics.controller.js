@@ -9,11 +9,10 @@ const usersModel = require("../models/users.model");
 const musicFolder = path.join(rootPath, "public", "songs");
 
 exports.postMusic = asyncHandler(async (req, res) => {
-    // not used for test
-    // if (req.user.right < 1) throw {
-    //     message: `You are not authorized to do this!`,
-    //     status: 403
-    // }
+    if (req.user.right < 1) throw {
+        message: `You are not authorized to do this!`,
+        status: 403
+    }
     /* ------------------------------ INPUTS CHECK ------------------------------ */
     const { title, artist, genre } = req.body;
     const year = parseInt(req.body.year)
@@ -139,10 +138,10 @@ exports.playMusic = asyncHandler(async (req, res) => {
 exports.deleteMusic = asyncHandler(async (req, res) => {
     try {
         /* ------------------------- CHECK REQUEST VALIDITY ------------------------- */
-        // if (!req.user.right || req.user.right < 1) throw {
-        //     message: `You are not authorized to do this!`,
-        //     status: 403
-        // };
+        if (!req.user.right || req.user.right < 1) throw {
+            message: `You are not authorized to do this!`,
+            status: 403
+        };
         const { id } = req.params
         if (!id) throw {
             message: "missing music id",
@@ -169,20 +168,54 @@ exports.deleteMusic = asyncHandler(async (req, res) => {
 
 exports.getInfos = asyncHandler(async (req, res) => {
     const music = await musicInfos(req.params);
-    const cover = fs.readFileSync(path.join(musicFolder, music.id, "cover.jpg")).toString('base64');
+    // const cover = fs.readFileSync(path.join(musicFolder, music.id, "cover.jpg")).toString('base64');
     res.status(200).json({
         title: music.title,
         artist: music.artist,
         genre: music.genre,
         year: music.year,
-        cover
     })
 })
 
 exports.searchMusic = asyncHandler(async (req, res) => {
-    res.end("Work in progress")
+    const searchQuery = req.params.query
+    if (!searchQuery || !/[a-z]/i.test(searchQuery)) throw {
+        message: "Missing search query",
+        status: 400,
+    }
+    // search
+    let filteredMusics;
+    if (searchQuery.split(" ").length === 1) {
+        // basic search, not aware of word or anythings like that
+        filteredMusics = await musicFinder({ $or: [
+            { title: { $regex: searchQuery, $options: 'i' } },
+            { artist: { $regex: searchQuery, $options: 'i' } }
+        ] });
+        // if "dumb" search didn't worked try the more advance one
+        if (filteredMusics.length < 1) filteredMusics = await musicFinder({ $text: { $search: searchQuery } });
+    } else { // if multiple word execute a combinaison of advance (the first entire words) and basic search (last word which may be incomplete)
+
+        // isolate last word from query and create another query without last word
+        const lastWord = new RegExp(searchQuery.split(" ")[searchQuery.split(" ").length -1], "i");
+        const textQuery = searchQuery.replace(/(\s+\S+)$/, "");
+        filteredMusics = await musicFinder({
+            $text: { $search: textQuery },
+            $or: [
+                { title: { $regex: lastWord } },
+                { artist: { $regex: lastWord } }
+            ]
+        });
+    }
+    res.status(200).json(filteredMusics)
 });
 
+
+
+function musicFinder(query) {
+    return musicModel.find(query)
+        .select("title artist year genre")
+        .sort([["listenedCount", -1]]);
+}
 
 async function musicInfos({ id }) {
     if (!id) throw {
@@ -201,7 +234,6 @@ async function musicInfos({ id }) {
             message: "Invalid ID",
             code: 400
         }
-        console.log(err)
         throw err
     }
 }
