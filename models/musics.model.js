@@ -4,29 +4,29 @@ const musicSchema = mongoose.Schema({
     title: {
         type: String,
         trim: true,
-        // required: true,
-        default: "test-title"
+        required: true,
     },
     artist: {
         type: String,
         trim: true,
-        // required: true,
-        default: "test-artist"
+        required: true,
     },
     year: {
         type: Number,
-        // required: true,
-        default: 2000
+        required: true,
     },
     genre: {
         type: String,
         trim: true,
-        // required: true,
-        default: "test-genre"
+        required: true,
     },
     similar: {
         type: Array,
         default: []
+    },
+    listenedCount: {
+        type: Number,
+        default: 0
     }
 }, { timestamps: true });
 

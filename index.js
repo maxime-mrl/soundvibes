@@ -4,7 +4,6 @@ const db = require("./config/db");
 const router = require("./routes");
 const fileUpload = require("express-fileupload");
 const errorHandler = require("./middleware/errors.middleware");
-// const path = require('path');
 const cors = require("cors")
 
 const port = process.env.PORT;
@@ -14,7 +13,6 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(fileUpload({ createParentPath: true }));
-// app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors())
 app.use("/api", router);
 app.use(errorHandler);

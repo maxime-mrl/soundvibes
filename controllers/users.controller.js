@@ -128,10 +128,6 @@ exports.setRight = asyncHandler(async (req, res) => {
         updatedId: updatedUser._id,
         newRight: updatedUser.right
     })
-    // if (!targetUser) throw {
-    //     message: `User not found`,
-    //     status: 404
-    // }
 })
 
 /* -------------------------------------------------------------------------- */

@@ -1,9 +1,12 @@
 const asyncHandler = require("express-async-handler");
-const musicModel = require("../models/musics.model");
 const sizeOf = require('buffer-image-size');
 const fs = require("fs");
 const path = require("path");
+const musicModel = require("../models/musics.model");
 const rootPath = require("../rootPath");
+const usersModel = require("../models/users.model");
+
+const musicFolder = path.join(rootPath, "public", "songs");
 
 exports.postMusic = asyncHandler(async (req, res) => {
     // not used for test
@@ -68,8 +71,8 @@ exports.postMusic = asyncHandler(async (req, res) => {
     const newSong = await musicModel.create({ title, artist, year, genre });
     if (!newSong) throw new Error("Error while adding song to the database");
 
-    await audio.mv(`${rootPath}/public/songs/${newSong.id}/audio.mp3`);
-    await cover.mv(`${rootPath}/public/songs/${newSong.id}/cover.jpg`);
+    await audio.mv(path.join(musicFolder, newSong.id, "audio.mp3"));
+    await cover.mv(path.join(musicFolder, newSong.id, "cover.jpg"));
     res.status(200).json({
         status: `Song ${newSong.title} successfully added!`,
         id: newSong.id,
@@ -77,12 +80,13 @@ exports.postMusic = asyncHandler(async (req, res) => {
 })
 
 exports.playMusic = asyncHandler(async (req, res) => {
-    const music = await musicInfos(req.params); // retrieve infos such as cover, id etc
-    const musicPath = `${rootPath}/public/songs/${music.id}/audio.mp3`
+    /* ------------------------------- SERVE MUSIC ------------------------------ */
+    const music = await musicInfos(req.params); // retrieve music infos w/ checking if exist etc
+    // find file and file infos
+    const musicPath = path.join(musicFolder, music.id, "audio.mp3");
     const { size:length } = fs.statSync(musicPath);
     const range = req.headers.range;
     let readStream;
-    console.log(range)
     res.setHeader('Content-type', 'audio/mpeg');
     res.setHeader('Accept-Ranges', 'bytes');
     if (range) { // adapted from https://gist.github.com/DingGGu/8144a2b96075deaf1bac
@@ -105,15 +109,40 @@ exports.playMusic = asyncHandler(async (req, res) => {
         readStream = fs.createReadStream(musicPath);
     }
     readStream.pipe(res);
+    /* --------------------------------- METRIC --------------------------------- */
+    if (!req.user) return; // make sure user is here
+    if (req.user.listeningHistory[0] === music.id) return; // since readStream can make multiple request count listening only once every time (need to listen another song before listening again the same song be counted)
+    // --- log to user history ---
+    await usersModel.findByIdAndUpdate(req.user.id, {
+        $push: {
+            listeningHistory: {
+                $each: [ music.id ],
+                $position: 0
+            }
+        }
+    });
+    // --- log for music ---
+    // handle the "listened after" metric (used as similar music because if most of users listen two music in a row they must be related)
+    const lastListend = req.user.listeningHistory[0]; // since we didn't updated req.user the most recent music is the one before the actual (this one)
+    if (!lastListend) return; // if user hasn't ever listened something
+    // either create a new line for "similar" or increment the music
+    const existingIndex = music.similar.findIndex(similar => similar[0] === lastListend);
+    if (existingIndex >= 0) music.similar[existingIndex][1]++;
+    else music.similar.push([ lastListend, 1 ]);
+    // update the music in db
+    await musicModel.findByIdAndUpdate(music.id, {
+        $inc: { listenedCount: 1 },
+        similar: music.similar
+    });
 })
 
 exports.deleteMusic = asyncHandler(async (req, res) => {
     try {
         /* ------------------------- CHECK REQUEST VALIDITY ------------------------- */
-        if (!req.user.right || req.user.right < 1) throw {
-            message: `You are not authorized to do this!`,
-            status: 403
-        };
+        // if (!req.user.right || req.user.right < 1) throw {
+        //     message: `You are not authorized to do this!`,
+        //     status: 403
+        // };
         const { id } = req.params
         if (!id) throw {
             message: "missing music id",
@@ -126,7 +155,7 @@ exports.deleteMusic = asyncHandler(async (req, res) => {
         /* --------------------------------- DELETE --------------------------------- */
         const query = await musicModel.deleteOne({ _id: id });
         if (query.deletedCount !== 1) throw new Error(query);
-        fs.rmSync(path.join(rootPath, "public", "songs", id), { recursive: true, force: true });
+        fs.rmSync(path.join(musicFolder, id), { recursive: true, force: true });
         res.status(200).json({
             deleted: id
         });
@@ -140,12 +169,13 @@ exports.deleteMusic = asyncHandler(async (req, res) => {
 
 exports.getInfos = asyncHandler(async (req, res) => {
     const music = await musicInfos(req.params);
+    const cover = fs.readFileSync(path.join(musicFolder, music.id, "cover.jpg")).toString('base64');
     res.status(200).json({
         title: music.title,
         artist: music.artist,
         genre: music.genre,
         year: music.year,
-        cover: music.cover
+        cover
     })
 })
 
@@ -165,7 +195,6 @@ async function musicInfos({ id }) {
             message: "music not found",
             code: 404
         }
-        music.cover = fs.readFileSync(`${rootPath}/public/songs/${music.id}/cover.jpg`).toString('base64');
         return music;
     } catch(err) {
         if (err.kind === "ObjectId") throw {

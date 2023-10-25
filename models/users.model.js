@@ -23,7 +23,11 @@ const userSchema = mongoose.Schema({
     password: {
         type: String,
         required: true,
-    }
+    },
+    listeningHistory: {
+        type: Array,
+        default: []
+    },
 }, { timestamps: true });
 
 userSchema.pre(['updateOne', 'update', 'findOneAndUpdate', 'save'], userCheck);
