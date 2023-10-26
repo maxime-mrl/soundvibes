@@ -1,6 +1,6 @@
+const router = require("express").Router();
 const { postMusic, deleteMusic, getInfos, searchMusic, playMusic } = require("../controllers/musics.controller");
 
-const router = require("express").Router();
 
 router.post("/", postMusic);
 router.delete("/delete/:id", deleteMusic);
