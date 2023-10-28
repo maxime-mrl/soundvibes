@@ -1,6 +1,7 @@
 const assyncHandler = require("express-async-handler");
 const playlistModel = require("../models/playlists.model");
 const musicModel = require("../models/musics.model");
+const usersModel = require("../models/users.model");
 
 exports.createPlaylist = assyncHandler(async (req, res) => {
     // data format check
@@ -38,5 +39,24 @@ exports.createPlaylist = assyncHandler(async (req, res) => {
     res.status(200).json({
         status: `Playlist ${newPlaylist.name} successfully created!`,
         id: newPlaylist.id,
+    })
+})
+
+exports.getPlaylist = assyncHandler(async (req, res) => {
+    const { id } = req.params;
+    if (!id) throw {
+        message: "missing playlist id",
+        status: 400
+    }
+    const playlist = await playlistModel.findOne({ _id: id });
+    if (!playlist) throw {
+        message: "playlist not found",
+        code: 404
+    }
+    const { username:owner } = await usersModel.findById(playlist.owner);
+    res.status(200).json({
+        name: playlist.name,
+        owner,
+        content: playlist.content
     })
 })

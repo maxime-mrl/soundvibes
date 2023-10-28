@@ -1,7 +1,8 @@
 const router = require("express").Router();
-const { createPlaylist } = require("../controllers/playlists.controller");
+const { createPlaylist, getPlaylist } = require("../controllers/playlists.controller");
 
 
+router.get("/:id", getPlaylist);
 router.post("/", createPlaylist);
 
 module.exports = router;
