@@ -1,9 +1,9 @@
-const assyncHandler = require("express-async-handler");
+const asyncHandler = require("express-async-handler");
 const playlistModel = require("../models/playlists.model");
 const musicModel = require("../models/musics.model");
 const usersModel = require("../models/users.model");
 
-exports.createPlaylist = assyncHandler(async (req, res) => {
+exports.createPlaylist = asyncHandler(async (req, res) => {
     // data format check
     const { name, musics } = req.body;
     const { id:owner } = req.user;
@@ -42,7 +42,7 @@ exports.createPlaylist = assyncHandler(async (req, res) => {
     })
 })
 
-exports.getPlaylist = assyncHandler(async (req, res) => {
+exports.getPlaylist = asyncHandler(async (req, res) => {
     const { id } = req.params;
     if (!id) throw {
         message: "missing playlist id",
@@ -59,4 +59,53 @@ exports.getPlaylist = assyncHandler(async (req, res) => {
         owner,
         content: playlist.content
     })
+})
+
+exports.updatePlaylist = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { name, musics } = req.body;
+    const { _id:owner } = req.user;
+    if (!id) throw {
+        message: "Missing playlist id",
+        status: 400
+    }
+    if (!musics || !JSON.parse(musics) || !name  || !owner) throw {
+        message: "Missing data",
+        code: 400
+    }
+    const { owner:playlistOwner } = await playlistModel.findOne({ _id: id });
+    if (!playlistOwner || !owner.equals(playlistOwner)) throw {
+        message: "Your are not authorized to edit this!",
+        status: 401
+    }
+    const content = JSON.parse(musics);
+    if (!Array.isArray(content) || content.length < 1) throw {
+        message: "Invalid musics",
+        code: 400
+    }
+    // check that every music are ok
+    try {
+        for (const musicId of content) { // for of instead of foreach to keep the async
+            const music = await musicModel.findOne({ _id: musicId });
+            if (!music) throw {
+                message: "Invalid musics",
+                code: 404
+            }
+
+        }
+    } catch(err) {
+        if (err.kind === "ObjectId") throw {
+            message: "Invalid music ID",
+            code: 400
+        }
+        throw err
+    }
+    // everything ok, update the playlist
+    const updatedPlaylist = await playlistModel.findByIdAndUpdate(id, { name, content, owner });
+    if (!updatedPlaylist) throw new Error("Error while adding playlist, please try again later");
+    res.status(200).json({
+        status: `Playlist ${name} successfully updated!`,
+        id: updatedPlaylist.id,
+    })
+
 })
