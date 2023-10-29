@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
-const errorsHandler = require("../middleware/modelsMiddleware/errorsHandler.middleware");
 const userCheck = require("../middleware/modelsMiddleware/userCheck.middleware");
+const errorsHandler = require("../middleware/modelsMiddleware/errorsHandler.middleware");
 
 const userSchema = mongoose.Schema({
     mail: {
         type: String,
         required: true,
-        unique: true,
+        unique: true
     },
     username: {
         type: String,
@@ -14,15 +14,15 @@ const userSchema = mongoose.Schema({
         required: true,
         unique: true,
         minlength: 3,
-        maxlength: 20,
+        maxlength: 20
     },
     right: {
         type: Number,
-        default: 0,
+        default: 0
     },
     password: {
         type: String,
-        required: true,
+        required: true
     },
     listeningHistory: {
         type: Array,
@@ -30,7 +30,9 @@ const userSchema = mongoose.Schema({
     },
 }, { timestamps: true });
 
+// check to make sure user format are good
 userSchema.pre(['updateOne', 'update', 'findOneAndUpdate', 'save'], userCheck);
+// customize error thrown by mongoose
 userSchema.post(['updateOne', 'update', 'findOneAndUpdate', 'save'], errorsHandler);
 
 module.exports = mongoose.model("Users", userSchema);

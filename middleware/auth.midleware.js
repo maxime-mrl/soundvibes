@@ -5,7 +5,7 @@ const userModel = require("../models/users.model");
 const tokenError = new Error("Invalid token");
 tokenError.status = 401;
 
-exports.protect = asyncHandler(async (req, res, next) => { // hard check if user is logged
+exports.protect = asyncHandler(async (req, res, next) => { // check if user is logged
     let token;
     if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
         try {

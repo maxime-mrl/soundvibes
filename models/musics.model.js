@@ -4,21 +4,21 @@ const musicSchema = mongoose.Schema({
     title: {
         type: String,
         trim: true,
-        required: true,
+        required: true
     },
     artist: {
         type: String,
         trim: true,
-        required: true,
+        required: true
     },
     year: {
         type: Number,
-        required: true,
+        required: true
     },
     genre: {
         type: String,
         trim: true,
-        required: true,
+        required: true
     },
     similar: {
         type: Array,
@@ -29,6 +29,8 @@ const musicSchema = mongoose.Schema({
         default: 0
     }
 }, { timestamps: true });
+
+// index used for search musics
 musicSchema.index({ title: 'text', artist: 'text' }, {
     default_language: "none",
     weight: {

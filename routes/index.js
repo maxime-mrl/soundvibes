@@ -1,8 +1,18 @@
-const router = require("express").Router();
+const express = require("express");
 const { protect } = require("../middleware/auth.midleware");
+const errorHandler = require("../middleware/errors.middleware");
+const router = express.Router();
 
-router.use("/user", require("./users.routes.js"));
-router.use("/music", protect, require("./musics.routes.js"));
-router.use("/playlist", protect, require("./playlists.routes.js"));
+// different router categories
+router.use("/api/user", require("./users.routes.js"));
+router.use("/api/music", protect, require("./musics.routes.js"));
+router.use("/api/playlist", protect, require("./playlists.routes.js"));
+
+// block direct access to audio, used to make harder the task of song downloading
+router.use(/^\/.+\.mp3$/, () => { throw { status: 404 } });
+// create public access to songs folder for the covers
+router.use("/public", express.static("songs"));
+// call the error handler
+router.use(errorHandler);
 
 module.exports = router;
