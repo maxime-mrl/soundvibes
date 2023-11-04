@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const playlistModel = require("../models/playlists.model");
-const usersModel = require("../models/users.model");
+const musicsModel = require("../models/musics.model");
 
 exports.createPlaylist = asyncHandler(async (req, res) => {
     /* ------------------------------ INPUTS CHECK ------------------------------ */
@@ -92,6 +92,25 @@ exports.deletePlaylist = asyncHandler(async (req, res) => {
     if (query.deletedCount !== 1) throw new Error(query);
     res.status(200).json({ deleted: id });
 });
+
+exports.playlistFrom = asyncHandler(async (req, res) => {
+    /* -------------------------- CHECK INPUTS VALIDITY ------------------------- */
+    if (!req.body || Object.keys(req.body).length !== 1 || !/^[-a-z0-9\s]+$/i.test(req.body[Object.keys(req.body)[0]])) throw {
+        message: "Invalid data",
+        status: 400
+    };
+    /* ------------------------------- FIND MUSICS ------------------------------ */
+    const musics = await musicsModel.find(req.body)
+        .sort([["listenedCount", -1]])
+        .select("title artist year genre");
+    if (!musics || musics.length < 1) throw {
+        message: "musics not found",
+        status: 404
+    };
+    res.status(200).json(musics);
+});
+
+exports.test = asyncHandler(require("./test"))
 
 // called when one or more music id isn't existing, update the playlist -- non existing music id can mainly happen in the case of a deleted musics
 async function repairPlaylist({id, content:playlist, name, owner}) { // no user return: the user arleady got his playlist w/ all valid musics, this is only used to help the database stay clean

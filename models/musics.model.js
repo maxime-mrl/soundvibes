@@ -15,10 +15,10 @@ const musicSchema = mongoose.Schema({
         type: Number,
         required: true
     },
-    genre: {
+    tags: {
         type: String,
         trim: true,
-        required: true
+        default: ""
     },
     similar: {
         type: Array,
@@ -31,11 +31,12 @@ const musicSchema = mongoose.Schema({
 }, { timestamps: true });
 
 // index used for search musics
-musicSchema.index({ title: 'text', artist: 'text' }, {
+musicSchema.index({ title: 'text', artist: 'text', tags: 'text' }, {
     default_language: "none",
     weight: {
-        title: 2,
-        artist: 1
+        title: 8,
+        artist: 4,
+        tags: 1
     }
 });
 

@@ -15,10 +15,10 @@ exports.postMusic = asyncHandler(async (req, res) => {
         status: 403
     }
     /* ------------------------------ INPUTS CHECK ------------------------------ */
-    const { title, artist, genre } = req.body;
+    const { title, artist, tags } = req.body;
     const year = parseInt(req.body.year)
-    if (!title || !artist || !year || !genre) throw { // check everything is here
-        message: `Fields missing: ${(!title ? "title " : "")}${(!artist ? "artist " : "")}${(!year ? "year " : "")}${(!genre ? "genre" : "")}`,
+    if (!title || !artist || !year || !tags) throw { // check everything is here
+        message: `Fields missing: ${(!title ? "title " : "")}${(!artist ? "artist " : "")}${(!year ? "year " : "")}${(!tags ? "tags" : "")}`,
         status: 400
     };
     // specific check
@@ -30,8 +30,8 @@ exports.postMusic = asyncHandler(async (req, res) => {
         message: "Invalid artist",
         status: 400
     };
-    if (!/^[-a-z0-9]+$/i.test(genre)) throw {
-        message: "Invalid genre",
+    if (!/^[-a-z0-9\s]+$/i.test(tags)) throw {
+        message: "Invalid tags",
         status: 400
     };
     const actualYear = new Date().getFullYear()
@@ -69,7 +69,7 @@ exports.postMusic = asyncHandler(async (req, res) => {
         status: 200
     };
     /* -------------------------------- SAVE SONG ------------------------------- */
-    const newSong = await musicModel.create({ title, artist, year, genre });
+    const newSong = await musicModel.create({ title, artist, year, tags });
     if (!newSong) throw new Error("Error while adding song to the database");
 
     await audio.mv(path.join(musicFolder, newSong.id, "audio.mp3"));
@@ -171,7 +171,6 @@ exports.getInfos = asyncHandler(async (req, res) => {
     res.status(200).json({
         title: music.title,
         artist: music.artist,
-        genre: music.genre,
         year: music.year
     })
 });
@@ -179,31 +178,22 @@ exports.getInfos = asyncHandler(async (req, res) => {
 exports.searchMusic = asyncHandler(async (req, res) => {
     /* ------------------------------ REQUEST CHECK ----------------------------- */
     const searchQuery = req.params.query;
-    if (!searchQuery || !/[a-z]/i.test(searchQuery)) throw {
-        message: "Missing search query",
+    if (!searchQuery || !/^[-a-z0-9\s]+$/i.test(searchQuery)) throw {
+        message: "Missing search query" + searchQuery,
         status: 400
     };
     /* --------------------------------- SEARCH --------------------------------- */
     let filteredMusics;
     if (searchQuery.split(" ").length === 1) { // if word assume it's not finished so the mongoose search based on words is not the best
         // basic search, not aware of word or anythings like that
-        filteredMusics = await musicFinder({ $or: [
-            { title: { $regex: searchQuery, $options: 'i' } },
-            { artist: { $regex: searchQuery, $options: 'i' } }
-        ] });
+        filteredMusics = await musicFinder({ regexQuery: searchQuery });
         // if "dumb" search didn't worked try the more advance one
-        if (filteredMusics.length < 1) filteredMusics = await musicFinder({ $text: { $search: searchQuery } });
+        if (filteredMusics.length < 1) filteredMusics = await musicFinder({ textQuery: searchQuery });
     } else { // if multiple word execute a combinaison of advance (the first entire words) and basic search (last word which may be incomplete)
         // isolate last word from query and create another query without last word
-        const lastWord = new RegExp(searchQuery.split(" ")[searchQuery.split(" ").length -1], "i");
+        const lastWord = searchQuery.split(" ")[searchQuery.split(" ").length -1];
         const textQuery = searchQuery.replace(/(\s+\S+)$/, "");
-        filteredMusics = await musicFinder({
-            $text: { $search: textQuery },
-            $or: [
-                { title: { $regex: lastWord } },
-                { artist: { $regex: lastWord } }
-            ]
-        });
+        filteredMusics = await musicFinder({ textQuery, regexQuery: lastWord });
     }
     /* ----------------------------- RESPONSE RESULT ---------------------------- */
     res.status(200).json(filteredMusics);
@@ -211,9 +201,16 @@ exports.searchMusic = asyncHandler(async (req, res) => {
 
 
 
-function musicFinder(query) { // search musics query
+function musicFinder({textQuery, regexQuery}) { // search musics query
+    const query = {};
+    if (regexQuery) query["$or"] = [
+        { title: { $regex: regexQuery, $options: 'i' } },
+        { artist: { $regex: regexQuery, $options: 'i' } },
+        { tags: { $regex: regexQuery, $options: 'i' } },
+    ];
+    if (textQuery) query["$text"] = { $search: textQuery };
     return musicModel.find(query)
-        .select("title artist year genre")
+        .select("title artist year")
         .sort([["listenedCount", -1]]);
 }
 
