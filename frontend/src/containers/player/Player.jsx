@@ -1,16 +1,16 @@
 import { useContext } from "react";
 import Datactx from "../../context/DataContext";
 
-import NavBarPC from "./NavBar-pc";
-import NavBarMobile from "./NavBar-mobile";
-import "./NavBar.css";
+import PlayerMobile from "./Player-mobile";
+import PlayerPC from "./Player-pc";
+import "./Player.css";
 
-export default function NavBar() {
+export default function Player() {
     const { windowSize: {width}, mobileWidth } = useContext(Datactx);
     return (
         <>
             {
-                width < mobileWidth ? <NavBarMobile /> : <NavBarPC />
+                width < mobileWidth ? <PlayerMobile /> : <PlayerPC />
             }
         </>
     )

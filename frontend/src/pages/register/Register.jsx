@@ -3,7 +3,7 @@ import "./Register.css";
 export default function Register() {
     return (
         <>
-            <div>Register</div>
+            <h1 className="h1">Register</h1>
         </>
     )
 }

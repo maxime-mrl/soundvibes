@@ -1,24 +1,46 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate, Outlet } from "react-router-dom";
 import "./App.css"
 
 import { Home, Login, Register } from "./pages";
-import { NavBar } from "./containers";
+import { NavBar, Player } from "./containers";
+import { DataProvider } from "./context/DataContext";
 
 
-function App() {
+export default function App() {
+  localStorage.setItem("user", "test")
   return (
-    <>
+    <DataProvider>
       <Router>
-        <NavBar />
-        <Routes>
-          <Route path="/" element={ <Home /> } />
-          <Route path="/login" element={ <Login /> } />
-          <Route path="/register" element={ <Register /> } />
-        </Routes>
+          <Routes>
+            <Route element={ <LoggoutRoutes /> }>
+              <Route path="/login" element={ <Login /> } />
+              <Route path="/register" element={ <Register /> } />
+            </Route>
+            <Route element={ <LoggedRoutes /> }>
+                <Route path="/" element={ <Home /> } />
+            </Route>
+          </Routes>
       </Router>
-    </>
+    </DataProvider>
   );
 }
 
-export default App;
+const LoggedRoutes = () => (
+  localStorage.getItem("user") ? 
+  <>
+    <NavBar />
+    <div className="content">
+      <Outlet />
+    </div>
+    <Player />
+  </> 
+  : <Navigate to="/register" />
+)
+
+const LoggoutRoutes = () => (
+  !localStorage.getItem("user") ? 
+  <>
+    <Outlet />
+  </> 
+  : <Navigate to="/" />
+)

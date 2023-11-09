@@ -1,12 +1,14 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./Player-pc.css";
+import { MusicControls, PlayerOptions, ProgressBar, VolumeControl } from "../../components";
 
 export default function PlayerPC() {
     return (
-        <div>
-            <FontAwesomeIcon icon="fa-solid fa-repeat" className=""/>
-            <FontAwesomeIcon icon="fa-solid fa-shuffle" />
-            <FontAwesomeIcon icon="fa-solid fa-plus" />
+        <div className="player-pc">
+            <PlayerOptions />
+            <div className="center">
+                <MusicControls />
+                <ProgressBar isTimeShow={true} />
+            </div>
+            <VolumeControl />
         </div>
     )
 }

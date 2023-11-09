@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap'); /* poppins font */
+
 /* -------------------------------------------------------------------------- */
 /*                                  RESET CSS                                 */
 /* -------------------------------------------------------------------------- */
@@ -6,12 +8,13 @@
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: 100%;
   font: inherit;
   color: inherit;
   vertical-align: baseline;
   line-height: 1;
   appearance: none;
+  -webkit-appearance: none;
+  background: none;
 }
 
 ol, ul {
@@ -27,6 +30,11 @@ a {
   text-decoration: none;
 }
 
+input::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
 /* -------------------------------------------------------------------------- */
 /*                               GLOBAL VARIABLE                              */
 /* -------------------------------------------------------------------------- */
@@ -38,7 +46,51 @@ a {
   --text-35: #f5f5f559; 
   --text-50: #f5f5f5ab;
 
-  --blur: blur(20px);
+  --accent: #B8E1FF;
+
+  --blur: blur(5px);
   --main-border-bg: 3px solid var(--bg-solid);
-  --main-border-text: 3px solid;
+  --main-border-text: 3px solid var(--text-50);
+  --radius: 0.5rem;
+
+  --transition-duration: 200ms;
+
+  --h2-size: 1.4rem;
+}
+
+body {
+  background-color: var(--bg-solid);
+  color: var(--text);
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  padding: 1em;
+}
+
+.h2 {
+  font-size: var(--h2-size);
+  font-weight: 600;
+}
+
+.h3 {
+  font-size: 1rem;
+  font-weight: 300;
+}
+
+.content {
+  float: left;
+}
+
+.btn {
+  padding: 0.5em;
+  cursor: pointer;
+  transition: var(--transition-duration);
+}
+.btn:hover {
+  color: var(--accent);
 }

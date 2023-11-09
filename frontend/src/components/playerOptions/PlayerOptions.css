@@ -1,0 +1,12 @@
+.player-options {
+    display: flex;
+    justify-content: space-between;
+    min-width: 5em;
+    width: 100%;
+    max-width: 8em;
+}
+
+
+.player-options svg {
+    width: 1em;
+}

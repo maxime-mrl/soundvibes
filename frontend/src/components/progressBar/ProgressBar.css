@@ -1,0 +1,11 @@
+.full-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    width: 40vw;
+}
+.full-bar p {
+    flex-shrink: 0;
+}
+
+  

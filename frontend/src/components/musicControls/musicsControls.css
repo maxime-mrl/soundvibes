@@ -1,0 +1,21 @@
+.musics-controls {
+    display: flex;
+    gap: 0.8em;
+}
+.musics-controls svg {
+    width: 1em;
+}
+
+.musics-controls .play {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2.1em;
+    aspect-ratio: 1;
+    background-color: var(--text-35);
+    border-radius: 50%;
+}
+
+.musics-controls .play svg {
+    margin-left: 0.1em; /* little hack to make feels like more center */
+}

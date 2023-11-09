@@ -1,0 +1,91 @@
+/* -------------------------------------------------------------------------- */
+/*                                 MOBILE CSS                                 */
+/* -------------------------------------------------------------------------- */
+.navbar-mobile ul {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 2.5em;
+    width: 100%;
+    font-size: var(--h2-size);
+    background-color: var(--bg-solid);
+    display: flex;
+    gap: 1em;
+}
+
+.navbar-mobile li {
+    width: 100%;
+}
+
+.nav-item-mobile {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   PC CSS                                   */
+/* -------------------------------------------------------------------------- */
+.navbar-pc {
+    position: sticky;
+    top: 0;
+    float: left;
+    width: 14em;
+    height: 87vh;
+    height: 87dvh;
+    font-size: var(--h2-size);
+    background-color: var(--bg-85);
+    backdrop-filter: var(--blur);
+    border-right: var(--main-border-bg);
+}
+
+.nav-item-pc {
+    display: flex;
+    gap: 1.2em;
+    margin: 0.4em 0;
+    padding: 0.55em 0 0.55em 1em;
+}
+
+.nav-icon {
+    width: 1em;
+}
+
+.playing {
+    position: absolute;
+    bottom: 1em;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 93%;
+}
+
+.playing-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em;
+    width: 100%;
+}
+
+.waveform {
+    font-size: 1.5em;
+}
+
+.music-infos {
+    margin: 1em 0;
+    display: flex;
+    align-items: center;
+    gap: 0.3em;
+}
+
+.music-infos img {
+    width: 4.5em;
+    aspect-ratio: 1;
+    background-color: black;
+    border-radius: var(--radius);
+}
+
+.music-infos .h2 {
+    margin-bottom: 0.5em;
+}
