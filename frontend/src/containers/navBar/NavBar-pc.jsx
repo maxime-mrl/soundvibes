@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
-import { SoundWaves } from "../../components";
+import { CoverImage, SoundWaves } from "../../components";
 
 
 export default function NavBarPC() {
@@ -29,7 +29,7 @@ export default function NavBarPC() {
                     <p>Now playing</p>
                 </div>
                 <div className="music-infos">
-                    <img src="cover-img" alt={`Album cover for ${"a"}`} />
+                    <CoverImage />
                     <div className="text">
                         <h2 className="h2">Never gonna Gi...</h2>
                         <h3 className="h3">Music artist</h3>

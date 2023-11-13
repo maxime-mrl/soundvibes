@@ -4,7 +4,7 @@ const errorHandler = require("../middleware/errors.middleware");
 const router = express.Router();
 
 // different router categories
-router.use("/api/user", require("./users.routes.js"));
+router.use("/api/users", require("./users.routes.js"));
 router.use("/api/music", protect, require("./musics.routes.js"));
 router.use("/api/playlist", protect, require("./playlists.routes.js"));
 

@@ -4,12 +4,12 @@ module.exports = (err, doc, next) => { // detect and handle specific errors thro
         err = new Error(`This ${Object.keys(err.keyPattern)} is arleady used`);
         err.status = 200;
     }
-    if (err.errors && err.errors[Object.keys(err.errors)].kind === 'minlength') { // input too short
+    if (err.errors && err.errors[Object.keys(err.errors)] && err.errors[Object.keys(err.errors)].kind === 'minlength') { // input too short
         const details = err.errors[Object.keys(err.errors)];
         err = new Error(`Your ${details.path} ${details.value} is too short! It must be at least ${details.properties.minlength} characters long.`);
         err.status = 400;
     }
-    if (err.errors && err.errors[Object.keys(err.errors)].kind === 'maxlength') { // input too big
+    if (err.errors && err.errors[Object.keys(err.errors)] && err.errors[Object.keys(err.errors)].kind === 'maxlength') { // input too big
         const details = err.errors[Object.keys(err.errors)];
         err = new Error(`Your ${details.path} ${details.value} is too long! It shouldn't be more than ${details.properties.maxlength} characters long.`);
         err.status = 400;

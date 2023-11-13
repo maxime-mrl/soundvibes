@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MusicControls, PlayerOptions, ProgressBar, VolumeControl } from "../../components";
+import { CoverImage, MusicControls, PlayerOptions, ProgressBar, VolumeControl } from "../../components";
 
 export default function PlayerMobile() {
     const [extended, setExtended] = useState(true)
@@ -7,7 +7,7 @@ export default function PlayerMobile() {
         !extended 
         ?
         <div className="player-mobile reduced">
-            <img src="cover-img" alt={`Album cover for ${"a"}`} />
+            <CoverImage />
             <div className="text">
                 <h2 className="h2">Never gonna Give you up</h2>
                 <h3 className="h3">rick astley</h3>
@@ -17,7 +17,7 @@ export default function PlayerMobile() {
         :
         <div className="player-mobile extended">
             <div className="infos">
-                <img src="cover-img" alt={`Album cover for ${"a"}`} />
+                <CoverImage />
                 <h2 className="h2">Never gonna Give you up</h2>
                 <h3 className="h3">rick astley</h3>
             </div>

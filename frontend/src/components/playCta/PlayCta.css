@@ -1,0 +1,9 @@
+.play-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2.1em;
+    aspect-ratio: 1;
+    background-color: var(--text-35);
+    border-radius: 50%;
+}

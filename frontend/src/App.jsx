@@ -1,13 +1,14 @@
 import { BrowserRouter as Router, Route, Routes, Navigate, Outlet } from "react-router-dom";
-import "./App.css"
+import { DataProvider } from "./context/DataContext";
+import { ToastContainer } from "react-toastify";
+import "./App.css";
+import "react-toastify/dist/ReactToastify.css";
 
 import { Home, Login, Register } from "./pages";
 import { NavBar, Player } from "./containers";
-import { DataProvider } from "./context/DataContext";
 
 
 export default function App() {
-  localStorage.setItem("user", "test")
   return (
     <DataProvider>
       <Router>
@@ -21,6 +22,7 @@ export default function App() {
             </Route>
           </Routes>
       </Router>
+      <ToastContainer />
     </DataProvider>
   );
 }

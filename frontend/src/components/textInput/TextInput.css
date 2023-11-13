@@ -1,0 +1,49 @@
+.text-input-container {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.5em;
+    width: 100%;
+    max-width: 35em;
+}
+
+/* ---------------------------------- INPUT --------------------------------- */
+
+.text-input {
+    padding: 0.2em 0.3em;
+    outline: none;
+    border: 2px solid var(--text);
+    border-radius: var(--radius);
+    transition: border var(--transition-duration) ease-out;
+}
+
+.text-input:focus { border-color: var(--accent); }
+
+.text-input::placeholder {
+    color: var(--text-35);
+    transition: color var(--transition-duration) ease-out;
+}
+
+.text-input:hover::placeholder,
+.text-input:focus::placeholder {
+    color: var(--text-50);
+}
+
+.fail .text-input:not(:focus) { border-color: var(--fail); }
+
+.success .text-input:not(:focus) { border-color: var(--success); }
+
+/* ---------------------------------- LABEL --------------------------------- */
+
+.text-label {
+    font-size: 0.9em;
+    transition: color var(--transition-duration) ease-out;
+}
+
+/* just decided to go nuts w/ css selector */
+.success .text-label { color: var(--success); }
+.fail .text-label { color: var(--fail); }
+
+.text-label .error { display: none; }
+
+.fail .text-input:not(:focus) ~ .text-label .regular { display: none; }
+.fail .text-input:not(:focus) ~ .text-label .error { display: block; }
