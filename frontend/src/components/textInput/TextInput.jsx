@@ -5,7 +5,7 @@ export default function TextInput({ label, input, validation, updateForm, valueS
         <div className="text-input-container">
             <input
                 className="text-input"
-                type={input.type}
+                type={input.type ? input.type : "text"}
                 name={input.name}
                 id={input.name}
                 placeholder={input.placeholder}

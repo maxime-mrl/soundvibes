@@ -63,7 +63,7 @@ export default function Register() {
     function submitForm(e) {
         e.preventDefault()
         if (!username[1] || !mail[1] || !password[1] || !confirm_password[1] || !age[1]) {
-            toast.error("Please fill and validate all input!"); // can't make work toastify, will debug it later
+            toast.error("Please fill and validate all input!");
             return;
         }
         const userData = { username: username[0], mail: mail[0], password: password[0], age: age[0] };
@@ -85,7 +85,6 @@ export default function Register() {
                         name: "username",
                         placeholder: "Your username",
                         autoComplete: "username",
-                        type: "text"
                     }}
                     validation={"^[-a-z0-9]{2,}$"}
                     valueState={username[0]}
