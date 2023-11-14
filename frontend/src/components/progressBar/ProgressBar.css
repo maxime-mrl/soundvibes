@@ -6,6 +6,8 @@
 }
 .full-bar p {
     flex-shrink: 0;
+    width: 3.1ch;
+    text-align: center;
 }
 
   
