@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import "./Register.css";
-import TextInput from "../../components/textInput/TextInput";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { register, reset } from "../../features/auth/authSlice";
+import TextInput from "../../components/textInput/TextInput";
+import "./Register.css";
 
 export default function Register() {
     const navigate = useNavigate();
@@ -44,8 +44,10 @@ export default function Register() {
         // match other element (confirm password)
         } else if (document.getElementById(validateQuery.replace("&=", "")).value === value) isValidated = true;
         /* ------------------------ inform user of validation ----------------------- */
-        if (!isValidated) e.target.parentNode.classList.add("fail");
-        else {
+        if (!isValidated) {
+            e.target.parentNode.classList.remove("success");
+            e.target.parentNode.classList.add("fail");
+        } else {
             e.target.parentNode.classList.remove("fail");
             e.target.parentNode.classList.add("success");
         }
@@ -63,7 +65,7 @@ export default function Register() {
     function submitForm(e) {
         e.preventDefault()
         if (!username[1] || !mail[1] || !password[1] || !confirm_password[1] || !age[1]) {
-            toast.error("Please fill and validate all input!");
+            toast.error("Please fill and validate all inputs!");
             return;
         }
         const userData = { username: username[0], mail: mail[0], password: password[0], age: age[0] };
@@ -148,6 +150,9 @@ export default function Register() {
                     updateForm={updateForm}
                 />
                 <button type="submit" className="btn-cta">Sign up</button>
+                <div className="login-redirect">
+                    Arleady have an account? <Link to={"/login"}>Login</Link>
+                </div>
             </form>
         </>
     )

@@ -6,20 +6,18 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { Home, Login, Register } from "./pages";
 import { NavBar, Player } from "./containers";
-import { useSelector } from "react-redux";
 
 
 export default function App() {
-  const { user } = useSelector(state => state.auth);
   return (
     <DataProvider>
       <Router>
           <Routes>
-            <Route element={ <LoggoutRoutes user={user} /> }>
+            <Route element={ <LoggoutRoutes /> }>
               <Route path="/login" element={ <Login /> } />
               <Route path="/register" element={ <Register /> } />
             </Route>
-            <Route element={ <LoggedRoutes user={user} /> }>
+            <Route element={ <LoggedRoutes /> }>
                 <Route path="/" element={ <Home /> } />
             </Route>
           </Routes>
@@ -29,8 +27,8 @@ export default function App() {
   );
 }
 
-const LoggedRoutes = ({ user }) => (
-  user ? 
+const LoggedRoutes = () => (
+  localStorage.getItem("user") ? // using localstorage because useSelector will update as soon as there is a change thus preventing success toast
   <>
     <NavBar />
     <div className="content">
@@ -41,8 +39,8 @@ const LoggedRoutes = ({ user }) => (
   : <Navigate to="/register" />
 )
 
-const LoggoutRoutes = ({ user }) => (
-  !user ? 
+const LoggoutRoutes = () => (
+  !localStorage.getItem("user") ? 
   <>
     <Outlet />
   </> 

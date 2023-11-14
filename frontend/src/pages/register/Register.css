@@ -10,7 +10,7 @@
     max-width: 680px;
     margin: 2em auto;
     gap: 1.2em;
-    padding: 2em 1em;
+    padding: 2em 1em 0.5em;
     
     background-color: var(--bg-85);
     backdrop-filter: var(--blur);
@@ -19,5 +19,13 @@
 }
 
 .register-form .btn-cta {
-    margin-top: 1em;
+    margin: 1em 0;
+}
+
+.login-redirect {
+    font-size: 0.9rem;
+}
+
+.login-redirect a {
+    color: var(--accent);
 }
