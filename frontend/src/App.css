@@ -77,8 +77,15 @@ body {
   min-height: 100dvh;
 }
 
+.navbar-pc ~ .content {
+  --margin-left: calc(var(--navbar-width, 0) * 1.4);
+  margin-left: var(--margin-left);
+}
+
 .content {
-  float: left;
+  margin-bottom: 15vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .h1 {
@@ -95,10 +102,6 @@ body {
 .h3 {
   font-size: 1rem;
   font-weight: 300;
-}
-
-.content {
-  float: left;
 }
 
 .btn {

@@ -1,0 +1,33 @@
+.song {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: clamp(1em, 2vw, 1.2em);
+    padding: 0.5em 0;
+    width: 95%;
+    margin: 0 auto;
+}
+
+.song .details {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: 1em;
+}
+
+.song .cover-img {
+    width: 10%;
+    min-width: 3.5em;
+    max-width: 5em;
+    border-radius: var(--radius);
+}
+
+.song h2 {
+    font-size: 1.2em;
+    margin-bottom: 0.2em;
+}
+
+.song .more {
+    font-size: 1.2em;
+    align-self: right;
+}

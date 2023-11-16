@@ -3,6 +3,7 @@
 /* -------------------------------------------------------------------------- */
 .navbar-mobile ul {
     position: fixed;
+    z-index: 5;
     bottom: 0;
     left: 0;
     height: 2.5em;
@@ -28,11 +29,13 @@
 /* -------------------------------------------------------------------------- */
 /*                                   PC CSS                                   */
 /* -------------------------------------------------------------------------- */
+:root {
+    --navbar-width: 14em;
+}
 .navbar-pc {
-    position: sticky;
+    position: fixed;
     top: 0;
-    float: left;
-    width: 14em;
+    width: var(--navbar-width);
     height: 87vh;
     height: 87dvh;
     font-size: var(--h2-size);

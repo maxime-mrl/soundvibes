@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import "./ProgressBar.css";
-import { MusicSlider } from "../";
+import { Slider } from "../";
 import Datactx from "../../context/DataContext";
 
 export default function ProgressBar({ isTimeShow }) {
@@ -40,11 +40,11 @@ export default function ProgressBar({ isTimeShow }) {
         ?
             <div className="full-bar">
                 <p className="h3">{progressStr}</p>
-                <MusicSlider value={music.audio ? music.audio.currentTime : 0} max={music.duration} update={updateProgress} />
+                <Slider value={music.audio ? music.audio.currentTime : 0} max={music.duration} update={updateProgress} />
                 <p className="h3">{durationStr}</p>
             </div>
         :
-        <MusicSlider value={music.audio ? music.audio.currentTime : 0} max={music.duration} update={updateProgress} />
+        <Slider value={music.audio ? music.audio.currentTime : 0} max={music.duration} update={updateProgress} />
         
     )
 }

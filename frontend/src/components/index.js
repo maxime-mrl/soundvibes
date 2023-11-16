@@ -7,6 +7,6 @@ export { default as Song } from "./song/Song";
 export { default as VolumeControl } from "./volumeControl/VolumeControl";
 export { default as SoundWaves } from "./soundWaves/SoundWaves";
 export { default as PlayerOptions } from "./playerOptions/PlayerOptions";
-export { default as MusicSlider } from "./musicSlider/MusicSlider";
+export { default as Slider } from "./Slider/Slider";
 export { default as CoverImage } from "./coverImage/CoverImage";
 export { default as TextInput } from "./textInput/TextInput";

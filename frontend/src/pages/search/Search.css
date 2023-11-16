@@ -1,0 +1,10 @@
+section.search {
+    max-width: 700px;
+    width: 95%;
+    margin: 1em auto;
+    padding: 1em;
+    border: var(--main-border-bg);
+    backdrop-filter: var(--blur);
+    background-color: var(--bg-85);
+    border-radius: var(--radius);
+}

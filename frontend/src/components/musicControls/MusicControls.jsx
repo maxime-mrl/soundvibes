@@ -1,7 +1,7 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./MusicsControls.css";
 import { useContext } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Datactx from "../../context/DataContext";
+import "./MusicsControls.css";
 
 export default function MusicsControls() {
     const { music:{isPlaying}, setMusic } = useContext(Datactx);

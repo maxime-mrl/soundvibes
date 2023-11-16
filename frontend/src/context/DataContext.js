@@ -7,12 +7,12 @@ const Datactx = createContext({});
 export function DataProvider({ children }) {
     const windowSize = useWindowSize();
     const mobileWidth = 700;
-    const [music, setMusic] = useMusic();
+    const [music, setMusic, resetMusic] = useMusic();
 
     return (
         <Datactx.Provider value={{
             windowSize, mobileWidth,
-            music, setMusic
+            music, setMusic, resetMusic
         }} >
             {children}
         </Datactx.Provider>

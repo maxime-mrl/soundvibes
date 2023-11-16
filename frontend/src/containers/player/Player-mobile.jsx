@@ -3,15 +3,15 @@ import { CoverImage, MusicControls, PlayerOptions, ProgressBar, VolumeControl } 
 import Datactx from "../../context/DataContext";
 
 export default function PlayerMobile() {
-    const { music:{name, artist} } = useContext(Datactx);
-    const [extended, setExtended] = useState(true)
+    const { music:{title, artist}, music } = useContext(Datactx);
+    const [extended, setExtended] = useState(false)
     return (
         !extended 
         ?
         <div className="player-mobile reduced">
-            <CoverImage />
+            <CoverImage music={music} />
             <div className="text">
-                <h2 className="h2">{name}</h2>
+                <h2 className="h2">{title}</h2>
                 <h3 className="h3">{artist}</h3>
             </div>
             <ProgressBar isTimeShow={false} />
@@ -19,8 +19,8 @@ export default function PlayerMobile() {
         :
         <div className="player-mobile extended">
             <div className="infos">
-                <CoverImage />
-                <h2 className="h2">{name}</h2>
+            <CoverImage music={music} />
+                <h2 className="h2">{title}</h2>
                 <h3 className="h3">{artist}</h3>
             </div>
             <MusicControls />

@@ -5,11 +5,11 @@ export default function useMusic() {
     let interval;
     const [music, setMusic] = useState({
         audio: null,
-        id: localMusic ? localMusic.id : "654540f811486f375a12c5f3",
+        id: localMusic ? localMusic.id : null,
         progress: localMusic ? localMusic.progress : 0,
         duration: localMusic ? localMusic.duration : null,
-        name: localMusic ? localMusic.name : "Do I wanna know",
-        artist: localMusic ? localMusic.artist : "Artic monkeys",
+        title: localMusic ? localMusic.title : "",
+        artist: localMusic ? localMusic.artist : "",
         volume: localMusic ? localMusic.volume : 100,
         isPlaying: false // always false regardless of localstorage
     })
@@ -18,6 +18,7 @@ export default function useMusic() {
     useEffect(() => {
         if (music.audio) music.audio.volume = music.volume/100;
         localStorage.setItem("music", JSON.stringify(music));
+        console.log("update")
     }, [ music ]);
 
     /* -------------------------- UPDATE PLAYING STATUS ------------------------- */
@@ -34,14 +35,6 @@ export default function useMusic() {
         }
         return () => {clearInterval(interval)}
     }, [ music.isPlaying ])
-
-    // useEffect(() => {
-    //     console.log("audio update")
-    // }, [music.audio])
-
-    // useEffect(() => {
-
-    // }, [music.progress])
     
     /* ------------------------------ LOADING AUDIO ----------------------------- */
     useEffect(() => {
@@ -52,7 +45,13 @@ export default function useMusic() {
             updateMusic({
                 audio,
                 duration: audio.duration,
-            })
+            });
+            if (music.isPlaying) {
+                audio.play()
+                interval = setInterval(() => {
+                    updateMusic({progress: audio.currentTime})
+                }, 100);
+            }
         })
         return () => updateMusic({ audio: null });
     }, [ music.id ]);
@@ -63,5 +62,20 @@ export default function useMusic() {
             ...update
         }));
     }
-    return [music, setMusic];
+
+    function reset() {
+        music.audio.pause();
+        clearInterval(interval)
+        updateMusic({
+            audio: null,
+            id: null,
+            progress: 0,
+            duration: null,
+            title: "",
+            artist: "",
+            isPlaying: false // always false regardless of localstorage
+        })
+    }
+
+    return [music, setMusic, reset];
 }

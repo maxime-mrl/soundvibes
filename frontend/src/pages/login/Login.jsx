@@ -1,10 +1,10 @@
-import { Link, useNavigate } from "react-router-dom";
-import "./Login.css";
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { login, reset } from "../../features/auth/authSlice";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { login, reset } from "../../features/auth/authSlice";
 import TextInput from "../../components/textInput/TextInput";
+import "./Login.css";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -105,9 +105,9 @@ export default function Login() {
                     updateForm={updateForm}
                 />
                 <button type="submit" className="btn-cta">Sign up</button>
-                {/* <div className="register-redirect">
+                <div className="register-redirect">
                     Don't have an account? <Link to={"/register"}>Sign up</Link>
-                </div> */}
+                </div>
             </form>
         </>
     )

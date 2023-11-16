@@ -1,8 +1,8 @@
-import { useContext, useState } from "react";
-import "./VolumeControl.css";
-import Slider from "../musicSlider/MusicSlider";
+import { useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Datactx from "../../context/DataContext";
+import { Slider } from "../";
+import "./VolumeControl.css";
 
 export default function VolumeControl() {
     const { music:{volume}, setMusic } = useContext(Datactx);

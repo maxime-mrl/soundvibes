@@ -1,12 +1,12 @@
+import { useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import { CoverImage, SoundWaves } from "../../components";
-import { useContext } from "react";
 import Datactx from "../../context/DataContext";
 
 
 export default function NavBarPC() {
-    const { music:{name, artist, isPlaying} } = useContext(Datactx);
+    const { music:{title, artist, isPlaying}, music } = useContext(Datactx);
     return (
         <nav className="navbar-pc">
             <ul>
@@ -34,9 +34,9 @@ export default function NavBarPC() {
                     </div>
                 }
                 <div className="music-infos">
-                    <CoverImage />
+                    <CoverImage music={music}/>
                     <div className="text">
-                        <h2 className="h2">{name}</h2>
+                        <h2 className="h2">{title}</h2>
                         <h3 className="h3">{artist}</h3>
                     </div>
                 </div>

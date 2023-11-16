@@ -4,6 +4,7 @@
 /* ----------------------------- GENERAL PLAYER ----------------------------- */
 .player-mobile {
     position: fixed;
+    z-index: 5;
     bottom: 3em;
     left: 50%;
     transform: translateX(-50%);
