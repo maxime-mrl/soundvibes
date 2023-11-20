@@ -1,10 +1,12 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:80/api/music";
+const API_URL = "http://192.168.1.100:80/api/music";
 export async function get(endpoint, token) {
     const config = {
         headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            // 'Access-Control-Allow-Origin': "*",
+            // 'Content-Type': 'application/json',
         }
     }
     const resp = await axios(API_URL + endpoint, config);

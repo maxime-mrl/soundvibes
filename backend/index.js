@@ -13,9 +13,12 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(fileUpload({ createParentPath: true }));
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: '*'
+}));
 app.use(cookieParser());
-app.use("/", router);
+app.use("/", (req, res, next) => {console.log("incoming request " + req.url); next()}, router);
 
 // start the server
 db.connect()

@@ -103,7 +103,7 @@ export default function Register() {
                         autoComplete: "email",
                         type: "email"
                     }}
-                    validation={"^[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+$"}
+                    validation={"^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"}
                     valueState={mail[0]}
                     updateForm={updateForm}
                 />

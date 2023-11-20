@@ -21,7 +21,7 @@ export default function SongDetails() {
         }
         if (isError) toast.error(message);
         else dispatch(getMusic(id));
-        return () => { dispatch(reset()) };
+        // return () => { dispatch(reset()) };
     }, [dispatch, isError, message]);
 
     function playClicked() {

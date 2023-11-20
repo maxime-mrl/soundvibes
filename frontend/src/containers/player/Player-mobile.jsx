@@ -1,14 +1,37 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CoverImage, MusicControls, PlayerOptions, ProgressBar, VolumeControl } from "../../components";
+// import { useSwipeable } from "react-swipeable"
 import Datactx from "../../context/DataContext";
 
 export default function PlayerMobile() {
     const { music:{title, artist}, music } = useContext(Datactx);
-    const [extended, setExtended] = useState(false)
+    const [extended, setExtended] = useState(false);
+    // const handlers = useSwipeable({
+    //     onSwiped: (eventData) => console.log("User Swiped!", eventData)
+    // });
+
+    function openPlayer(e) {
+        if (e.target instanceof HTMLInputElement) return;
+        setExtended(true)
+    }
+
+    useEffect(() => {
+        document.body.addEventListener("click", (e) => {
+            let elem = e.target
+            while (!(elem instanceof HTMLBodyElement)) {
+                if (elem.className === "player-mobile extended") return;
+                elem = elem.parentNode
+            }
+            setExtended(false)
+        })
+        return () => {
+            document.body.removeEventListener("click", () => {});
+        }
+    }, [])
     return (
         !extended 
         ?
-        <div className="player-mobile reduced">
+        <div className="player-mobile reduced" onClick={openPlayer}>
             <CoverImage music={music} />
             <div className="text">
                 <h2 className="h2">{title}</h2>

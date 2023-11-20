@@ -86,7 +86,7 @@ export default function Login() {
                         autoComplete: "email",
                         type: "email"
                     }}
-                    validation={"^[\\w-\\.]+@([\\w-]+\.)+[\\w-]{2,4}$"}
+                    validation={"^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"}
                     valueState={mail[0]}
                     updateForm={updateForm}
                 />
