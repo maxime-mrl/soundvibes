@@ -2,7 +2,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import "./SongDetails.css";
 import { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getMusic, reset } from "../../features/musics/musicsSlice";
+import { getMusic } from "../../features/musics/musicsSlice";
 import { toast } from "react-toastify";
 import { CoverImage, PlayCta } from "../../components";
 import Datactx from "../../context/DataContext";
@@ -21,8 +21,7 @@ export default function SongDetails() {
         }
         if (isError) toast.error(message);
         else dispatch(getMusic(id));
-        // return () => { dispatch(reset()) };
-    }, [dispatch, isError, message]);
+    }, [dispatch, isError, message, id, navigate]);
 
     function playClicked() {
         resetMusic()
@@ -31,7 +30,7 @@ export default function SongDetails() {
             id,
             title: infos.title,
             artist: infos.artist,
-            isPlaying: true
+            autoPlay: true
         }))
     }
 

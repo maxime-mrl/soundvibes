@@ -17,9 +17,12 @@ export default function PlayerMobile() {
 
     useEffect(() => {
         document.body.addEventListener("click", (e) => {
+            // if (!extended) return;
             let elem = e.target
             while (!(elem instanceof HTMLBodyElement)) {
-                if (elem.className === "player-mobile extended") return;
+                if (!elem) break;
+                if (elem.className && elem.className === "player-mobile extended") return;
+                if (!elem.parentNode) break;
                 elem = elem.parentNode
             }
             setExtended(false)

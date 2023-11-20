@@ -13,14 +13,14 @@ export default function ProgressBar({ isTimeShow }) {
             let durationMinute = Math.floor(duration/60);
             let durationSecond = Math.round(duration - durationMinute*60);
             setDurationStr(`${durationMinute}:${(durationSecond < 10 ? "0" + durationSecond : durationSecond)}`);
-        }
+        } else setDurationStr("-:--");
         if (music.audio) {
             const progress = music.audio.currentTime;
             let progressMinute = Math.floor(progress/60);
             let progressSecond = Math.round(progress - progressMinute*60);
             setProgressStr(`${progressMinute}:${(progressSecond < 10 ? "0" + progressSecond : progressSecond)}`);
-        }
-    }, [music]);
+        } else setProgressStr("-:--");
+    }, [music, music.duration, music.audio]);
 
     function updateProgress(e) {
         const value = parseInt(e.target.value)
