@@ -4,84 +4,61 @@ import { toast } from "react-toastify";
 
 export default function useMusic() {
     const localMusic = JSON.parse(localStorage.getItem("music"));
-    // if ('mediaSession' in navigator && navigator.mediaSession.playbackState) localMusic.progress = navigator.mediaSession.playbackState.progress
     const { user } = useSelector(state => state.auth);
     const interval = useRef();
     const [music, setMusic] = useState({
-        audio: null,
         id: localMusic ? localMusic.id : null,
         progress: localMusic ? localMusic.progress : 0,
-        duration: null,
         title: localMusic ? localMusic.title : "",
         artist: localMusic ? localMusic.artist : "",
         volume: localMusic ? localMusic.volume : 100,
+        audio: null,
+        duration: null,
         isLoading: true,
         autoPlay: false,
-        isPlaying: false // always false regardless of localstorage to start of false and avoid no interaction browser error
+        isPlaying: false,
     });
     /* ---------------------------- VOLUME + STORAGE ---------------------------- */
     useEffect(() => {
+        // update volume
         if (music.audio && music.volume) music.audio.volume = music.volume/100;
+        // update local storage
         localStorage.setItem("music", JSON.stringify(music));
-        if ('mediaSession' in navigator && music.audio && music.audio.currentTime) navigator.mediaSession.setPositionState({
-            duration: music.duration,
+        // update media session
+        if ('mediaSession' in navigator && music.duration) navigator.mediaSession.setPositionState({
             playbackRate: 1,
             position: music.progress,
+            duration: music.duration,
         });
     }, [ music ]);
 
     /* -------------------------- UPDATE PLAYING STATUS ------------------------- */
     useEffect(() => {
-        if (music.audio && !music.isLoading) {
-            if (music.isPlaying) {
-                music.audio.play()
-                .catch(err => {
-                    alert(err)
-                });
-                interval.current = setInterval(() => {
-                    updateMusic({progress: music.audio.currentTime})
-                    // let formData = new FormData();
-                    // formData.append('progressmemory', music.progress);
-                    // formData.append('progressreal', music.audio.currentTime);
-                    // fetch("http://192.168.1.100/console", {
-                    //     method: "POST",
-                    //     body: formData
-                    // })
-                }, 100);
-            }
-            else {
-                music.audio.pause();
-                music.audio.currentTime = music.progress;
-                clearInterval(interval.current);
-            };
-        } else if (!music.id || music.isLoading) {
-            updateMusic({ isPlaying: false });
-        }
-        return () => {
-            clearInterval(interval.current);
-        }
-    }, [ music.isPlaying, music.id, music.audio ])
+        // music loaded -> handle play/pause
+        if (!music.isLoading) music.isPlaying ? handlePlay() : handlePause();
+        // music not yet loaded -> force paused state
+        else updateMusic({ isPlaying: false });
+        // cleanup
+        return () => { handlePause() }
+    }, [ music.isPlaying, music.isLoading ])
     
     /* ------------------------------ LOADING AUDIO ----------------------------- */
     useEffect(() => {
-        if (!music.id) return;
-        if (music.audio) {
-            clearInterval(interval.current);
-            music.audio.pause();
-        }
+        if (!music.id) return; // need a music ID
+        // reset the music
+        handlePause();
         updateMusic({ audio: null });
         // check user
         if (!user || !user.token) return toast.error("User not found!");
-        // get audio
+        // get audio (adapted from https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams)
         fetch(`http://192.168.1.100/api/music/play/${music.id}`, {
             headers: { Authorization: `Bearer ${user.token}` }
         })
-        .then((response) => { // https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams
+        .then((response) => { // read the whole stream
             const reader = response.body.getReader();
             return new ReadableStream({ start(controller) {
                 const pump = () => reader.read().then(({ done, value }) => {
-                    // When no more data needs to be consumed, close the sstream
-                    if (done) return controller.close();
+                    if (done) return controller.close(); // When no more data needs to be consumed, close the sstream
                     // Enqueue the next data chunk into our target stream
                     controller.enqueue(value);
                     return pump();
@@ -89,34 +66,33 @@ export default function useMusic() {
                 return pump();
             }, });
         })
-        // Create an object URL for the response
-        .then((stream) => new Response(stream))
-        .then((response) => response.blob())
-        .then((blob) => URL.createObjectURL(blob))
+        .then(async (stream) => { // Create an object URL for the response
+            const blob = await new Response(stream).blob();
+            return URL.createObjectURL(blob);
+        })
         // use the audio
         .then((url) => {
+            // set up the audio
             const audio = document.querySelector("audio") ? document.querySelector("audio") : document.createElement("audio");
-            const source = document.createElement("source");
-            audio.preload = "auto"; source.src = url; source.type = "audio/mpeg";
-            audio.title = music.title; audio.subtitle = music.artist;
-            audio.appendChild(source);
-            document.body.appendChild(audio);
-            audio.addEventListener("loadedmetadata",() => {
-                addmetadata(audio);
-                audio.volume = music.volume ? music.volume/100 : 1;
+            const source = audio.querySelector("source") ? audio.querySelector("source") : document.createElement("source");
+            audio.appendChild(source); document.body.appendChild(audio);
+            source.src = url; source.type = "audio/mpeg";
+            // wait for load (loadedmetadata and not loaded because loaded won't fire in IOS)
+            audio.onloadedmetadata = () => {
+                audio.onloadedmetadata = null;
+                addMetadata(audio);
                 audio.currentTime = music.progress;
                 updateMusic({
                     audio: audio,
                     duration: audio.duration,
                     isLoading: false,
                 });
-                if (music.autoPlay) {
-                    updateMusic({
-                        autoPlay: false,
-                        isPlaying: true
-                    })
-                }
-            })
+                if (music.autoPlay) updateMusic({
+                    autoPlay: false,
+                    isPlaying: true
+                });
+                audio.ontimeupdate = () => updateMusic({ progress: audio.currentTime });
+            }
         });
         // cleanup
         return () => {
@@ -126,68 +102,59 @@ export default function useMusic() {
     // eslint-disable-next-line
     }, [ music.id ]);
 
-
-    function addmetadata(audio) {
-        if ('mediaSession' in navigator) {
-            navigator.mediaSession.metadata = new MediaMetadata({
-            title: music.title,
-            artist: music.artist,
-            album: 'Album Name',
-            artwork: [
-                { src: `http://192.168.1.100:80/public/${music.id}/cover.jpg` },
-            ],
-            });
-            navigator.mediaSession.setPositionState({
-                duration: audio.duration,
-                position: audio.currentTime,
-                playbackRate: 1,
-            });
-            let formData = new FormData();
-            formData.append('musicduration', audio.duration);
-            formData.append('progress', music.progress);
-            fetch("http://192.168.1.100/console", {
-                method: "POST",
-                body: formData
-                
-            })
-        }
-        audio.addEventListener('play', () => {
-            // Custom logic when the audio starts playing
-            if ('mediaSession' in navigator && navigator.mediaSession.setActionHandler) {
-              navigator.mediaSession.setActionHandler('play', () => updateMusic({isPlaying: true}));
-              navigator.mediaSession.setActionHandler('pause', () => updateMusic({isPlaying: false}));
-              navigator.mediaSession.setActionHandler("seekto", (e) => {
-                audio.currentTime = e.seekTime;
-              })
-            }
+    function handlePlay() { // play the music
+        if (!music.audio) return;
+        music.audio.play()
+        .then(() => music.audio.currentTime = music.progress)
+        .catch(err => {
+            window.location.reload();
+            toast.error(`Something weent wrong :/ Please try again.`);
+            console.error(err);
         });
     }
 
-    function updateMusic(update) {
+    function handlePause() { // pause the music
+        if (!music.audio) return;
+        music.audio.pause();
+        music.audio.currentTime = music.progress;
+    }
+
+
+    function addMetadata(audio) { // metadata are everything that let the system know what audio is (to have music notification on mobile etc)
+        if (!('mediaSession' in navigator)) return;
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: music.title,
+            artist: music.artist,
+            artwork: [ { src: `http://192.168.1.100:80/public/${music.id}/cover.jpg` } ]
+        });
+        navigator.mediaSession.setActionHandler('play', () => updateMusic({ isPlaying: true }));
+        navigator.mediaSession.setActionHandler('pause', () => updateMusic({ isPlaying: false }));
+        navigator.mediaSession.setActionHandler("seekto", (e) => audio.currentTime = e.seekTime);
+    }
+
+    function updateMusic(update) { // update the music
         setMusic(prevState => ({
             ...prevState,
             ...update
         }));
     }
 
-    function reset() {
-        if (music.audio) {
-            music.audio.pause();
-            clearInterval(interval.current)
-        }
+    function reset() { // reset to default stage
+        handlePause();
+        if (music.audio) music.audio.ontimeupdate = null;
         updateMusic({
-            audio: null,
             id: null,
             progress: 0,
-            duration: null,
             title: "",
             artist: "",
+            volume: 100,
+            audio: null,
+            duration: null,
             isLoading: true,
             autoPlay: false,
-            isPlaying: false // always false regardless of localstorage
+            isPlaying: false,
         })
-        document.querySelectorAll("audio").forEach(audio => audio.remove())
-        console.log("reset")
+        document.querySelectorAll("audio").forEach(audio => audio.remove());
     }
 
     return [music, setMusic, reset];
