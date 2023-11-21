@@ -91,9 +91,7 @@
 /*                                   PC CSS                                   */
 /* -------------------------------------------------------------------------- */
 .player-pc {
-    position: fixed;
-    left: 0;
-    bottom: 0;
+    grid-area: player;
     height: 13vh;
     height: 13dvh;
     width: 100%;

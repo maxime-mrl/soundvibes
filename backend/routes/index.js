@@ -5,8 +5,8 @@ const router = express.Router();
 
 // different router categories
 router.use("/api/users", require("./users.routes.js"));
-router.use("/api/music", protect, require("./musics.routes.js"));
-router.use("/api/playlist", protect, require("./playlists.routes.js"));
+router.use("/api/musics", protect, require("./musics.routes.js"));
+router.use("/api/playlists", protect, require("./playlists.routes.js"));
 router.use("/console", (req, res) => {
     console.log(req.body)
     res.end("ok")

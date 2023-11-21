@@ -27,7 +27,7 @@ export default function useMusic() {
         // update media session
         if ('mediaSession' in navigator && music.duration) navigator.mediaSession.setPositionState({
             playbackRate: 1,
-            position: music.progress,
+            position: music.progress >= music.duration ? 0 : music.progress,
             duration: music.duration,
         });
     }, [ music ]);
@@ -51,7 +51,7 @@ export default function useMusic() {
         // check user
         if (!user || !user.token) return toast.error("User not found!");
         // get audio (adapted from https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams)
-        fetch(`http://192.168.1.100/api/music/play/${music.id}`, {
+        fetch(`http://192.168.1.100/api/musics/play/${music.id}`, {
             headers: { Authorization: `Bearer ${user.token}` }
         })
         .then((response) => { // read the whole stream
@@ -80,8 +80,12 @@ export default function useMusic() {
             // wait for load (loadedmetadata and not loaded because loaded won't fire in IOS)
             audio.onloadedmetadata = () => {
                 audio.onloadedmetadata = null;
+                if (music.progress >= music.duration) {
+                    updateMusic({progress: 0})
+                    audio.currentTime = 0;
+                }
+                else audio.currentTime = music.progress;
                 addMetadata(audio);
-                audio.currentTime = music.progress;
                 updateMusic({
                     audio: audio,
                     duration: audio.duration,
@@ -107,7 +111,8 @@ export default function useMusic() {
         music.audio.play()
         .then(() => music.audio.currentTime = music.progress)
         .catch(err => {
-            window.location.reload();
+            // window.location.reload();
+            updateMusic({isPlaying: false})
             toast.error(`Something weent wrong :/ Please try again.`);
             console.error(err);
         });
@@ -147,7 +152,7 @@ export default function useMusic() {
             progress: 0,
             title: "",
             artist: "",
-            volume: 100,
+            // volume: 100,
             audio: null,
             duration: null,
             isLoading: true,

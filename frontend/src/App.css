@@ -42,6 +42,7 @@ input::-webkit-inner-spin-button {
 
 input[type=number] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -66,6 +67,7 @@ input[type=number] {
 
   --transition-duration: 200ms;
 
+  --h1-size: 2rem;
   --h2-size: 1.4rem;
 }
 
@@ -73,25 +75,42 @@ body {
   background-color: #2c2c2c;
   color: var(--text);
   font-family: 'Poppins', sans-serif;
-  min-height: 100vh;
-  min-height: 100dvh;
 }
 
-.navbar-pc ~ .content {
-  --margin-left: calc(var(--navbar-width, 0) * 1.4);
-  margin-left: var(--margin-left);
+.page {
+  display: grid;
+  gap: 0px 0px;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+}
+
+.page.pc {
+  grid-template-columns: min-content auto; 
+  grid-template-rows: auto min-content; 
+  grid-template-areas: 
+    "nav content"
+    "player player";
+}
+.page.mobile {
+  grid-template-rows: auto min-content;
+  grid-template-areas: 
+    "content"
+    "nav";
 }
 
 .content {
-  margin-bottom: 15vh;
-  display: flex;
-  flex-direction: column;
+  grid-area: content;
+  overflow-y: auto;
+}
+
+.mobile .content {
+  padding-bottom: 10vh;
 }
 
 .h1 {
-  font-size: 2rem;
+  font-size: var(--h1-size);
   font-weight: 600;
-  padding: 1em;
 }
 
 .h2 {

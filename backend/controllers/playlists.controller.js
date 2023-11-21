@@ -105,7 +105,7 @@ exports.playlistFrom = asyncHandler(async (req, res) => {
         .select("title artist year genre");
     if (!musics || musics.length < 1) throw {
         message: "musics not found",
-        status: 404
+        status: 200
     };
     res.status(200).json(musics);
 });

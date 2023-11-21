@@ -3,7 +3,7 @@ import * as musicsService from "./musicsService";
 
 const initialState = {
     musics : [],
-    infos: [], // maybe
+    infos: [],
     isSuccess: false,
     isError: false,
     isLoading: false,

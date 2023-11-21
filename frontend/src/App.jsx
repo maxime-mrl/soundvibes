@@ -1,11 +1,12 @@
 import { BrowserRouter as Router, Route, Routes, Navigate, Outlet } from "react-router-dom";
-import { DataProvider } from "./context/DataContext";
+import Datactx, { DataProvider } from "./context/DataContext";
 import { ToastContainer } from "react-toastify";
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 
 import { Home, Login, Register, Search, SongDetails } from "./pages";
 import { NavBar, Player } from "./containers";
+import { useContext } from "react";
 
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
               <Route path="/details/*" element={ <SongDetails /> } />
               <Route path="/" element={ <Home /> } />
             </Route>
+            <Route path="*" element={ <h1 className="h1">404 WIP</h1> } />
           </Routes>
       </Router>
       <ToastContainer />
@@ -29,17 +31,20 @@ export default function App() {
   );
 }
 
-const LoggedRoutes = () => (
+const LoggedRoutes = () => {
+  const { windowSize: {width}, mobileWidth } = useContext(Datactx);
+  return (
   localStorage.getItem("user") ? // using localstorage because useSelector will update as soon as there is a change thus preventing success toast
-  <>
+  <div className={width < mobileWidth ? "page mobile" : "page pc"}>
     <NavBar />
     <div className="content">
       <Outlet />
     </div>
     <Player />
-  </> 
+  </div>
   : <Navigate to="/register" />
 )
+}
 
 const LoggoutRoutes = () => (
   !localStorage.getItem("user") ? 

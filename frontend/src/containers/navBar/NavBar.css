@@ -2,10 +2,7 @@
 /*                                 MOBILE CSS                                 */
 /* -------------------------------------------------------------------------- */
 .navbar-mobile ul {
-    position: fixed;
-    z-index: 5;
-    bottom: 0;
-    left: 0;
+    grid-area: nav;
     height: 2.5em;
     width: 100%;
     font-size: var(--h2-size);
@@ -29,15 +26,11 @@
 /* -------------------------------------------------------------------------- */
 /*                                   PC CSS                                   */
 /* -------------------------------------------------------------------------- */
-:root {
-    --navbar-width: 14em;
-}
 .navbar-pc {
-    position: fixed;
-    top: 0;
-    width: var(--navbar-width);
-    height: 87vh;
-    height: 87dvh;
+    grid-area: nav;
+    position: relative;
+    width: min(14em, calc(8em + 14vw));
+    height: 100%;
     font-size: var(--h2-size);
     background-color: var(--bg-85);
     backdrop-filter: var(--blur);
@@ -87,6 +80,10 @@
     aspect-ratio: 1;
     background-color: black;
     border-radius: var(--radius);
+}
+
+.navbar-pc .text {
+    overflow: hidden;
 }
 
 .music-infos .h2 {
