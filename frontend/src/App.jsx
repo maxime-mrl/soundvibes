@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Home, Login, Register, Search, SongDetails } from "./pages";
 import { NavBar, Player } from "./containers";
 import { useContext } from "react";
-import { ScrollTop } from "./components";
+import { MusicCircle, ScrollTop } from "./components";
 
 
 export default function App() {
@@ -40,6 +40,7 @@ const LoggedRoutes = () => {
     <ScrollTop />
     <NavBar />
     <div className="content">
+      <MusicCircle />
       <Outlet />
     </div>
     <Player />

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://192.168.1.100:80/api/musics";
+const API_URL = `http://${window.location.hostname}:80/api/musics`;
 export async function get(endpoint, token) {
     const config = {
         headers: {

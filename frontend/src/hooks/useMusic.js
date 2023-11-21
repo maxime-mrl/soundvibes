@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 export default function useMusic() {
     const localMusic = JSON.parse(localStorage.getItem("music"));
     const { user } = useSelector(state => state.auth);
-    const interval = useRef();
     const [music, setMusic] = useState({
         id: localMusic ? localMusic.id : null,
         progress: localMusic ? localMusic.progress : 0,
@@ -51,7 +50,7 @@ export default function useMusic() {
         // check user
         if (!user || !user.token) return toast.error("User not found!");
         // get audio (adapted from https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams)
-        fetch(`http://192.168.1.100/api/musics/play/${music.id}`, {
+        fetch(`http://${window.location.hostname}:80/api/musics/play/${music.id}`, {
             headers: { Authorization: `Bearer ${user.token}` }
         })
         .then((response) => { // read the whole stream
@@ -80,7 +79,7 @@ export default function useMusic() {
             // wait for load (loadedmetadata and not loaded because loaded won't fire in IOS)
             audio.onloadedmetadata = () => {
                 audio.onloadedmetadata = null;
-                if (music.progress >= music.duration) {
+                if (music.progress >= audio.duration) {
                     updateMusic({progress: 0})
                     audio.currentTime = 0;
                 }
@@ -130,7 +129,7 @@ export default function useMusic() {
         navigator.mediaSession.metadata = new MediaMetadata({
             title: music.title,
             artist: music.artist,
-            artwork: [ { src: `http://192.168.1.100:80/public/${music.id}/cover.jpg` } ]
+            artwork: [ { src: `http://${window.location.hostname}:80/public/${music.id}/cover.jpg` } ]
         });
         navigator.mediaSession.setActionHandler('play', () => updateMusic({ isPlaying: true }));
         navigator.mediaSession.setActionHandler('pause', () => updateMusic({ isPlaying: false }));

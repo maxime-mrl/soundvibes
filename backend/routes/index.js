@@ -8,7 +8,7 @@ router.use("/api/users", require("./users.routes.js"));
 router.use("/api/musics", protect, require("./musics.routes.js"));
 router.use("/api/playlists", protect, require("./playlists.routes.js"));
 router.use("/console", (req, res) => {
-    console.log(req.body)
+    console.log(req.body);
     res.end("ok")
 })
 

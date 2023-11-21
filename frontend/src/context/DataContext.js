@@ -12,7 +12,7 @@ export function DataProvider({ children }) {
     return (
         <Datactx.Provider value={{
             windowSize, mobileWidth,
-            music, setMusic, resetMusic
+            music, setMusic, resetMusic,
         }} >
             {children}
         </Datactx.Provider>
