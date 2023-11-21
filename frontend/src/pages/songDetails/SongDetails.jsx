@@ -51,19 +51,21 @@ export default function SongDetails() {
         </>
     )
     return (
-        <div className="music-details">
-            <header className="music-header">
-                <CoverImage music={ {_id: id, ...infos} } />
-                <div>
-                    <h1>{infos.title}</h1>
-                    <h2>{infos.artist}</h2>
-                    <h3>{infos.year}</h3>
-                </div>
-            </header>
-            <section className="music-actions">
-                <PlayCta clickAction={playClicked}/>
-                <button className="btn"><FontAwesomeIcon icon="fa-solid fa-plus" /> Add to playlist</button>
-                <button className="btn"><FontAwesomeIcon icon="fa-solid fa-share" /> Share</button>
+        <>
+            <section className="music-details">
+                <header className="music-header">
+                    <CoverImage music={ {_id: id, ...infos} } />
+                    <div>
+                        <h1>{infos.title}</h1>
+                        <h2>{infos.artist}</h2>
+                        <h3>{infos.year}</h3>
+                    </div>
+                </header>
+                <article className="music-actions">
+                    <PlayCta clickAction={playClicked}/>
+                    <button className="btn"><FontAwesomeIcon icon="fa-solid fa-plus" /> Add to playlist</button>
+                    <button className="btn"><FontAwesomeIcon icon="fa-solid fa-share" /> Share</button>
+                </article>
             </section>
             <section className="music-similar">
                 <div>
@@ -74,6 +76,6 @@ export default function SongDetails() {
                 </div>
                 <SongList musics={similar} />
             </section>
-        </div>
+        </>
     )
 }

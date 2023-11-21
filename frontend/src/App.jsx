@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Home, Login, Register, Search, SongDetails } from "./pages";
 import { NavBar, Player } from "./containers";
 import { useContext } from "react";
+import { ScrollTop } from "./components";
 
 
 export default function App() {
@@ -36,6 +37,7 @@ const LoggedRoutes = () => {
   return (
   localStorage.getItem("user") ? // using localstorage because useSelector will update as soon as there is a change thus preventing success toast
   <div className={width < mobileWidth ? "page mobile" : "page pc"}>
+    <ScrollTop />
     <NavBar />
     <div className="content">
       <Outlet />

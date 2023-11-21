@@ -10,3 +10,4 @@ export { default as PlayerOptions } from "./playerOptions/PlayerOptions";
 export { default as Slider } from "./Slider/Slider";
 export { default as CoverImage } from "./coverImage/CoverImage";
 export { default as TextInput } from "./textInput/TextInput";
+export { default as ScrollTop } from "./scrollTop/ScrollTop";

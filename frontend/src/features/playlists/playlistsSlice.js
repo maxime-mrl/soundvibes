@@ -33,7 +33,6 @@ export const { reset } = playlistsSlice.actions;
 
 export const getSimilar = createAsyncThunk("playlist/similar", async (query, thunkAPI) => {
     try {
-        console.log(query)
         return await playlistsService.post(`/from`, thunkAPI.getState().auth.user.token, query)
     } catch (err) {
         if (err.response && err.response.data.error) return thunkAPI.rejectWithValue(err.response.data.error);
