@@ -4,12 +4,10 @@ import "./MusicCircle.css";
 
 export default function MusicCircle() {  
         const canvasRef = useRef(null);
-        const memory = useRef({ analyser: null, audioCtx: null, sourceNode: null });
+        const memory = useRef({ analyser: null, audioCtx: null, sourceNode: null, memId: null });
         const animationId = useRef();
         const timeoutId = useRef();
-        const memAudio = useRef();
         const { music:{audio, isPlaying, id, isLoading} } = useContext(Datactx);
-        const { windowSize:{width:windowSize}, mobileWidth } = useContext(Datactx);
         
         function renderFrame(ctx, analyser, interval) {
             let dataArray = new Uint8Array(analyser.frequencyBinCount);
@@ -56,7 +54,6 @@ export default function MusicCircle() {
             if (positions.length < 30) {
                 for (let i = 0; i <= 15 - positions.length; i++) positions.push(avg + Math.random()*10);
             }
-            // console.log(avg)
             return {
                 audiopos: positions.concat(positions.slice().reverse()),
                 avg: avg
@@ -81,46 +78,47 @@ export default function MusicCircle() {
         }
         
         useEffect(() => {
-            if (windowSize >= mobileWidth) {
-                const canvas = canvasRef.current;
-                const context = canvas.getContext('2d');
-                let {
-                    analyser,
-                    audioCtx,
-                    sourceNode
-                } = memory.current
-                let interval = 50;
-    
-                // create the analyser to handle the visualization data
-                if (audio && isPlaying && !isLoading && (!audioCtx || memAudio.current !== id)) {
-                    audioCtx = new AudioContext();
-                    analyser = audioCtx.createAnalyser();
-                    analyser.connect(audioCtx.destination);
-                    analyser.fftSize = 256; // power of 2 only - the higher it is the more resolution there is for the visualization
-                    // connect the analyser to the audio
-                    if (sourceNode) sourceNode.disconnect()
-                    sourceNode = audioCtx.createMediaElementSource(audio).connect(analyser);
-                    memAudio.current = id
-                    memory.current = { analyser, audioCtx, sourceNode }
-                    if (animationId.current) window.cancelAnimationFrame(animationId.current)
-                    if (timeoutId.current) clearTimeout(timeoutId.current);
-                    render()
-                }
+            const canvas = canvasRef.current;
+            const context = canvas.getContext('2d');
+            let {
+                analyser,
+                audioCtx,
+                sourceNode,
+                memId
+            } = memory.current
+            let interval = 50;
 
-                function render() {
-                    renderFrame(context, analyser, interval)
-                    timeoutId.current = setTimeout(() => {
-                        animationId.current = window.requestAnimationFrame(render)
-                    }, interval);
-                }
+            // create the analyser to handle the visualization data
+            if (audio && isPlaying && !isLoading && (!audioCtx || memId !== id)) {
+                audioCtx = new AudioContext();
+                console.log(audioCtx)
+                analyser = audioCtx.createAnalyser();
+                analyser.connect(audioCtx.destination);
+                analyser.fftSize = 256; // power of 2 only - the higher it is the more resolution there is for the visualization
+                // connect the analyser to the audio
+                if (sourceNode) sourceNode.disconnect();
+                sourceNode = audioCtx.createMediaElementSource(audio);
+                sourceNode.connect(analyser);
+                memory.current = { analyser, audioCtx, sourceNode, memId: id }
+                if (animationId.current) window.cancelAnimationFrame(animationId.current)
+                if (timeoutId.current) clearTimeout(timeoutId.current);
+                render()
+            }
+
+            function render() {
+                renderFrame(context, analyser, interval)
+                timeoutId.current = setTimeout(() => {
+                    animationId.current = window.requestAnimationFrame(render)
+                }, interval);
             }
 
             return () => {
+                console.log(sourceNode)
+                if (sourceNode) sourceNode.disconnect()
+                memory.current = { analyser: null, audioCtx: null, sourceNode: null, memId: null }
                 window.cancelAnimationFrame(animationId.current)
             }
         }, [audio, id, isPlaying, isLoading])
-    console.log(windowSize)
-    if (windowSize < mobileWidth) return <></>
     return (
         <canvas className="circle-bg" ref={canvasRef}></canvas>
     )

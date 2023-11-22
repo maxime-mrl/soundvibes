@@ -4,7 +4,7 @@ import { ToastContainer } from "react-toastify";
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 
-import { Home, Login, Register, Search, SongDetails } from "./pages";
+import { Home, Login, Profile, Register, Search, SongDetails } from "./pages";
 import { NavBar, Player } from "./containers";
 import { useContext } from "react";
 import { MusicCircle, ScrollTop } from "./components";
@@ -22,6 +22,7 @@ export default function App() {
             <Route element={ <LoggedRoutes /> }>
               <Route path="/search/*" element={ <Search /> } />
               <Route path="/details/*" element={ <SongDetails /> } />
+              <Route path="/profile/" element= { <Profile /> } />
               <Route path="/" element={ <Home /> } />
             </Route>
             <Route path="*" element={ <h1 className="h1">404 WIP</h1> } />
@@ -40,7 +41,7 @@ const LoggedRoutes = () => {
     <ScrollTop />
     <NavBar />
     <div className="content">
-      <MusicCircle />
+    {/* { width > mobileWidth && <MusicCircle /> } */}
       <Outlet />
     </div>
     <Player />

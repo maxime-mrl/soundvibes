@@ -23,6 +23,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
     if (user) res.status(201).json({
         _id: user._id,
         username: user.username,
+        right: user.right,
         token: generateToken(user._id)
     });
     else throw new Error("User can't be created right now");
@@ -41,6 +42,7 @@ exports.loginUser = asyncHandler(async (req, res) => {
     if (user && await bcrypt.compare(password, user.password)) res.status(200).json({
         _id: user._id,
         username: user.username,
+        right: user.right,
         token: generateToken(user._id)
     });
     else throw {
@@ -52,9 +54,10 @@ exports.loginUser = asyncHandler(async (req, res) => {
 exports.getUser = asyncHandler(async (req, res) => {
     /* ---------------------------- RETURN USER INFOS --------------------------- */
     res.status(200).json({
-        id: req.user._id,
+        _id: req.user._id,
         mail: req.user.mail,
-        username: req.user.username
+        username: req.user.username,
+        right: req.user.right
     });
 });
 
@@ -81,7 +84,8 @@ exports.updateUser = asyncHandler(async (req, res) => {
     res.status(200).json({
         _id: updatedUser._id,
         username: updatedUser.username,
-        token: generateToken(updatedUser._id)
+        token: generateToken(updatedUser._id),
+        right: updatedUser.right,
     });
 });
 

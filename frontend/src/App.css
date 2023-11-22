@@ -141,6 +141,10 @@ html {
   transition: background-color var(--transition-duration) ease-out;
 }
 
+.btn-fail {
+  background-color: var(--fail);
+}
+
 .btn-cta:hover {
   background-color: var(--text);
 }

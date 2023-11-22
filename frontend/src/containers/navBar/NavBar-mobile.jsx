@@ -15,7 +15,7 @@ export default function NavBarMobile() {
                     <Link className="nav-item-mobile" to="/playlists"><FontAwesomeIcon className="nav-icon" icon="fa-solid fa-bars-staggered" /></Link>
                 </li>
                 <li>
-                    <Link className="nav-item-mobile" to="/account"><FontAwesomeIcon className="nav-icon" icon="fa-solid fa-user" /></Link>
+                    <Link className="nav-item-mobile" to="/profile"><FontAwesomeIcon className="nav-icon" icon="fa-solid fa-user" /></Link>
                 </li>
             </ul>
         </nav>
