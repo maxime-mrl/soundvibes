@@ -1,6 +1,4 @@
 .profile {
-    display: flex;
-    flex-direction: column;
     padding: 2em 1vw;
     max-width: 600px;
 }
@@ -33,4 +31,10 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
+}
+
+.admin-btn {
+    display: block;
+    width: fit-content;
+    margin-top: 1em;
 }

@@ -4,7 +4,7 @@ import { ToastContainer } from "react-toastify";
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 
-import { Home, Login, Profile, Register, Search, SongDetails } from "./pages";
+import { Admin, Home, Login, Profile, Register, Search, SongDetails } from "./pages";
 import { NavBar, Player } from "./containers";
 import { useContext } from "react";
 import { MusicCircle, ScrollTop } from "./components";
@@ -23,6 +23,7 @@ export default function App() {
               <Route path="/search/*" element={ <Search /> } />
               <Route path="/details/*" element={ <SongDetails /> } />
               <Route path="/profile/" element= { <Profile /> } />
+              <Route path="/admin/" element= { <Admin /> } />
               <Route path="/" element={ <Home /> } />
             </Route>
             <Route path="*" element={ <h1 className="h1">404 WIP</h1> } />

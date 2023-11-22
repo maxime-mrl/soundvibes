@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Profile.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -19,7 +19,6 @@ export default function Profile() {
     });
 
     useEffect(() => {
-        console.log(user)
         if (!user || !user.token) {
             toast.error("User not found!");
             navigate("/")
@@ -92,73 +91,78 @@ export default function Profile() {
 
     return (
         <section className="profile">
-        <header className="profile-header">
-            <h1 className="h1">Hello {user.username}!</h1>
-            <h2 className="h2">Your profile:</h2>
-        </header>
-        <form onSubmit={submitForm} className="profile-form">
-            <TextInput 
-                label={{
-                    regular: "Username:",
-                    error: "Invalid username, allowed: a-z, 0-9 and -"
-                }}
-                input={{
-                    name: "username",
-                    placeholder: "Your username",
-                    autoComplete: "username",
-                }}
-                validation={"^[-a-z0-9]{2,}$"}
-                valueState={username[0]}
-                updateForm={updateForm}
-            />
-            <TextInput 
-                label={{
-                    regular: "Email:",
-                    error: "Invalid email"
-                }}
-                input={{
-                    name: "mail",
-                    placeholder: "Your email",
-                    autoComplete: "email",
-                    type: "email"
-                }}
-                validation={"^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"}
-                valueState={mail[0]}
-                updateForm={updateForm}
-            />
-            <TextInput 
-                label={{
-                    regular: "New password:",
-                    error: "Your password must be at least 6 character"
-                }}
-                input={{
-                    name: "password",
-                    placeholder: "Your password",
-                    type: "password"
-                }}
-                validation={"^.{6,}$"}
-                valueState={password[0]}
-                updateForm={updateForm}
-            />
-            <TextInput 
-                label={{
-                    regular: "Actual password:",
-                    error: "Your passwords dosen't match"
-                }}
-                input={{
-                    name: "confirm_password",
-                    placeholder: "Your old password",
-                    type: "password"
-                }}
-                validation={"^.{6,}$"}
-                valueState={confirm_password[0]}
-                updateForm={updateForm}
-            />
-            <div className="btns">
-                <button type="submit" className="btn-cta">Update Profile</button>
-                <button type="button" onClick={signOut} className="btn-cta btn-fail">Sign out</button>
-            </div>
-        </form>
+            <header className="profile-header">
+                <h1 className="h1">Hello {user.username}!</h1>
+                <h2 className="h2">Your profile:</h2>
+            </header>
+            <form onSubmit={submitForm} className="profile-form">
+                <TextInput 
+                    label={{
+                        regular: "Username:",
+                        error: "Invalid username, allowed: a-z, 0-9 and -"
+                    }}
+                    input={{
+                        name: "username",
+                        placeholder: "Your username",
+                        autoComplete: "username",
+                    }}
+                    validation={"^[-a-z0-9]{2,}$"}
+                    valueState={username[0]}
+                    updateForm={updateForm}
+                />
+                <TextInput 
+                    label={{
+                        regular: "Email:",
+                        error: "Invalid email"
+                    }}
+                    input={{
+                        name: "mail",
+                        placeholder: "Your email",
+                        autoComplete: "email",
+                        type: "email"
+                    }}
+                    validation={"^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"}
+                    valueState={mail[0]}
+                    updateForm={updateForm}
+                />
+                <TextInput 
+                    label={{
+                        regular: "New password:",
+                        error: "Your password must be at least 6 character"
+                    }}
+                    input={{
+                        name: "password",
+                        placeholder: "Your password",
+                        type: "password"
+                    }}
+                    validation={"^.{6,}$"}
+                    valueState={password[0]}
+                    updateForm={updateForm}
+                />
+                <TextInput 
+                    label={{
+                        regular: "Actual password:",
+                        error: "Your password must be at least 6 character"
+                    }}
+                    input={{
+                        name: "confirm_password",
+                        placeholder: "Your old password",
+                        type: "password"
+                    }}
+                    validation={"^.{6,}$"}
+                    valueState={confirm_password[0]}
+                    updateForm={updateForm}
+                />
+                <div className="btns">
+                    <button type="submit" className="btn-cta">Update Profile</button>
+                    <button type="button" onClick={signOut} className="btn-cta btn-fail">Sign out</button>
+                </div>
+            </form>
+            {user && user.right && user.right > 0 ?
+            <Link to="/admin" className="btn-cta admin-btn">Manage Musics</Link>
+            :
+            ""
+            }
         </section>
     )
 }

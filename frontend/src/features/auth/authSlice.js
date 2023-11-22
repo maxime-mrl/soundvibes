@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import * as authService from "./authService";
 
-const user = JSON.parse(localStorage.getItem("user"));
+const user = JSON.parse(localStorage.getItem("user"))
 
 const initialState = {
     user: user ? user : null,
@@ -103,8 +103,7 @@ export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
 
 export const infos = createAsyncThunk("auth/infos", async(thunkAPI) => {
     try {
-        if (!user || !user.token) throw new Error("User not found!")
-        return await authService.get("/me", user.token);
+        return await authService.get("/me", thunkAPI.getState().auth.user.token);
     } catch (err) {
         if (err.response && err.response.data.error) return thunkAPI.rejectWithValue(err.response.data.error);
         else if (err.message) return thunkAPI.rejectWithValue(err.message);
@@ -114,8 +113,7 @@ export const infos = createAsyncThunk("auth/infos", async(thunkAPI) => {
 
 export const updateProfile = createAsyncThunk("auth/update", async(userData, thunkAPI) => {
     try {
-        if (!user || !user.token) throw new Error("User not found!")
-        return await authService.put("/update", user.token, userData);
+        return await authService.put("/update", thunkAPI.getState().auth.user.token, userData);
     } catch (err) {
         if (err.response && err.response.data.error) return thunkAPI.rejectWithValue(err.response.data.error);
         else if (err.message) return thunkAPI.rejectWithValue(err.message);

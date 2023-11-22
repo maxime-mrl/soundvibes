@@ -18,6 +18,7 @@ export const musicsSlice = createSlice({
     // pending
         .addCase(searchMusics.pending, state => { state.isLoading = true })
         .addCase(getMusic.pending, state => { state.isLoading = true })
+        .addCase(addMusic.pending, state => { state.isLoading = true })
     // success
         .addCase(searchMusics.fulfilled, (state, action) => {
             state.isLoading = false;
@@ -29,6 +30,11 @@ export const musicsSlice = createSlice({
             state.isSuccess = true;
             state.infos = action.payload;
         })
+        .addCase(addMusic.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.message = action.payload.status;
+        })
     // rejected
         .addCase(searchMusics.rejected, (state, action) => {
             state.isLoading = false;
@@ -36,6 +42,11 @@ export const musicsSlice = createSlice({
             state.message = action.payload;
         })
         .addCase(getMusic.rejected, (state, action) => {
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload;
+        })
+        .addCase(addMusic.rejected, (state, action) => {
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload;
@@ -56,6 +67,16 @@ export const searchMusics = createAsyncThunk("musics/search", async (query, thun
 export const getMusic = createAsyncThunk("musics/get", async (query, thunkAPI) => {
     try {
         return await musicsService.get(`/get/${query}`, thunkAPI.getState().auth.user.token)
+    } catch (err) {
+        if (err.response && err.response.data.error) return thunkAPI.rejectWithValue(err.response.data.error);
+        else if (err.message) return thunkAPI.rejectWithValue(err.message);
+        else return thunkAPI.rejectWithValue(err.toString());
+    }
+})
+
+export const addMusic = createAsyncThunk("musics/add", async (music, thunkAPI) => {
+    try {
+        return await musicsService.post(`/add/`, thunkAPI.getState().auth.user.token, music)
     } catch (err) {
         if (err.response && err.response.data.error) return thunkAPI.rejectWithValue(err.response.data.error);
         else if (err.message) return thunkAPI.rejectWithValue(err.message);
