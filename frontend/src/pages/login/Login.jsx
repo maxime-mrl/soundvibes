@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { login, reset } from "../../features/auth/authSlice";
-import { TextInput } from "../../components"
+import { Loader, TextInput } from "../../components"
 import "./Login.css";
 
 export default function Login() {
@@ -109,6 +109,7 @@ export default function Login() {
                     Don't have an account? <Link to={"/register"}>Sign up</Link>
                 </div>
             </form>
+            <Loader />
         </>
     )
 }

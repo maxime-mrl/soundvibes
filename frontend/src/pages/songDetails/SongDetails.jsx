@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getMusic } from "../../features/musics/musicsSlice";
 import { getSimilar } from "../../features/playlists/playlistsSlice";
 import Datactx from "../../context/DataContext";
-import { CoverImage, PlayCta } from "../../components";
+import { CoverImage, Loader, PlayCta } from "../../components";
 import { SongList } from "../../containers";
 import "./SongDetails.css";
 
@@ -76,6 +76,7 @@ export default function SongDetails() {
                 </div>
                 <SongList musics={similar} />
             </section>
+            <Loader />
         </>
     )
 }

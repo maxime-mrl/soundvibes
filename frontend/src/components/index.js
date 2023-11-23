@@ -13,3 +13,4 @@ export { default as TextInput } from "./textInput/TextInput";
 export { default as ScrollTop } from "./scrollTop/ScrollTop";
 export { default as MusicCircle } from "./musicCircle/MusicCircle";
 export { default as FileInput } from "./fileInput/FileInput";
+export { default as Loader } from "./loader/Loader";

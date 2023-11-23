@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AddMusic } from "../../containers";
+import { Loader } from "../../components";
 import "./Admin.css";
 
 export default function Admin() {
@@ -18,6 +19,7 @@ export default function Admin() {
                 <h2 className="h2">Manage:</h2>
             </header>
             <AddMusic />
+            <Loader />
         </>
     )
 }
