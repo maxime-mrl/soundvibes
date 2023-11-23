@@ -54,5 +54,6 @@
 }
 
 .music-similar h1 {
+    font-size: var(--h1-size); /* fallback */
     font-size: clamp(1.3rem, 4vw, var(--h1-size));
 }

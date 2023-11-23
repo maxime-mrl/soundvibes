@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { TextInput } from "../../components";
-import "./AddMusic.css";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { addMusic, reset } from "../../features/musics/musicsSlice";
+import { FileInput, TextInput } from "../../components";
+import "./AddMusic.css";
 
 export default function AddMusic() {
     const dispatch = useDispatch();
-    const { isLoading, isError, isSuccess, message } = useSelector(state => state.musics)
+    const { isError, isSuccess, message } = useSelector(state => state.musics)
 
     const [{ title, artist, tags, year }, setFormData] = useState({
         title: ["", false],
@@ -81,7 +81,8 @@ export default function AddMusic() {
     }
 
     return (
-        <form onSubmit={submitForm} className="add-music">
+        <form onSubmit={submitForm} className="add-music-form">
+            <h3 className="h2">Add music:</h3>
             <TextInput 
                 label={{
                     regular: "Title",
@@ -139,31 +140,9 @@ export default function AddMusic() {
                 valueState={year[0]}
                 updateForm={updateForm}
             />
-            <div className="file-input-container">
-                <label htmlFor="musicFile" className="file-label">
-                    Audio file:
-                </label>
-                <input
-                    className="file-input"
-                    type="file"
-                    accept="audio/mpeg"
-                    name="musicFile"
-                    id="musicFile"
-                    onChange={updateFiles}
-                />
-            </div>
-            <div className="file-input-container">
-                <label htmlFor="coverFile" className="file-label">
-                    Cover image:
-                </label>
-                <input
-                    className="file-input"
-                    type="file"
-                    accept="image/jpeg"
-                    name="coverFile"
-                    id="coverFile"
-                    onChange={updateFiles}
-                />
+            <div className="files">
+                <FileInput name={"musicFile"} label={"Audio file"} accept={"audio/mpeg"} update={updateFiles} />
+                <FileInput name={"coverFile"} label={"Cover image"} accept={"image/jpeg"} update={updateFiles} />
             </div>
             <button type="submit" className="btn-cta">Add music</button>
         </form>

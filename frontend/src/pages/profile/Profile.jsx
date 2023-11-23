@@ -1,10 +1,10 @@
-import { Link, useNavigate } from "react-router-dom";
-import "./Profile.css";
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { infos, reset, updateProfile, logout } from "../../features/auth/authSlice";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { infos, reset, updateProfile, logout } from "../../features/auth/authSlice";
 import { TextInput } from "../../components";
+import "./Profile.css";
 
 export default function Profile() {
     const navigate = useNavigate();
@@ -19,22 +19,16 @@ export default function Profile() {
     });
 
     useEffect(() => {
-        if (!user || !user.token) {
-            toast.error("User not found!");
-            navigate("/")
-        } else if (isError) {
-            toast.error(message);
-        } else if (isSuccess) {
-            toast.success(`Information successfully updated`)
-        } else if (user && !user.mail) {
-            dispatch(infos())
-        } else if (user && user.mail) {
-            setFormData(prevState => ({
-                ...prevState,
-                username: [user.username, true],
-                mail: [user.mail, true],
-            }))
-        }
+        dispatch(reset());
+        if (!user || !user.token) navigate("/");
+        else if (isError) toast.error(message);
+        else if (isSuccess) toast.success(`Information successfully updated`);
+        if (user && !user.mail) dispatch(infos());
+        else if (user && user.mail) setFormData(prevState => ({
+            ...prevState,
+            username: [user.username, true],
+            mail: [user.mail, true],
+        }));
     }, [user, isSuccess, isError, message, navigate, dispatch])
 
     
@@ -157,12 +151,14 @@ export default function Profile() {
                     <button type="submit" className="btn-cta">Update Profile</button>
                     <button type="button" onClick={signOut} className="btn-cta btn-fail">Sign out</button>
                 </div>
+                {user && user.right && user.right > 0 ?
+                <div>
+                    <Link to="/admin" className="btn-cta admin-btn">Manage Musics</Link>
+                </div>
+                :
+                ""
+                }
             </form>
-            {user && user.right && user.right > 0 ?
-            <Link to="/admin" className="btn-cta admin-btn">Manage Musics</Link>
-            :
-            ""
-            }
         </section>
     )
 }

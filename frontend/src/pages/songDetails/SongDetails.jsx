@@ -1,14 +1,14 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getMusic } from "../../features/musics/musicsSlice";
 import { getSimilar } from "../../features/playlists/playlistsSlice";
-import { toast } from "react-toastify";
+import Datactx from "../../context/DataContext";
 import { CoverImage, PlayCta } from "../../components";
 import { SongList } from "../../containers";
-import Datactx from "../../context/DataContext";
 import "./SongDetails.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function SongDetails() {
     const navigate = useNavigate();

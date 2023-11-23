@@ -1,44 +1,56 @@
 /* -------------------------------------------------------------------------- */
+/*                                 GENERAL CSS                                */
+/* -------------------------------------------------------------------------- */
+.navbar {
+    grid-area: nav;
+    font-size: var(--h2-size);
+}
+
+.navbar .active {
+    color: var(--accent);
+}
+
+.nav-item {
+    display: flex;
+    width: 100%;
+}
+
+/* -------------------------------------------------------------------------- */
 /*                                 MOBILE CSS                                 */
 /* -------------------------------------------------------------------------- */
-.navbar-mobile ul {
-    grid-area: nav;
+.navbar.mobile ul {
     height: 2.5em;
     width: 100%;
-    font-size: var(--h2-size);
     background-color: var(--bg-solid);
     display: flex;
     gap: 1em;
 }
 
-.navbar-mobile li {
+.navbar.mobile li {
     width: 100%;
 }
 
-.nav-item-mobile {
+.nav-item.mobile {
     height: 100%;
-    width: 100%;
-    display: flex;
     justify-content: center;
     align-items: center;
 }
 
+
 /* -------------------------------------------------------------------------- */
 /*                                   PC CSS                                   */
 /* -------------------------------------------------------------------------- */
-.navbar-pc {
-    grid-area: nav;
+.navbar.pc {
     position: relative;
+    width: 14em; /* fallback */
     width: min(14em, calc(8em + 14vw));
     height: 100%;
-    font-size: var(--h2-size);
     background-color: var(--bg-85);
     backdrop-filter: var(--blur);
     border-right: var(--main-border-bg);
 }
 
-.nav-item-pc {
-    display: flex;
+.nav-item.pc {
     gap: 1.2em;
     margin: 0.4em 0;
     padding: 0.55em 0 0.55em 1em;

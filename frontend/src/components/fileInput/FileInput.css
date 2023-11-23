@@ -1,0 +1,21 @@
+.file-input {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.file-label {
+    background-color: var(--text);
+    display: flex;
+    gap: 1.5ch;
+    min-width: 20ch;
+    padding-left: 1em;
+    padding-right: 0.5em;
+}
+
+.file-label:hover {
+    background-color: var(--accent);
+}

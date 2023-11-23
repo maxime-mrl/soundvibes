@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { login, reset } from "../../features/auth/authSlice";
-import TextInput from "../../components/textInput/TextInput";
+import { TextInput } from "../../components"
 import "./Login.css";
 
 export default function Login() {
@@ -104,7 +104,7 @@ export default function Login() {
                     valueState={password[0]}
                     updateForm={updateForm}
                 />
-                <button type="submit" className="btn-cta">Sign up</button>
+                <button type="submit" className="btn-cta">Sign in</button>
                 <div className="register-redirect">
                     Don't have an account? <Link to={"/register"}>Sign up</Link>
                 </div>

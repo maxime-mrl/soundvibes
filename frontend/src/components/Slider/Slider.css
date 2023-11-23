@@ -28,7 +28,10 @@
     transition: var(--transition-duration);
 }
 
-.slider-bar:hover {
-    --color: var(--accent);
-    transform: scaleY(1.5);
+
+@media (hover: hover) {
+    .slider-bar:hover {
+        --color: var(--accent);
+        transform: scaleY(1.5);
+    }
 }

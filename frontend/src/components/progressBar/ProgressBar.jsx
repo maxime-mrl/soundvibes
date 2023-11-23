@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
-import "./ProgressBar.css";
-import { Slider } from "../";
 import Datactx from "../../context/DataContext";
+import { Slider } from "../";
+import "./ProgressBar.css";
 
 export default function ProgressBar({ isTimeShow }) {
     const { music, setMusic } = useContext(Datactx);

@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
-import "./Admin.css";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AddMusic } from "../../containers";
+import "./Admin.css";
 
 export default function Admin() {
     const { user, isLoading } = useSelector(state => state.auth);

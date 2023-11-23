@@ -20,6 +20,7 @@ export const authSlice = createSlice({
             state.isSuccess = false;
             state.isError = false;
             state.message = "";
+            // always keep the user
         }
     },
     extraReducers: builder => builder
@@ -101,7 +102,7 @@ export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
     }
 })
 
-export const infos = createAsyncThunk("auth/infos", async(thunkAPI) => {
+export const infos = createAsyncThunk("auth/infos", async(_, thunkAPI) => {
     try {
         return await authService.get("/me", thunkAPI.getState().auth.user.token);
     } catch (err) {
@@ -121,6 +122,6 @@ export const updateProfile = createAsyncThunk("auth/update", async(userData, thu
     }
 })
 
-export const logout = createAsyncThunk("auth/logout", async (thunkAPI) => localStorage.removeItem('user'));
+export const logout = createAsyncThunk("auth/logout", async () => localStorage.removeItem('user'));
 
 export default authSlice.reducer;

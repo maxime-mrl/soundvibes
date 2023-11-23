@@ -1,0 +1,18 @@
+.add-music-form {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    max-width: 680px;
+    gap: 1.2em;
+    padding: 2em 1em;
+    
+    background-color: var(--bg-85);
+    backdrop-filter: var(--blur);
+    border: var(--main-border-bg);
+    border-radius: var(--radius);
+}
+
+.add-music-form .files {
+    display: flex;
+    gap: 1em;
+}

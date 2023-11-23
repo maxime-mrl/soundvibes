@@ -1,14 +1,10 @@
 import { useContext, useEffect, useState } from "react";
-import { CoverImage, MusicControls, PlayerOptions, ProgressBar, VolumeControl } from "../../components";
-// import { useSwipeable } from "react-swipeable"
 import Datactx from "../../context/DataContext";
+import { CoverImage, MusicControls, PlayerOptions, ProgressBar, VolumeControl } from "../../components";
 
 export default function PlayerMobile() {
     const { music:{title, artist}, music } = useContext(Datactx);
     const [extended, setExtended] = useState(false);
-    // const handlers = useSwipeable({
-    //     onSwiped: (eventData) => console.log("User Swiped!", eventData)
-    // });
 
     function openPlayer(e) {
         if (e.target instanceof HTMLInputElement) return;
