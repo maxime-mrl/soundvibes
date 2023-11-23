@@ -10,3 +10,17 @@
 .player-options svg {
     width: 1em;
 }
+
+.player-options.extended {
+    max-width: 100%;
+    gap: 1em;
+}
+
+.player-options.extended button:nth-child(1) {
+    align-self: flex-start;
+    margin-right: auto;
+}
+
+.player-options i {
+    margin-left: 0.8ch;
+}

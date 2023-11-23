@@ -40,13 +40,13 @@ export default function NavBarPC() {
                         <p>Now playing</p>
                     </div>
                 }
-                <div className="music-infos">
+                <Link to={`/details?id=${music.id}`} className="music-infos">
                     <CoverImage music={music}/>
                     <div className="text">
                         <h2 className="h2">{title}</h2>
                         <h3 className="h3">{artist}</h3>
                     </div>
-                </div>
+                </Link>
             </div>
         </nav>
     )

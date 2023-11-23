@@ -2,13 +2,9 @@ import { useContext, useEffect } from "react";
 import Datactx from "../../context/DataContext";
 import "./Loader.css";
 
-export default function Loader({isFullSize}) {
+export default function Loader() {
     const { isLoading } = useContext(Datactx);
-    useEffect(() => {
-        console.log(isLoading)
-    }, [isLoading])
-    // const isLoading = true;
-    if (!isFullSize && isLoading) return (
+    if (isLoading) return (
         <div className="loader-container">
             <div className="loader">
             <div className="loader-bar"></div>
@@ -19,16 +15,6 @@ export default function Loader({isFullSize}) {
             <div className="loader-bar"></div>
             <div className="loader-bar"></div>
             </div>
-        </div>
-    ); else if (isLoading) return (
-        <div className="loader">
-            <div className="loader-bar"></div>
-            <div className="loader-bar"></div>
-            <div className="loader-bar"></div>
-            <div className="loader-bar"></div>
-            <div className="loader-bar"></div>
-            <div className="loader-bar"></div>
-            <div className="loader-bar"></div>
         </div>
     ); else return (<></>);
 }

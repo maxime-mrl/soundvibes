@@ -15,7 +15,6 @@ export default function useLoading() {
         loadings.forEach(isLoading => { if (isLoading) return load = true });
         if (load) setisSomethingLoading(true)
         else setisSomethingLoading(false)
-        console.log(loadings)
     }, [isSomethingLoading, loadings])
 
     return isSomethingLoading;

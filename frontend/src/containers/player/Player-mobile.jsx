@@ -1,54 +1,47 @@
 import { useContext, useEffect, useState } from "react";
+import { useSwipeable } from "react-swipeable";
 import Datactx from "../../context/DataContext";
-import { CoverImage, MusicControls, PlayerOptions, ProgressBar, VolumeControl } from "../../components";
+import { CoverImage, MusicControls, PlayerOptions, ProgressBar } from "../../components";
 
 export default function PlayerMobile() {
     const { music:{title, artist}, music } = useContext(Datactx);
     const [extended, setExtended] = useState(false);
+    const { ref } = useSwipeable({ onSwipedDown: () => setExtended(false) });
 
-    function openPlayer(e) {
-        if (e.target instanceof HTMLInputElement) return;
-        setExtended(true)
+    function toggleplayer(e) {
+        let elem = e.target;
+        while (!(elem instanceof HTMLBodyElement)) {
+            if (!elem || !elem.parentNode) break;
+            if (elem.className && /player/.test(elem.className)) return setExtended(true);
+            elem = elem.parentNode;
+        }
+        setExtended(false);
     }
 
     useEffect(() => {
-        document.body.addEventListener("click", (e) => {
-            // if (!extended) return;
-            let elem = e.target
-            while (!(elem instanceof HTMLBodyElement)) {
-                if (!elem) break;
-                if (elem.className && elem.className === "player-mobile extended") return;
-                if (!elem.parentNode) break;
-                elem = elem.parentNode
-            }
-            setExtended(false)
-        })
-        return () => {
-            document.body.removeEventListener("click", () => {});
-        }
+        // music.volume = 100; // don't know if this should be
+        document.body.addEventListener("click", toggleplayer);
+        return () => { document.body.removeEventListener("click", toggleplayer) }
     }, [])
+
+    useEffect(() => {
+      if (extended) ref(document);
+      else ref({});
+      return () => ref({});
+    }, [extended, ref]);
+
     return (
-        !extended 
-        ?
-        <div className="player-mobile reduced" onClick={openPlayer}>
-            <CoverImage music={music} />
-            <div className="text">
-                <h2 className="h2">{title}</h2>
-                <h3 className="h3">{artist}</h3>
-            </div>
-            <ProgressBar isTimeShow={false} />
-        </div>
-        :
-        <div className="player-mobile extended">
+        <div className={!extended ? "player-mobile reduced" : "player-mobile extended"}>
             <div className="infos">
-            <CoverImage music={music} />
-                <h2 className="h2">{title}</h2>
-                <h3 className="h3">{artist}</h3>
+                <CoverImage music={music} />
+                <div className="text">
+                    <h2 className="h2">{title}</h2>
+                    <h3 className="h3">{artist}</h3>
+                </div>
             </div>
             <MusicControls />
             <div className="options">
-                <PlayerOptions />
-                <VolumeControl />
+                <PlayerOptions isExtended={true} />
             </div>
             <ProgressBar isTimeShow={false} />
         </div>

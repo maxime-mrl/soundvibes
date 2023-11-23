@@ -26,6 +26,11 @@
     --height: 0.2em
 }
 
+.player-mobile .infos {
+    display: flex;
+    align-items: center;
+}
+
 .player-mobile img {
     flex-shrink: 0;
     flex-grow: 0;
@@ -34,57 +39,45 @@
     height: var(--size);
     border-radius: var(--radius);
 }
+.reduced img { --size: 2.8em; }
+.extended img { --size: 6em; }
+
+
 /* ----------------------------- REDUCED PLAYER ----------------------------- */
-.player-mobile.reduced {
-    display: flex;
-    align-items: center;
+.reduced .player-options, .reduced .musics-controls { display: none }
+
+.reduced .infos {
     gap: 0.8em;
     text-align: left;
     padding: 0.5em 0.6em;
 }
 
-.player-mobile.reduced img {
-    --size: 2.8em;
-}
-
 .player-mobile.reduced .h2 {
     margin-bottom: 0.2em;
 }
+
+
 /* ----------------------------- EXTENDED PLAYER ---------------------------- */
 
 .player-mobile.extended {
-    padding: 0.8em;
     display: flex;
+    padding: 0.8em;
     flex-direction: column;
     align-items: center;
     text-align: center;
     gap: 1.2em;
 }
 
-.player-mobile.extended .infos {
-    display: flex;
+.extended .infos {
     flex-direction: column;
-    align-items: center;
     gap: 0.3em;
 }
-.player-mobile.extended img {
-    --size: 6em;
-}
 
-.player-mobile.extended .options {
+.options {
     display: flex;
     justify-content: space-between;
     width: 100%;
 }
-
-.player-mobile.extended .options .volume-control {
-    width: 6em;
-}
-
-.player-mobile.extended .options .player-options {
-    width: 5.5em;
-}
-
 
 
 /* -------------------------------------------------------------------------- */
