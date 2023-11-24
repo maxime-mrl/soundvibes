@@ -1,0 +1,5 @@
+.cover-img {
+    aspect-ratio: 1;
+    background-color: var(--text-35);
+    border-radius: var(--radius);
+}

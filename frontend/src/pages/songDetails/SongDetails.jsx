@@ -16,8 +16,8 @@ export default function SongDetails() {
     const [searchparams] = useSearchParams();
     const id = searchparams.get("id");
     const { music, setMusic, resetMusic } = useContext(Datactx);
-    const { infos, isError, isLoading, message } = useSelector(state => state.musics);
-    const { similar, isPlaylistError, isPlaylistLoading, playlistMessage } = useSelector(state => state.playlists)
+    const { infos, isError, message } = useSelector(state => state.musics);
+    const { similar, isPlaylistError, playlistMessage } = useSelector(state => state.playlists)
 
     useEffect(() => {
         if (!id) navigate("/");

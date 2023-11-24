@@ -89,9 +89,6 @@
 
 .music-infos img {
     width: 4.5em;
-    aspect-ratio: 1;
-    background-color: black;
-    border-radius: var(--radius);
 }
 
 .navbar-pc .text {

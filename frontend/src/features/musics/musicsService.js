@@ -23,3 +23,14 @@ export async function post(endpoint, token, data) {
     if (resp.data && resp.data.error) throw new Error(resp.data.error);
     return resp.data;
 }
+
+export async function del(endpoint, token) {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        }
+    }
+    const resp = await axios.delete(API_URL + endpoint, config);
+    if (resp.data && resp.data.error) throw new Error(resp.data.error);
+    return resp.data;
+}

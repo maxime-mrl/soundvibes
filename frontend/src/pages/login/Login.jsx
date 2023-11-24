@@ -9,7 +9,7 @@ import "./Login.css";
 export default function Login() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { user, isLoading, isSuccess, isError, message } = useSelector(state => state.auth);
+    const { user, isSuccess, isError, message } = useSelector(state => state.auth);
 
     const [{ mail, password }, setFormData] = useState({
         username: ["", false],

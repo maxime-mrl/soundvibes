@@ -158,7 +158,7 @@ exports.deleteMusic = asyncHandler(async (req, res) => {
         const query = await musicModel.deleteOne({ _id: id });
         if (query.deletedCount !== 1) throw new Error(query);
         fs.rmSync(path.join(musicFolder, id), { recursive: true, force: true });
-        res.status(200).json({ deleted: id });
+        res.status(200).json({ status: `Successfully deleted music ${id}` });
     } catch (err) {
         if (err.code == 'ENOENT') throw { message: "No such file or directory" };
         else throw(err);

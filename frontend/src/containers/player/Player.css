@@ -34,10 +34,7 @@
 .player-mobile img {
     flex-shrink: 0;
     flex-grow: 0;
-    background-color: black;
     width: var(--size);
-    height: var(--size);
-    border-radius: var(--radius);
 }
 .reduced img { --size: 2.8em; }
 .extended img { --size: 6em; }

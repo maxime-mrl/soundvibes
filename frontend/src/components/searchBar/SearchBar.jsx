@@ -10,7 +10,7 @@ export default function SearchBar() {
     useEffect(() => {
         if (search === "") dispatch(reset());
         else dispatch(searchMusics(search));
-    }, [search])
+    }, [search, dispatch])
 
     return (
         <div className="search-input">

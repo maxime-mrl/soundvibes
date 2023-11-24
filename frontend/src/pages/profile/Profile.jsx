@@ -9,7 +9,7 @@ import "./Profile.css";
 export default function Profile() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { user, isLoading, isSuccess, isError, message } = useSelector(state => state.auth);
+    const { user, isSuccess, isError, message } = useSelector(state => state.auth);
 
     const [{ username, mail, password, confirm_password }, setFormData] = useState({
         username: ["", false],
@@ -19,9 +19,10 @@ export default function Profile() {
     });
 
     useEffect(() => {
-        dispatch(reset());
+        if (isError) toast.error(message);
+        else dispatch(reset());
+        
         if (!user || !user.token) navigate("/");
-        else if (isError) toast.error(message);
         else if (isSuccess) toast.success(`Information successfully updated`);
         if (user && !user.mail) dispatch(infos());
         else if (user && user.mail) setFormData(prevState => ({

@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { addMusic, reset } from "../../features/musics/musicsSlice";
+import { addMusic } from "../../features/musics/musicsSlice";
 import { FileInput, TextInput } from "../../components";
 import "./AddMusic.css";
 
 export default function AddMusic() {
     const dispatch = useDispatch();
-    const { isError, isSuccess, message } = useSelector(state => state.musics)
 
     const [{ title, artist, tags, year }, setFormData] = useState({
         title: ["", false],
@@ -20,16 +19,6 @@ export default function AddMusic() {
         musicFile: null,
         coverFile: null
     });
-    
-    useEffect(() => {
-        if (isError) {
-            toast.error(message);
-        }
-        if (isSuccess && message) {
-            toast.success(message);
-        }
-        dispatch(reset());
-    }, [isSuccess, isError, message])
 
     function updateForm(e) {
         let isValidated = false;

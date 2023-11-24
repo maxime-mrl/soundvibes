@@ -39,6 +39,7 @@ export default function useMusic() {
         else updateMusic({ isPlaying: false });
         // cleanup
         return () => { handlePause() }
+    // eslint-disable-next-line
     }, [ music.isPlaying, music.isLoading ])
     
     /* ------------------------------ LOADING AUDIO ----------------------------- */
@@ -96,7 +97,11 @@ export default function useMusic() {
                 });
                 audio.ontimeupdate = () => updateMusic({ progress: audio.currentTime });
             }
-        });
+        })
+        .catch(err => {
+            toast.error(err.message);
+            reset();
+        }) 
         // cleanup
         return () => {
             document.querySelectorAll("audio").forEach(audio => audio.remove())

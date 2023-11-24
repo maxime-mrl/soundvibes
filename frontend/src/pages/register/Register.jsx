@@ -9,7 +9,7 @@ import "./Register.css";
 export default function Register() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { user, isLoading, isSuccess, isError, message } = useSelector(state => state.auth);
+    const { user, isSuccess, isError, message } = useSelector(state => state.auth);
 
     const [{ username, mail, password, confirm_password, age }, setFormData] = useState({
         username: ["", false],
