@@ -3,6 +3,7 @@ const usersModel = require("../models/users.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const playlistsModel = require("../models/playlists.model");
+const { isValidObjectId } = require("mongoose");
 
 exports.registerUser = asyncHandler(async (req, res) => {
     /* ------------------------------ INPUTS CHECK ------------------------------ */
@@ -95,17 +96,18 @@ exports.setRight = asyncHandler(async (req, res) => {
         message: `You are not authorized to do this!`,
         status: 403
     };
-    const { right } = req.body;
-    /* -------------------------- FIND THE TARGET USER -------------------------- */
-    const targetParams = {};
-    if (req.body.mail) targetParams.mail = req.body.mail;
-    if (req.body.id) targetParams._id = req.body.id;
-    if (req.body.username) targetParams.username = req.body.username;
+    const { target, right } = req.body;
+    console.log(right)
     /* ------------------------- CHECK IF ENOUGH IS HERE ------------------------ */
-    if (!right || Object.keys(targetParams).length === 0) throw {
+    if (isNaN(right) && typeof right !== 'number' || !target) throw {
         message: "invalid data",
         code: 400
     };
+    /* -------------------------- FIND THE TARGET USER -------------------------- */
+    const targetParams = {};
+    if (/^[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+$/.test(target)) targetParams.mail = target;
+    else if (isValidObjectId(target)) targetParams._id = target;
+    else targetParams.username = target;
     /* -------------------------------- FIND USER ------------------------------- */
     const targetUser = await usersModel.findOne(targetParams);
     if (!targetUser) throw {
@@ -114,10 +116,7 @@ exports.setRight = asyncHandler(async (req, res) => {
     };
     /* ------------------------------- UPDATE USER ------------------------------ */
     const updatedUser = await usersModel.findByIdAndUpdate(targetUser._id, { right }, { new: true });
-    res.status(200).json({
-        updatedId: updatedUser._id,
-        newRight: updatedUser.right
-    });
+    res.status(200).json({ status: `Successfully updated user ${updatedUser._id} to right ${updatedUser.right}` });
 })
 
 exports.deleteUser = asyncHandler(async (req, res) => {

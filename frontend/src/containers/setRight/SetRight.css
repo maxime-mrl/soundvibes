@@ -1,0 +1,22 @@
+
+.right-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 680px;
+    gap: 1.2em;
+    padding: 2em 1em;
+    
+    background-color: var(--bg-85);
+    backdrop-filter: var(--blur);
+    border: var(--main-border-bg);
+    border-radius: var(--radius);
+}
+
+.right-form .btns {
+    margin: 1em 0;
+    display: flex;
+    gap: 1em;
+    justify-content: space-between;
+    width: 100%;
+}

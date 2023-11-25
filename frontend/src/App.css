@@ -159,8 +159,16 @@ html {
   transition: background-color var(--transition-duration) ease-out;
 }
 
+.btn-white {
+  background-color: var(--text);
+}
+
 .btn-fail {
   background-color: var(--fail);
+}
+
+.btn-success {
+  background-color: var(--success);
 }
 
 
@@ -170,5 +178,8 @@ html {
   }
   .btn-cta:hover {
     background-color: var(--text);
+  }
+  .btn-white:hover {
+    background-color: var(--accent);
   }
 }

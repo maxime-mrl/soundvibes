@@ -29,6 +29,7 @@ export const authSlice = createSlice({
         .addCase(login.pending, state => { state.isLoading = true })
         .addCase(infos.pending, state => { state.isLoading = true })
         .addCase(updateProfile.pending, state => { state.isLoading = true })
+        .addCase(setRight.pending, state => { state.isLoading = true })
     // success
         .addCase(logout.fulfilled, (state) => { state.user = null })
         .addCase(register.fulfilled, (state, action) => {
@@ -56,6 +57,11 @@ export const authSlice = createSlice({
                 ...action.payload
             };
         })
+        .addCase(setRight.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.message = action.payload.status;
+        })
     // rejected
         .addCase(register.rejected, (state, action) => {
             state.isLoading = false;
@@ -75,6 +81,11 @@ export const authSlice = createSlice({
             state.message = action.payload;
         })
         .addCase(infos.rejected, (state, action) => {
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload;
+        })
+        .addCase(setRight.rejected, (state, action) => {
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload;
@@ -115,6 +126,16 @@ export const infos = createAsyncThunk("auth/infos", async(_, thunkAPI) => {
 export const updateProfile = createAsyncThunk("auth/update", async(userData, thunkAPI) => {
     try {
         return await authService.put("/update", thunkAPI.getState().auth.user.token, userData);
+    } catch (err) {
+        if (err.response && err.response.data.error) return thunkAPI.rejectWithValue(err.response.data.error);
+        else if (err.message) return thunkAPI.rejectWithValue(err.message);
+        else return thunkAPI.rejectWithValue(err.toString());
+    }
+})
+
+export const setRight = createAsyncThunk("auth/right", async(data, thunkAPI) => {
+    try {
+        return await authService.put("/setright", thunkAPI.getState().auth.user.token, data);
     } catch (err) {
         if (err.response && err.response.data.error) return thunkAPI.rejectWithValue(err.response.data.error);
         else if (err.message) return thunkAPI.rejectWithValue(err.message);

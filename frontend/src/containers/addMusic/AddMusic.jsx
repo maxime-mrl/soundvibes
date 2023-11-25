@@ -54,7 +54,7 @@ export default function AddMusic() {
     }
     
     function submitForm(e) {
-        e.preventDefault()
+        e.preventDefault();
         if (!title[1] || !artist[1] || !tags[1] || !year[1] || !musicFile || !coverFile) {
             toast.error("Please fill and validate all inputs!");
             return;
