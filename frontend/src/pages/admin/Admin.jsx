@@ -43,9 +43,11 @@ export default function Admin() {
                 <h1 className="h1">Hello {user.username}!</h1>
                 <h2 className="h2">Manage:</h2>
             </header>
-            <AddMusic />
-            <DeleteMusic />
-            <SetRight />
+            <section className="admin-actions">
+                <AddMusic />
+                <SetRight />
+                <DeleteMusic />
+            </section>
             <Loader />
         </>
     )

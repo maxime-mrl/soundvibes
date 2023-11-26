@@ -37,6 +37,7 @@ export default function DeleteMusic() {
                 </div>
             </div>
             <section className="delete-music">
+                <h2 className="h2">Delete a music:</h2>
                 <SearchBar />
                 {musics && musics.length > 0
                 ? 

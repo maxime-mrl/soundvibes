@@ -2,7 +2,6 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    max-width: 680px;
     gap: 1.2em;
     padding: 2em 1em;
     
@@ -14,5 +13,6 @@
 
 .add-music-form .files {
     display: flex;
+    flex-wrap: wrap;
     gap: 1em;
 }

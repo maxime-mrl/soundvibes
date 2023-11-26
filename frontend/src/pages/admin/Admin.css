@@ -5,3 +5,16 @@
 .admin-header h1 {
     margin-bottom: 0.5em;
 }
+
+.admin-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2em;
+}
+
+.admin-actions > * {
+    flex-grow: 1;
+    width: 40%;
+    max-width: 500px;
+}
