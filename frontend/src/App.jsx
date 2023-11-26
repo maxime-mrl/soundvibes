@@ -1,25 +1,27 @@
 import { BrowserRouter as Router, Route, Routes, Navigate, Outlet } from "react-router-dom";
 import Datactx, { DataProvider } from "./context/DataContext";
 import { ToastContainer } from "react-toastify";
-import "./App.css";
-import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
 
 import { Admin, Home, Login, Profile, Register, Search, SongDetails } from "./pages";
 import { NavBar, Player } from "./containers";
 import { useContext } from "react";
 import { MusicCircle, ScrollTop } from "./components";
 
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
 
 export default function App() {
+  const { user } = useSelector(state => state.auth);
   return (
     <DataProvider>
       <Router>
           <Routes>
-            <Route element={ <LoggoutRoutes /> }>
+            <Route element={ <LoggoutRoutes user={user} /> }>
               <Route path="/login" element={ <Login /> } />
               <Route path="/register" element={ <Register /> } />
             </Route>
-            <Route element={ <LoggedRoutes /> }>
+            <Route element={ <LoggedRoutes user={user} /> }>
               <Route path="/search/*" element={ <Search /> } />
               <Route path="/details/*" element={ <SongDetails /> } />
               <Route path="/profile/" element= { <Profile /> } />
@@ -34,10 +36,10 @@ export default function App() {
   );
 }
 
-const LoggedRoutes = () => {
+const LoggedRoutes = ({user}) => {
   const { windowSize: {width}, mobileWidth } = useContext(Datactx);
   return (
-  localStorage.getItem("user") ? // using localstorage because useSelector will update as soon as there is a change thus preventing success toast
+  user ? // using localstorage because useSelector will update as soon as there is a change thus preventing success toast
   <div className={width < mobileWidth ? "page mobile" : "page pc"}>
     <ScrollTop />
     <NavBar />
@@ -51,8 +53,8 @@ const LoggedRoutes = () => {
 )
 }
 
-const LoggoutRoutes = () => (
-  !localStorage.getItem("user") ? 
+const LoggoutRoutes = ({user}) => (
+  !user ? 
   <>
     <Outlet />
   </> 

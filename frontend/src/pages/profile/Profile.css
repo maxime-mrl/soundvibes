@@ -28,9 +28,18 @@
 .profile-form .btns {
     margin: 1em 0;
     display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
     justify-content: space-between;
     width: 100%;
 }
+
+.profile-form .btns > * {
+    flex-grow: 1;
+    width: 30%;
+    min-width: 8.5em;
+}
+
 
 .admin-btn {
     display: block;

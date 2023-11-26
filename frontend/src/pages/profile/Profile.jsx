@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { infos, reset, updateProfile, logout } from "../../features/auth/authSlice";
-import { Loader, TextInput } from "../../components";
+import { infos, reset, updateProfile, logout, deleteAccount } from "../../features/auth/authSlice";
+import { ConfirmPopup, Loader, TextInput } from "../../components";
 import "./Profile.css";
 
 export default function Profile() {
@@ -81,6 +81,20 @@ export default function Profile() {
         toast.success("successfully signed out!");
         dispatch(logout());
     }
+    
+    function showConfirm() {
+        if (!confirm_password[1]) {
+            toast.error("You need to confirm your actual password!");
+            return;
+        }
+        const confirm = document.querySelector(".confirm-popup");
+        confirm.classList.add("shown");
+    }
+    function delteAccount() {
+        dispatch(deleteAccount({
+            confirmPassword: confirm_password[0]
+        }));
+    }
 
     if (!user) return (<></>)
 
@@ -152,6 +166,7 @@ export default function Profile() {
                     <div className="btns">
                         <button type="submit" className="btn-cta">Update Profile</button>
                         <button type="button" onClick={signOut} className="btn-cta btn-fail">Sign out</button>
+                        <button type="button" className="btn-cta btn-fail" onClick={showConfirm}>Delete account</button>
                     </div>
                     {user && user.right && user.right > 0 ?
                     <div>
@@ -162,6 +177,7 @@ export default function Profile() {
                     }
                 </form>
             </section>
+            <ConfirmPopup text={"to delete your account"} confirm={delteAccount} cancel={() => {}} />
             <Loader />
         </>
     )

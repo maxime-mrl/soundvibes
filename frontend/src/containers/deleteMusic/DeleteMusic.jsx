@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { CoverImage, Loader, SearchBar } from "../../components";
+import { ConfirmPopup, CoverImage, Loader, SearchBar } from "../../components";
 import { deleteSong } from "../../features/musics/musicsSlice";
 import "./DeleteMusic.css";
 
@@ -20,22 +20,14 @@ export default function DeleteMusic() {
     function handleDelete() {
         dispatch(deleteSong(deleteTarget));
         setDeleteTarget("");
-        document.querySelector(".confirm-popup").classList.remove("shown");
     }
     function handleCancel() {
         setDeleteTarget("");
-        document.querySelector(".confirm-popup").classList.remove("shown");
     }
 
     return (
         <>
-            <div className="confirm-popup">
-                <div className="popup">
-                    <p className="h2">Are you sure to delete music "<i></i>" ?</p>
-                    <button className="btn-cta btn-fail" onClick={handleDelete}>Delete</button>
-                    <button className="btn-cta" onClick={handleCancel}>Cancel</button>
-                </div>
-            </div>
+            <ConfirmPopup text={`to delete music`} confirm={handleDelete} cancel={handleCancel} customText={true} />
             <section className="delete-music">
                 <h2 className="h2">Delete a music:</h2>
                 <SearchBar />

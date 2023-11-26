@@ -23,7 +23,7 @@ export default function Register() {
         if (isError) {
             toast.error(message);
         }
-        if (isSuccess) {
+        if (isSuccess && user) {
             navigate("/")
             toast.success(`Welcome ${user.username}!`)
         }

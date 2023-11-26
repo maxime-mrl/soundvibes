@@ -2,8 +2,8 @@ const asyncHandler = require("express-async-handler");
 const usersModel = require("../models/users.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const playlistsModel = require("../models/playlists.model");
 const { isValidObjectId } = require("mongoose");
+const playlistsModel = require("../models/playlists.model");
 
 exports.registerUser = asyncHandler(async (req, res) => {
     /* ------------------------------ INPUTS CHECK ------------------------------ */

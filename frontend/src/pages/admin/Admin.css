@@ -9,7 +9,6 @@
 .admin-actions {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
     gap: 2em;
 }
 
@@ -17,4 +16,5 @@
     flex-grow: 1;
     width: 40%;
     max-width: 500px;
+    min-width: 300px;
 }

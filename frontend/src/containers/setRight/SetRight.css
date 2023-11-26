@@ -23,5 +23,5 @@
 .right-form .btns > * {
     flex-grow: 1;
     width: 30%;
-    min-width: 7em;
+    min-width: 8.5em;
 }
