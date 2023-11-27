@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { register, reset } from "../../features/auth/authSlice";
+import { register } from "../../features/auth/authSlice";
 import { Loader, TextInput } from "../../components";
 import "./Register.css";
 
 export default function Register() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { user, isSuccess, isError, message } = useSelector(state => state.auth);
+    const { user } = useSelector(state => state.auth);
 
     const [{ username, mail, password, confirm_password, age }, setFormData] = useState({
         username: ["", false],
@@ -20,18 +20,8 @@ export default function Register() {
     });
 
     useEffect(() => {
-        if (isError) {
-            toast.error(message);
-        }
-        if (isSuccess && user) {
-            navigate("/")
-            toast.success(`Welcome ${user.username}!`)
-        }
-        if (user) {
-            navigate("/")
-        }
-        dispatch(reset())
-    }, [user, isSuccess, isError, message, navigate, dispatch])
+        if (user) navigate("/");
+    }, [user, navigate])
 
     function updateForm(e) {
         let isValidated = false;

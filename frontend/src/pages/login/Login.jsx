@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { login, reset } from "../../features/auth/authSlice";
+import { login } from "../../features/auth/authSlice";
 import { Loader, TextInput } from "../../components"
 import "./Login.css";
 
 export default function Login() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { user, isSuccess, isError, message } = useSelector(state => state.auth);
+    const { user } = useSelector(state => state.auth);
 
     const [{ mail, password }, setFormData] = useState({
         username: ["", false],
@@ -56,18 +56,9 @@ export default function Login() {
     }
 
     useEffect(() => {
-        if (isError) {
-            toast.error(message);
-        }
-        if (isSuccess) {
-            toast.success(`Welcome back ${user.username}!`);
-            navigate("/");
-        }
-        if (user) {
-            navigate("/");
-        }
-        dispatch(reset())
-    }, [user, isSuccess, isError, message, navigate, dispatch])
+        if (user) navigate("/");
+    }, [user, navigate])
+
     return (
         <>
             <section className="login-header">

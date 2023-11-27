@@ -32,17 +32,24 @@ export const authSlice = createSlice({
         .addCase(setRight.pending, state => { state.isLoading = true })
         .addCase(deleteAccount.pending, state => { state.isLoading = true })
     // success
-        .addCase(logout.fulfilled, (state) => { state.user = null })
+        .addCase(logout.fulfilled, (state) => {
+            state.user = null;
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.message = "successfully signed out!";
+        })
         .addCase(register.fulfilled, (state, action) => {
             localStorage.setItem("user", JSON.stringify(action.payload));
             state.isLoading = false;
             state.isSuccess = true;
+            state.message = `Welcome ${action.payload.username}!`;
             state.user = action.payload;
         })
         .addCase(login.fulfilled, (state, action) => {
             localStorage.setItem("user", JSON.stringify(action.payload));
             state.isLoading = false;
             state.isSuccess = true;
+            state.message = `Welcome back ${action.payload.username}!`;
             state.user = action.payload;
         })
         .addCase(updateProfile.fulfilled, (state, action) => {

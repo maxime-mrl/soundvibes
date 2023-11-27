@@ -97,7 +97,6 @@ exports.setRight = asyncHandler(async (req, res) => {
         status: 403
     };
     const { target, right } = req.body;
-    console.log(right)
     /* ------------------------- CHECK IF ENOUGH IS HERE ------------------------ */
     if (isNaN(right) && typeof right !== 'number' || !target) throw {
         message: "invalid data",

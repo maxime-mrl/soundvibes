@@ -1,7 +1,6 @@
 import { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getMusic } from "../../features/musics/musicsSlice";
 import { getSimilar } from "../../features/playlists/playlistsSlice";
@@ -14,21 +13,20 @@ export default function SongDetails() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [searchparams] = useSearchParams();
+    
     const id = searchparams.get("id");
     const { music, setMusic, resetMusic } = useContext(Datactx);
-    const { infos, isError, message } = useSelector(state => state.musics);
-    const { similar, isPlaylistError, playlistMessage } = useSelector(state => state.playlists)
+    const { infos } = useSelector(state => state.musics);
+    const { similar } = useSelector(state => state.playlists)
 
     useEffect(() => {
         if (!id) navigate("/");
-        else if (isError) toast.error(message);
         else dispatch(getMusic(id))
-    }, [dispatch, navigate, isError, message, id ]);
+    }, [dispatch, navigate, id ]);
     
     useEffect(() => {
-        if (isPlaylistError) toast.error(playlistMessage);
-        else if (infos && infos.artist) dispatch(getSimilar({artist: infos.artist}))
-    }, [dispatch, navigate, isPlaylistError, playlistMessage, infos, infos.artist ])
+        if (infos && infos.artist) dispatch(getSimilar({artist: infos.artist}))
+    }, [dispatch, infos ])
 
     function playClicked() {
         if (id === music.id) return;
@@ -41,7 +39,6 @@ export default function SongDetails() {
             autoPlay: true
         }))
     }
-
 
     if (!infos) return (
         <>

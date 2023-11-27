@@ -9,7 +9,7 @@ import "./Profile.css";
 export default function Profile() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { user, isSuccess, isError, message } = useSelector(state => state.auth);
+    const { user } = useSelector(state => state.auth);
 
     const [{ username, mail, password, confirm_password }, setFormData] = useState({
         username: ["", false],
@@ -19,18 +19,15 @@ export default function Profile() {
     });
 
     useEffect(() => {
-        if (isError) toast.error(message);
-        else dispatch(reset());
-        
-        if (!user || !user.token) navigate("/");
-        else if (isSuccess) toast.success(`Information successfully updated`);
-        if (user && !user.mail) dispatch(infos());
-        else if (user && user.mail) setFormData(prevState => ({
+        if (!user) navigate("/");
+        else if (!user.mail) dispatch(infos());
+        else setFormData(prevState => ({
             ...prevState,
             username: [user.username, true],
             mail: [user.mail, true],
         }));
-    }, [user, isSuccess, isError, message, navigate, dispatch])
+        dispatch(reset());
+    }, [user, navigate, dispatch])
 
     
     function updateForm(e) {
@@ -63,11 +60,8 @@ export default function Profile() {
     }
 
     function submitForm(e) {
-        e.preventDefault()
-        if (!confirm_password[1]) {
-            toast.error("You need to confirm your actual password!");
-            return;
-        }
+        e.preventDefault();
+        if (!confirmPass()) return;
         const userData = {
             confirmPassword: confirm_password[0]
         };
@@ -77,16 +71,8 @@ export default function Profile() {
         dispatch(updateProfile(userData));
     }
 
-    function signOut() {
-        toast.success("successfully signed out!");
-        dispatch(logout());
-    }
-    
     function showConfirm() {
-        if (!confirm_password[1]) {
-            toast.error("You need to confirm your actual password!");
-            return;
-        }
+        if (!confirmPass()) return;
         const confirm = document.querySelector(".confirm-popup");
         confirm.classList.add("shown");
     }
@@ -95,8 +81,14 @@ export default function Profile() {
             confirmPassword: confirm_password[0]
         }));
     }
-
-    if (!user) return (<></>)
+    
+    function confirmPass() {
+        if (!confirm_password[1]) {
+            toast.error("You need to confirm your actual password!");
+            return false;
+        }
+        return true;
+    }
 
     return (
         <>
@@ -165,7 +157,7 @@ export default function Profile() {
                     />
                     <div className="btns">
                         <button type="submit" className="btn-cta">Update Profile</button>
-                        <button type="button" onClick={signOut} className="btn-cta btn-fail">Sign out</button>
+                        <button type="button" onClick={() => dispatch(logout())} className="btn-cta btn-fail">Sign out</button>
                         <button type="button" className="btn-cta btn-fail" onClick={showConfirm}>Delete account</button>
                     </div>
                     {user && user.right && user.right > 0 ?

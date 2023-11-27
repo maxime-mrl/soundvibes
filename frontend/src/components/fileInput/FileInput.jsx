@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./FileInput.css";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 export default function AddMusic({name, label, accept, update}) {
     const inputRef = useRef({ files: [] });
