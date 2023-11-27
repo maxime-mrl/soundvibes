@@ -3,7 +3,7 @@ import Datactx, { DataProvider } from "./context/DataContext";
 import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
 
-import { Admin, Home, Login, Profile, Register, Search, SongDetails } from "./pages";
+import { Admin, Home, Login, Playlists, Profile, Register, Search, SongDetails } from "./pages";
 import { NavBar, Player } from "./containers";
 import { useContext } from "react";
 import { MusicCircle, ScrollTop } from "./components";
@@ -25,6 +25,7 @@ export default function App() {
               <Route path="/search/*" element={ <Search /> } />
               <Route path="/details/*" element={ <SongDetails /> } />
               <Route path="/profile/" element= { <Profile /> } />
+              <Route path="/playlists/" element= { <Playlists /> } />
               <Route path="/admin/" element= { <Admin /> } />
               <Route path="/" element={ <Home /> } />
             </Route>

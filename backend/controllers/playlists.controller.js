@@ -50,6 +50,11 @@ exports.getPlaylist = asyncHandler(async (req, res) => {
     if (playlist.contentLength !== playlist.content.length) repairPlaylist(playlist);
 });
 
+exports.userPlaylist = asyncHandler(async (req, res) => {
+    const playlists = await playlistModel.find({ owner: req.user._id });
+    console.log(playlists);
+})
+
 exports.updatePlaylist = asyncHandler(async (req, res) => {
     /* ------------------------------ INPUTS CHECK ------------------------------ */
     const { id } = req.params;

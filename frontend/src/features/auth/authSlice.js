@@ -5,6 +5,7 @@ const user = JSON.parse(localStorage.getItem("user"))
 
 const initialState = {
     user: user ? user : null,
+    history: [],
     isSuccess: false,
     isError: false,
     isLoading: false,
@@ -28,6 +29,7 @@ export const authSlice = createSlice({
         .addCase(register.pending, state => { state.isLoading = true })
         .addCase(login.pending, state => { state.isLoading = true })
         .addCase(infos.pending, state => { state.isLoading = true })
+        .addCase(getHistory.pending, state => { state.isLoading = true })
         .addCase(updateProfile.pending, state => { state.isLoading = true })
         .addCase(setRight.pending, state => { state.isLoading = true })
         .addCase(deleteAccount.pending, state => { state.isLoading = true })
@@ -60,10 +62,16 @@ export const authSlice = createSlice({
         })
         .addCase(infos.fulfilled, (state, action) => {
             state.isLoading = false;
+            state.isSuccess = true;
             state.user = {
                 ...state.user,
                 ...action.payload
             };
+        })
+        .addCase(getHistory.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.history = action.payload;
         })
         .addCase(setRight.fulfilled, (state, action) => {
             state.isLoading = false;
@@ -97,6 +105,11 @@ export const authSlice = createSlice({
             state.message = action.payload;
         })
         .addCase(infos.rejected, (state, action) => {
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload;
+        })
+        .addCase(getHistory.rejected, (state, action) => {
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload;
@@ -137,6 +150,16 @@ export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
 export const infos = createAsyncThunk("auth/infos", async(_, thunkAPI) => {
     try {
         return await authService.get("/me", thunkAPI.getState().auth.user.token);
+    } catch (err) {
+        if (err.response && err.response.data.error) return thunkAPI.rejectWithValue(err.response.data.error);
+        else if (err.message) return thunkAPI.rejectWithValue(err.message);
+        else return thunkAPI.rejectWithValue(err.toString());
+    }
+})
+
+export const getHistory = createAsyncThunk("auth/history", async(_, thunkAPI) => {
+    try {
+        return await authService.get("/history", thunkAPI.getState().auth.user.token);
     } catch (err) {
         if (err.response && err.response.data.error) return thunkAPI.rejectWithValue(err.response.data.error);
         else if (err.message) return thunkAPI.rejectWithValue(err.message);

@@ -2,7 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import * as playlistsService from "./playlistsService";
 
 const initialState = {
-    similar : [],
+    playlists: [],
+    similar: [],
     isSuccess: false,
     isError: false,
     isLoading: false,

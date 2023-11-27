@@ -5,7 +5,7 @@ export default function SongList({ musics }) {
     return (
         <>
             {musics.map(music => (
-                <Song key={music._id} details={music} />
+                <Song  details={music} />
             ))}
         </>
     )

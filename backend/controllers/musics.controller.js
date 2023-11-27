@@ -113,19 +113,29 @@ exports.playMusic = asyncHandler(async (req, res) => {
     readStream.pipe(res);
     /* --------------------------------- METRIC --------------------------------- */
     if (!req.user) return; // make sure user is here
-    if (req.user.listeningHistory[0] === music.id) return; // since readStream can make multiple request count listening only once every time (need to listen another song before listening again the same song be counted)
+    if (req.user.recentHistory[0] && req.user.recentHistory[0].equals(music.id)) return; // since readStream can make multiple request count listening only once every time (need to listen another song before listening again the same song be counted)
     /* ------------------------------- USER METRIC ------------------------------ */
+    const HistoryExistingSong = req.user.fullHistory.findIndex(history => history.id.equals(music.id));
+    if (HistoryExistingSong >= 0) req.user.fullHistory[HistoryExistingSong].count++;
+    else req.user.fullHistory.push({ id: music._id, count: 1 });
+    // update both full history (w/ unique song + listened count) and recent history where song can repeat
     await usersModel.findByIdAndUpdate(req.user.id, {
         $push: {
-            listeningHistory: {
+            recentHistory: {
                 $each: [ music.id ],
                 $position: 0
             }
+        },
+        $slice: {
+            recentHistory: 20 // Limit the full history to 20 songs
+        },
+        $set: {
+            fullHistory: req.user.fullHistory
         }
     });
     /* ------------------------------ MUSIC METRIC ------------------------------ */
     // handle the "listened after" metric
-    const lastListend = req.user.listeningHistory[0]; // req.user didn't got updated -> most recent song from it is the song before this one
+    const lastListend = req.user.recentHistory[0]; // req.user didn't got updated -> most recent song from it is the song before this one
     if (!lastListend) return; // if user hasn't ever listened something
     // either create a new line for "similar" or increment the music
     const existingIndex = music.similar.findIndex(similar => similar[0] === lastListend);

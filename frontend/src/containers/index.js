@@ -5,3 +5,4 @@ export { default as SongList } from "./songList/SongList";
 export { default as AddMusic } from "./addMusic/AddMusic";
 export { default as DeleteMusic } from "./deleteMusic/DeleteMusic";
 export { default as SetRight } from "./setRight/SetRight";
+export { default as UserHistory } from "./userHistory/UserHistory";
