@@ -2,9 +2,9 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-import { reset as resetUser } from "../features/auth/authSlice";
-import { reset as resetMusic } from "../features/musics/musicsSlice";
-import { reset as resetPlaylist } from "../features/playlists/playlistsSlice";
+import { statusReset as resetUser } from "../features/auth/authSlice";
+import { statusReset as resetMusic } from "../features/musics/musicsSlice";
+import { statusReset as resetPlaylist } from "../features/playlists/playlistsSlice";
 
 export default function useNotification() {
     const dispatch = useDispatch();

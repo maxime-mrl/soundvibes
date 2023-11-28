@@ -1,14 +1,16 @@
 import { useContext, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useSwipeable } from "react-swipeable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { newPlaylist } from "../../features/playlists/playlistsSlice";
+import { getOwn, newPlaylist, updatePlaylist } from "../../features/playlists/playlistsSlice";
 import Datactx from "../../context/DataContext";
+import { PlaylistCover } from "../../components";
 import "./AddPlaylist.css";
 
 export default function AddPlaylist() {
     const dispatch = useDispatch() 
     const playlistModal = useRef();
+    const { playlists } = useSelector(state => state.playlists)
     const { addPlaylist, setAddPlaylist, windowSize } = useContext(Datactx);
     const { ref } = useSwipeable({ onSwipedDown: () => setAddPlaylist(false) });
 
@@ -28,6 +30,18 @@ export default function AddPlaylist() {
             musics: addPlaylist.ids
         }
         dispatch(newPlaylist(data))
+        setAddPlaylist(false);
+    }
+    function addToPlaylist(playlist) {
+        const contentIds = []
+        playlist.content.forEach(music => contentIds.push(music._id));
+        addPlaylist.ids.forEach(id => contentIds.push(id));
+        const updatedPlaylist = {
+            name: playlist.name,
+            musics: contentIds,
+            id: playlist._id,
+        };
+        dispatch(updatePlaylist(updatedPlaylist));
         setAddPlaylist(false);
     }
 
@@ -61,7 +75,13 @@ export default function AddPlaylist() {
         if (addPlaylist) showModal();
         else hideModal();
         return hideModal
-    }, [addPlaylist])
+    }, [addPlaylist]);
+
+    useEffect(() => {
+        if (!playlists || !playlists[0]) {
+            dispatch(getOwn())
+        }
+    }, [])
 
     return (
         <div className="add-playlist-modal" ref={playlistModal}>
@@ -69,9 +89,19 @@ export default function AddPlaylist() {
                 <FontAwesomeIcon icon="fa-solid fa-xmark" onClick={() => setAddPlaylist(false)} />
             </button>
             <h2 className="h2">Add to librairie</h2>
-            <div className="options">
+            <div className="playlists-list">
+                {playlists &&
+                playlists.map(playlist => (
+                    <button key={playlist._id} onClick={() => addToPlaylist(playlist)} className="add btn">
+                        <PlaylistCover playlist={playlist} />
+                        <p>{playlist.name}</p>
+                    </button>
+                ))
+                }
                 <button onClick={createPlaylist} className="add btn">
-                    <img src="/img/new-playlist.png" alt="Plus icon" />
+                    <div className="playlist-img">
+                        <img src="/img/new-playlist.png" alt="Plus icon" />
+                    </div>
                     <p>New playlist</p>
                 </button>
             </div>

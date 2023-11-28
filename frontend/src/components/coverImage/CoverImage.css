@@ -2,4 +2,5 @@
     aspect-ratio: 1;
     background-color: var(--text-35);
     border-radius: var(--radius);
+    max-width: 100%;
 }

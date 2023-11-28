@@ -45,6 +45,21 @@ input[type=number] {
   appearance: textfield;
 }
 
+::-webkit-scrollbar { width: 0.4em; }
+
+::-webkit-scrollbar-track { margin: 0.5em 0; }
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-35);
+  border-radius: 50em;
+  min-height: 15vh;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-50);
+}
+
+
 /* -------------------------------------------------------------------------- */
 /*                               GLOBAL VARIABLE                              */
 /* -------------------------------------------------------------------------- */
@@ -75,6 +90,7 @@ input[type=number] {
   --toastify-color-light: var(--text) !important;
   --toastify-text-color-light: var(--bg-solid) !important;
 }
+
 html {
   color: var(--text);
   font-family: 'Poppins', sans-serif;
@@ -107,20 +123,6 @@ html {
   grid-area: content;
   overflow-y: auto;
   scroll-behavior: smooth;
-}
-
-.content::-webkit-scrollbar { width: 0.4em; }
-
-.content::-webkit-scrollbar-track { margin: 0.5em 0; }
-
-.content::-webkit-scrollbar-thumb {
-  background: var(--text-35);
-  border-radius: 50em;
-  min-height: 15vh;
-}
-
-.content::-webkit-scrollbar-thumb:hover {
-  background: var(--text-50);
 }
 
 .mobile .content {

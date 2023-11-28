@@ -13,13 +13,18 @@ exports.createPlaylist = asyncHandler(async (req, res) => {
     }
     const content = typeof musics === "object" ? musics : JSON.parse(musics);
     /* ----------------------------- CREATE PLAYLIST ---------------------------- */
-    const newPlaylist = await playlistModel.create({ name, content, owner });
+    let newPlaylist = await playlistModel.create({ name, content, owner })
+    newPlaylist = await newPlaylist.populate({
+        path: "content",
+        select: "title artist genre year"
+    });
     if (!newPlaylist) throw new Error("Error while adding playlist, please try again later");
     res.status(200).json({
+        _id: newPlaylist._id,
         name: newPlaylist.name,
         owner: {
-            username: req.user.username,
-            id: req.user.id
+            _id: req.user.id,
+            username: req.user.username
         },
         content: newPlaylist.content
     });
@@ -56,8 +61,16 @@ exports.getPlaylist = asyncHandler(async (req, res) => {
 });
 
 exports.userPlaylist = asyncHandler(async (req, res) => {
-    const playlists = await playlistModel.find({ owner: req.user._id });
-    console.log(playlists);
+    const playlists = await playlistModel.find({ owner: req.user._id })
+    .populate({
+        path: "content",
+        select: "title artist genre year"
+    })
+    .populate({
+        path: "owner",
+        select: "username"
+    })
+    .select("name content owner");
     res.status(200).json(playlists);
 })
 
@@ -66,7 +79,7 @@ exports.updatePlaylist = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const { name, musics } = req.body;
     const { _id:owner } = req.user;
-    if (!musics || !JSON.parse(musics) || !name  || !owner || !id) throw { // check everything is here
+    if (!musics || (typeof musics !== "object" && !JSON.parse(musics)) || !name  || !owner) throw { // check everything is here
         message: "Missing data",
         status: 400
     };
@@ -75,13 +88,22 @@ exports.updatePlaylist = asyncHandler(async (req, res) => {
         message: "Your are not authorized to edit this!",
         status: 401
     };
-    const content = JSON.parse(musics);
+    const content = typeof musics === "object" ? musics : JSON.parse(musics);
     /* ----------------------------- UPDATE PLAYLIST ---------------------------- */
-    const updatedPlaylist = await playlistModel.findByIdAndUpdate(id, { name, content, owner });
+    const updatedPlaylist = await playlistModel.findByIdAndUpdate(id, { name, content, owner }, {new: true})
+    .populate({
+        path: "content",
+        select: "title artist genre year"
+    });
     if (!updatedPlaylist) throw new Error("Error while adding playlist, please try again later");
     res.status(200).json({
-        status: `Playlist ${name} successfully updated!`,
-        id: updatedPlaylist.id
+        _id: updatedPlaylist._id,
+        name: updatedPlaylist.name,
+        owner: {
+            _id: req.user.id,
+            username: req.user.username
+        },
+        content: updatedPlaylist.content,
     });
 });
 

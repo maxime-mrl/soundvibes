@@ -22,7 +22,13 @@ export const authSlice = createSlice({
             state.isError = false;
             state.message = "";
             // always keep the user
-        }
+        },
+        statusReset: state => {
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = false;
+                state.message = "";
+        },
     },
     extraReducers: builder => builder
     // pending
@@ -125,7 +131,7 @@ export const authSlice = createSlice({
             state.message = action.payload;
         })
 });
-export const { reset } = authSlice.actions;
+export const { reset, statusReset } = authSlice.actions;
 
 export const register = createAsyncThunk("auth/register", async (user, thunkAPI) => {
     try {

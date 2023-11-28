@@ -13,7 +13,14 @@ const initialState = {
 export const musicsSlice = createSlice({
     name: "musics",
     initialState,
-    reducers:  { reset: () => initialState },
+    reducers:  {
+        reset: () => initialState,
+        statusReset: state => {
+            state.isLoading = false;
+            state.isSuccess = false;
+            state.isError = false;
+            state.message = "";
+    } },
     extraReducers: builder => builder
     // pending
         .addCase(searchMusics.pending, state => { state.isLoading = true })
@@ -63,7 +70,7 @@ export const musicsSlice = createSlice({
             state.message = action.payload;
         })
 });
-export const { reset } = musicsSlice.actions;
+export const { reset, statusReset } = musicsSlice.actions;
 
 export const searchMusics = createAsyncThunk("musics/search", async (query, thunkAPI) => {
     try {
