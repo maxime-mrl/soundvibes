@@ -15,7 +15,7 @@ export default function SongDetails() {
     const [searchparams] = useSearchParams();
     
     const id = searchparams.get("id");
-    const { music, setMusic, resetMusic } = useContext(Datactx);
+    const { music, setMusic, resetMusic, setAddPlaylist } = useContext(Datactx);
     const { infos } = useSelector(state => state.musics);
     const { similar } = useSelector(state => state.playlists)
 
@@ -60,7 +60,7 @@ export default function SongDetails() {
                 </header>
                 <article className="music-actions">
                     <PlayCta clickAction={playClicked}/>
-                    <button className="btn"><FontAwesomeIcon icon="fa-solid fa-plus" /> Add to playlist</button>
+                    <button className="btn" onClick={(e) => {setAddPlaylist({ids: [id], e})}}><FontAwesomeIcon icon="fa-solid fa-plus" /> Add to playlist</button>
                     <button className="btn"><FontAwesomeIcon icon="fa-solid fa-share" /> Share</button>
                 </article>
             </section>

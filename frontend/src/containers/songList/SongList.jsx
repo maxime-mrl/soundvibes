@@ -4,8 +4,8 @@ import "./SongList.css";
 export default function SongList({ musics }) {
     return (
         <>
-            {musics.map(music => (
-                <Song  details={music} />
+            {musics.map((music, i) => (
+                <Song key={i} details={music} />
             ))}
         </>
     )

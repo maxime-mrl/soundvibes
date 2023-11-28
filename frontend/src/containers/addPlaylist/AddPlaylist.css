@@ -1,0 +1,56 @@
+.add-playlist-modal {
+    position: fixed;
+    z-index: 10;
+
+    padding: 1em;
+    background-color: var(--bg-85);
+    backdrop-filter: var(--blur);
+    border-radius: var(--radius);
+    border: var(--main-border-bg);
+
+    display: none;
+}
+
+.mobile .add-playlist-modal {
+    bottom: 3em;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    max-width: 500px;
+}
+.pc .add-playlist-modal {
+    top: var(--top);
+    bottom: var(--bottom);
+    left: var(--left);
+    right: var(--right);
+}
+
+.add-playlist-modal.shown {
+    display: block;
+}
+
+.add-playlist-modal .add {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    margin: 0.2em 0;
+}
+
+.add-playlist-modal img {
+    width: 3em;
+}
+
+.add-playlist-modal .h2 {
+    margin-bottom: 1em;
+}
+
+.add-playlist-modal .close-btn {
+    font-size: 1.5em;
+    margin-bottom: 1em;
+    padding: 0.1em;
+}
+
+.mobile .add-playlist-modal .close-btn {
+    display: none;
+}

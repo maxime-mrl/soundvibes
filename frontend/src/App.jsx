@@ -4,7 +4,7 @@ import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
 
 import { Admin, Home, Login, Playlists, Profile, Register, Search, SongDetails } from "./pages";
-import { NavBar, Player } from "./containers";
+import { AddPlaylist, NavBar, Player } from "./containers";
 import { useContext } from "react";
 import { MusicCircle, ScrollTop } from "./components";
 
@@ -43,6 +43,7 @@ const LoggedRoutes = ({user}) => {
   user ? // using localstorage because useSelector will update as soon as there is a change thus preventing success toast
   <div className={width < mobileWidth ? "page mobile" : "page pc"}>
     <ScrollTop />
+    <AddPlaylist />
     <NavBar />
     <div className="content">
     {/* { width > mobileWidth && <MusicCircle /> } */}
