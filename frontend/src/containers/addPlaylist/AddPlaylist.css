@@ -26,6 +26,7 @@
 }
 
 .add-playlist-modal.shown {
+    padding: 2em;
     display: block;
 }
 

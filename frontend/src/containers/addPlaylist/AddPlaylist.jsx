@@ -1,12 +1,15 @@
 import { useContext, useEffect, useRef } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useDispatch } from "react-redux";
 import { useSwipeable } from "react-swipeable";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { newPlaylist } from "../../features/playlists/playlistsSlice";
 import Datactx from "../../context/DataContext";
 import "./AddPlaylist.css";
 
 export default function AddPlaylist() {
-    const { addPlaylist, setAddPlaylist, windowSize } = useContext(Datactx);
+    const dispatch = useDispatch() 
     const playlistModal = useRef();
+    const { addPlaylist, setAddPlaylist, windowSize } = useContext(Datactx);
     const { ref } = useSwipeable({ onSwipedDown: () => setAddPlaylist(false) });
 
     function toggleplayer(e) {
@@ -19,8 +22,13 @@ export default function AddPlaylist() {
         setAddPlaylist(false);
     }
 
-    function createPlaylist(e) {
-        console.log(e.clientX)
+    function createPlaylist() {
+        const data = {
+            name: "New playlist",
+            musics: addPlaylist.ids
+        }
+        dispatch(newPlaylist(data))
+        setAddPlaylist(false);
     }
 
     function showModal() {

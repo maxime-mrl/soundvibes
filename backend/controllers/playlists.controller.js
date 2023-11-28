@@ -6,17 +6,22 @@ exports.createPlaylist = asyncHandler(async (req, res) => {
     /* ------------------------------ INPUTS CHECK ------------------------------ */
     const { name, musics } = req.body;
     const { id:owner } = req.user;
-    if (!musics || !JSON.parse(musics) || !name  || !owner) throw { // check that everything is here
+    console.log(owner)
+    if (!musics || (typeof musics !== "object" && !JSON.parse(musics)) || !name  || !owner) throw { // check that everything is here
         message: "Missing data",
         status: 400
     }
-    const content = JSON.parse(musics);
+    const content = typeof musics === "object" ? musics : JSON.parse(musics);
     /* ----------------------------- CREATE PLAYLIST ---------------------------- */
     const newPlaylist = await playlistModel.create({ name, content, owner });
     if (!newPlaylist) throw new Error("Error while adding playlist, please try again later");
     res.status(200).json({
-        status: `Playlist ${newPlaylist.name} successfully created!`,
-        id: newPlaylist.id
+        name: newPlaylist.name,
+        owner: {
+            username: req.user.username,
+            id: req.user.id
+        },
+        content: newPlaylist.content
     });
 });
 
@@ -53,6 +58,7 @@ exports.getPlaylist = asyncHandler(async (req, res) => {
 exports.userPlaylist = asyncHandler(async (req, res) => {
     const playlists = await playlistModel.find({ owner: req.user._id });
     console.log(playlists);
+    res.status(200).json(playlists);
 })
 
 exports.updatePlaylist = asyncHandler(async (req, res) => {
