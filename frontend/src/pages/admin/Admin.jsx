@@ -22,7 +22,7 @@ export default function Admin() {
             </header>
             <section className="admin-actions">
                 <AddMusic />
-                <SetRight />
+                {user.right > 1 && <SetRight />}
                 <DeleteMusic />
             </section>
             <Loader />

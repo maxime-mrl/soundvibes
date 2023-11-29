@@ -123,11 +123,9 @@ exports.playMusic = asyncHandler(async (req, res) => {
         $push: {
             recentHistory: {
                 $each: [ music.id ],
-                $position: 0
+                $position: 0,
+                $slice: 20,
             }
-        },
-        $slice: {
-            recentHistory: 20 // Limit the full history to 20 songs
         },
         $set: {
             fullHistory: req.user.fullHistory
