@@ -9,7 +9,7 @@ export default function PlaylistCover({ playlist }) {
             <CoverImage />
             :
             playlist.content.slice(0, 3).map((music, i) => (
-                <CoverImage music={music} />
+                <CoverImage music={music} key={i} />
             ))
             // (playlist.content.length > 1)
             }

@@ -11,8 +11,8 @@ export default function UserHistory() {
         if (!history || history.length === 0) dispatch(getHistory());
     }, [history, dispatch])
     return (
-        <section className="user-history">
-            <h2 className="h2">Your history:</h2>
+        <article className="user-history">
+            <h2 className="h2">Recently listened:</h2>
             {history && history.length > 0 && history[0]._id 
             ? 
                 <SongList musics={history} />
@@ -22,6 +22,6 @@ export default function UserHistory() {
                 <p>Go to home page to find recommendations</p>
             </>
             }
-        </section>
+        </article>
     )
 }

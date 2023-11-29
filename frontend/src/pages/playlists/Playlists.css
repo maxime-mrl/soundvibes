@@ -1,0 +1,16 @@
+.playlists-header {
+    padding: 2em 1em;
+}
+
+.playlists-page {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    gap: 2em;
+}
+
+.playlists-pages > * {
+    flex-grow: 1;
+    width: 40%;
+    max-width: 500px;
+    min-width: 300px;
+}
