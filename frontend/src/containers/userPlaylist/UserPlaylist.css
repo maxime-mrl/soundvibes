@@ -4,4 +4,18 @@
     backdrop-filter: var(--blur);
     background-color: var(--bg-85);
     border-radius: var(--radius);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1em 5vw;
+    height: fit-content;
+}
+
+.pc .user-playlists.column {
+    flex-direction: column;
+}
+
+.user-playlists .h2 {
+    width: 100%;
+    margin-bottom: 1em;
 }

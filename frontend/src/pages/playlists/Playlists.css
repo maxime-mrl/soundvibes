@@ -4,7 +4,9 @@
 
 .playlists-page {
     display: flex;
+    align-items: baseline;
     flex-wrap: wrap-reverse;
+    justify-content: center;
     gap: 2em;
 }
 

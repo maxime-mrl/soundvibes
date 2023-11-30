@@ -60,3 +60,8 @@
 .mobile .add-playlist-modal .close-btn {
     display: none;
 }
+
+
+.add-playlist-modal .playlist-img {
+    width: 3em;
+}
