@@ -15,7 +15,7 @@ export default function SongDetails() {
     const [searchparams] = useSearchParams();
     
     const id = searchparams.get("id");
-    const { music, setMusic, resetMusic, setAddPlaylist } = useContext(Datactx);
+    const { playNewMusic, setAddPlaylist } = useContext(Datactx);
     const { infos } = useSelector(state => state.musics);
     const { similar } = useSelector(state => state.playlists)
 
@@ -28,16 +28,13 @@ export default function SongDetails() {
         if (infos && infos.artist) dispatch(getSimilar({artist: infos.artist}))
     }, [dispatch, infos ])
 
-    function playClicked() {
-        if (id === music.id) return;
-        resetMusic()
-        setMusic(prevState => ({
-            ...prevState,
-            id,
-            title: infos.title,
-            artist: infos.artist,
-            autoPlay: true
-        }))
+    function playSimilarClicked() {
+        const similarIds = [];
+        console.log(similar);
+        similar.forEach(song => {
+            similarIds.push(song._id)
+        })
+        playNewMusic({ ids: similarIds })
     }
 
     if (!infos) return (
@@ -59,7 +56,7 @@ export default function SongDetails() {
                     </div>
                 </header>
                 <article className="music-actions">
-                    <PlayCta clickAction={playClicked}/>
+                    <PlayCta clickAction={() => {playNewMusic({ ids: [id] })}}/>
                     <button className="btn" onClick={(e) => {setAddPlaylist({ids: [id], e})}}><FontAwesomeIcon icon="fa-solid fa-plus" /> Add to playlist</button>
                     <button className="btn"><FontAwesomeIcon icon="fa-solid fa-share" /> Share</button>
                 </article>
@@ -69,7 +66,7 @@ export default function SongDetails() {
                     <h1 className="h1">
                         Featuring {infos.artist}
                     </h1>
-                    <PlayCta clickAction={() => {}}/>
+                    <PlayCta clickAction={playSimilarClicked}/>
                 </div>
                 <SongList musics={similar} />
             </section>

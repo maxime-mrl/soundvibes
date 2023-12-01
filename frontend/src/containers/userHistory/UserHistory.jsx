@@ -8,6 +8,7 @@ export default function UserHistory() {
     const dispatch = useDispatch();
     const { history } = useSelector(state => state.auth);
     useEffect(() => {
+        console.log("fetch playlist")
         if (!history || history.length === 0) dispatch(getHistory());
     }, [history, dispatch])
     return (

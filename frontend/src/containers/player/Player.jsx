@@ -9,6 +9,9 @@ export default function Player() {
     const { windowSize: {width}, mobileWidth } = useContext(Datactx);
     return (
         <>
+            <audio className="audio-player">
+                <source type="audio/mpeg"/>
+            </audio>
             {
                 width < mobileWidth ? <PlayerMobile /> : <PlayerPC />
             }

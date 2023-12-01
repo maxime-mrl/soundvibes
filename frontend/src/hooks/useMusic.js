@@ -3,10 +3,12 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 export default function useMusic() {
+    const getAudio = () =>  document.querySelector(".audio-player");
     const localMusic = JSON.parse(localStorage.getItem("music"));
     const { user } = useSelector(state => state.auth);
     const [music, setMusic] = useState({
-        id: localMusic ? localMusic.id : null,
+        ids: localMusic ? localMusic.ids : [],
+        id: localMusic ? localMusic.ids[0] : null,
         progress: localMusic ? localMusic.progress : 0,
         title: localMusic ? localMusic.title : "",
         artist: localMusic ? localMusic.artist : "",
@@ -15,18 +17,27 @@ export default function useMusic() {
         duration: null,
         isLoading: true,
         autoPlay: false,
-        isPlaying: false,
+        isPlaying: false
     });
     /* ---------------------------- VOLUME + STORAGE ---------------------------- */
     useEffect(() => {
+        const audio = getAudio();
         // update volume
-        if (music.audio && music.volume) music.audio.volume = music.volume/100;
+        if (music.audio && music.volume) audio.volume = music.volume/100;
         // update local storage
-        localStorage.setItem("music", JSON.stringify(music));
+        const toSave = {
+            ids: music.ids,
+            id: music.id,
+            progress: music.progress,
+            title: music.title,
+            artist: music.artist,
+            volume: music.volume,
+        };
+        localStorage.setItem("music", JSON.stringify(toSave));
         // update media session
-        if ('mediaSession' in navigator && music.duration) navigator.mediaSession.setPositionState({
+        if ('mediaSession' in navigator) navigator.mediaSession.setPositionState({
             playbackRate: 1,
-            position: music.progress >= music.duration ? 0 : music.progress,
+            position: audio.currentTime,
             duration: music.duration,
         });
     }, [ music ]);
@@ -44,14 +55,11 @@ export default function useMusic() {
     
     /* ------------------------------ LOADING AUDIO ----------------------------- */
     useEffect(() => {
-        if (!music.id) return; // need a music ID
-        // reset the music
-        handlePause();
-        updateMusic({ audio: null });
-        // check user
+        // check needed (user and id)
+        if (!music.ids || !music.ids[0]) return; // need a music ID
         if (!user || !user.token) return toast.error("User not found!");
         // get audio (adapted from https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams)
-        fetch(`http://${window.location.hostname}:80/api/musics/play/${music.id}`, {
+        fetch(`http://${window.location.hostname}:80/api/musics/play/${music.ids[0]}`, {
             headers: { Authorization: `Bearer ${user.token}` }
         })
         .then((response) => { // read the whole stream
@@ -70,75 +78,73 @@ export default function useMusic() {
             const blob = await new Response(stream).blob();
             return URL.createObjectURL(blob);
         })
-        // use the audio
-        .then((url) => {
+        .then((url) => { // use the audio
+            const audio = getAudio();
             // set up the audio
-            const audio = document.querySelector("audio") ? document.querySelector("audio") : document.createElement("audio");
-            const source = audio.querySelector("source") ? audio.querySelector("source") : document.createElement("source");
-            audio.appendChild(source); document.body.appendChild(audio);
-            source.src = url; source.type = "audio/mpeg";
+            audio.querySelector("source").src = url;
+            audio.load();
             // wait for load (loadedmetadata and not loaded because loaded won't fire in IOS)
             audio.onloadedmetadata = () => {
                 audio.onloadedmetadata = null;
-                if (music.progress >= audio.duration) {
-                    updateMusic({progress: 0})
-                    audio.currentTime = 0;
-                }
-                else audio.currentTime = music.progress;
-                addMetadata(audio);
-                updateMusic({
-                    audio: audio,
-                    duration: audio.duration,
-                    isLoading: false,
-                });
-                if (music.autoPlay) updateMusic({
-                    autoPlay: false,
-                    isPlaying: true
-                });
-                audio.ontimeupdate = () => updateMusic({ progress: audio.currentTime });
+                addMetadata();
             }
         })
         .catch(err => {
             toast.error(err.message);
             reset();
-        }) 
-        // cleanup
-        return () => {
-            document.querySelectorAll("audio").forEach(audio => audio.remove())
-            updateMusic({ audio: null });
-        };
+        })
     // eslint-disable-next-line
-    }, [ music.id ]);
+    }, [ music.ids ]);
 
     function handlePlay() { // play the music
-        if (!music.audio) return;
-        music.audio.play()
-        .then(() => music.audio.currentTime = music.progress)
+        const audio = getAudio();
+        audio.play()
         .catch(err => {
-            // window.location.reload();
-            updateMusic({isPlaying: false})
+            updateMusic({ isPlaying: false })
             toast.error(`Something weent wrong :/ Please try again.`);
             console.error(err);
         });
     }
 
     function handlePause() { // pause the music
-        if (!music.audio) return;
-        music.audio.pause();
-        music.audio.currentTime = music.progress;
+        const audio = getAudio();
+        audio.pause();
     }
 
+    function handleEnd() {
+        if (music.ids.length > 1) {
+            const newIds = music.ids;
+            newIds.shift();
+            playNewMusic({ ids: newIds });
+        } else {
+            updateMusic({ isPlaying: false })
+        }
+    }
 
-    function addMetadata(audio) { // metadata are everything that let the system know what audio is (to have music notification on mobile etc)
-        if (!('mediaSession' in navigator)) return;
-        navigator.mediaSession.metadata = new MediaMetadata({
-            title: music.title,
-            artist: music.artist,
-            artwork: [ { src: `http://${window.location.hostname}:80/public/${music.id}/cover.jpg` } ]
+    function addMetadata() { // metadata are everything that let the system know what audio is (to have music notification on mobile etc)
+        const audio = getAudio();
+        audio.currentTime = music.progress;
+        if (('mediaSession' in navigator)) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: music.title,
+                artist: music.artist,
+                artwork: [ { src: `http://${window.location.hostname}:80/public/${music.ids[0]}/cover.jpg` } ]
+            });
+            navigator.mediaSession.setActionHandler('play', () => updateMusic({ isPlaying: true }));
+            navigator.mediaSession.setActionHandler('pause', () => updateMusic({ isPlaying: false }));
+            navigator.mediaSession.setActionHandler("seekto", (e) => audio.currentTime = e.seekTime);
+        }
+        updateMusic({
+            audio: audio,
+            duration: audio.duration,
+            isLoading: false,
         });
-        navigator.mediaSession.setActionHandler('play', () => updateMusic({ isPlaying: true }));
-        navigator.mediaSession.setActionHandler('pause', () => updateMusic({ isPlaying: false }));
-        navigator.mediaSession.setActionHandler("seekto", (e) => audio.currentTime = e.seekTime);
+        if (music.autoPlay) updateMusic({
+            autoPlay: false,
+            isPlaying: true
+        });
+        audio.ontimeupdate = () => updateMusic({ progress: audio.currentTime });
+        audio.onended = handleEnd;
     }
 
     function updateMusic(update) { // update the music
@@ -148,10 +154,33 @@ export default function useMusic() {
         }));
     }
 
+    async function playNewMusic({ ids }) {
+        if (music.ids && music.ids[0] && (ids.length === 1 && ids[0] === music.ids[0])) return; // do nothing if stop musics
+        reset();
+        if (!user || !user.token) return toast.error("User not found!");
+        const resp = await fetch(`http://${window.location.hostname}:80/api/musics/get/${ids[0]}`, {
+            headers: { Authorization: `Bearer ${user.token}` }
+        });
+        const infos = await resp.json();
+        if (!infos || !infos.artist || !infos.title) return toast.error("infos not found");
+        updateMusic({
+            ids,
+            id: ids[0],
+            autoPlay: true,
+            title: infos.title,
+            artist: infos.artist,
+        })
+    }
+
     function reset() { // reset to default stage
         handlePause();
-        if (music.audio) music.audio.ontimeupdate = null;
+        let audio = document.querySelector(".audio-player");
+        audio.onended = null;
+        audio.onloadedmetadata = null;
+        audio.ontimeupdate = null;
+        audio.currentTime = 0;
         updateMusic({
+            ids: [],
             id: null,
             progress: 0,
             title: "",
@@ -163,8 +192,7 @@ export default function useMusic() {
             autoPlay: false,
             isPlaying: false,
         })
-        document.querySelectorAll("audio").forEach(audio => audio.remove());
     }
 
-    return [music, setMusic, reset];
+    return [music, setMusic, reset, playNewMusic];
 }
