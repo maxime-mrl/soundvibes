@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { PlayCta, PlaylistCover } from "../";
 
 export default function PlaylistPC({ playlist }) {

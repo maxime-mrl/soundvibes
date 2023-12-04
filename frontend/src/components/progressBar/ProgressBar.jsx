@@ -4,7 +4,7 @@ import { Slider } from "../";
 import "./ProgressBar.css";
 
 export default function ProgressBar({ isTimeShow }) {
-    const { music, setMusic } = useContext(Datactx);
+    const { music, updateMusic } = useContext(Datactx);
     const [durationStr, setDurationStr] = useState("-:--");
     const [progressStr, setProgressStr] = useState("-:--");
     useEffect(() => {
@@ -27,11 +27,10 @@ export default function ProgressBar({ isTimeShow }) {
         if (music.audio) {
             const audio = music.audio;
             audio.currentTime = value;
-            setMusic(prevState => ({
-                ...prevState,
+            updateMusic({
                 audio, 
                 progress: e.target.value
-            }));
+            });
         }
     }
 

@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { getHistory } from "../features/auth/authSlice";
 
 export default function useMusic() {
+    const dispatch = useDispatch();
     const getAudio = () =>  document.querySelector(".audio-player");
     const localMusic = JSON.parse(localStorage.getItem("music"));
-    const { user } = useSelector(state => state.auth);
+    const { user, history } = useSelector(state => state.auth);
     const [music, setMusic] = useState({
         ids: localMusic ? localMusic.ids : [],
         id: localMusic ? localMusic.ids[0] : null,
@@ -17,7 +19,9 @@ export default function useMusic() {
         duration: null,
         isLoading: true,
         autoPlay: false,
-        isPlaying: false
+        isPlaying: false,
+        prevLoading: false,
+        nextloading: false,
     });
     /* ---------------------------- VOLUME + STORAGE ---------------------------- */
     useEffect(() => {
@@ -191,8 +195,22 @@ export default function useMusic() {
             isLoading: true,
             autoPlay: false,
             isPlaying: false,
+            prevLoading: false,
+            nextloading: false,
         })
     }
 
-    return [music, setMusic, reset, playNewMusic];
+    useEffect(() => {
+        if (!music.prevLoading) return;
+        if (!history || history.length < 1) dispatch(getHistory());
+        else {
+            const newlist = music.ids;
+            newlist.unshift(history[0]._id);
+            playNewMusic({ids: newlist});
+        }
+        console.log(history)
+
+    }, [music.prevLoading, history])
+
+    return [music, updateMusic, reset, playNewMusic];
 }

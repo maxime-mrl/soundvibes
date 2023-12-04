@@ -75,13 +75,12 @@ export default function AddPlaylist() {
         if (addPlaylist) showModal();
         else hideModal();
         return hideModal
+    // eslint-disable-next-line
     }, [addPlaylist]);
 
     useEffect(() => {
-        if (!playlists || !playlists[0]) {
-            dispatch(getOwn())
-        }
-    }, [])
+        if (!playlists || !playlists[0]) dispatch(getOwn())
+    })
 
     return (
         <div className="add-playlist-modal" ref={playlistModal}>
