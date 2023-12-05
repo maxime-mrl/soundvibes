@@ -2,9 +2,9 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getPlaylist, updatePlaylist } from "../../features/playlists/playlistsSlice";
+import { deletePlaylist, getPlaylist, reset, updatePlaylist } from "../../features/playlists/playlistsSlice";
 import Datactx from "../../context/DataContext";
-import { Loader, PlayCta, PlaylistCover, TextInput } from "../../components";
+import { ConfirmPopup, Loader, PlayCta, PlaylistCover, ShareBtn, TextInput } from "../../components";
 import { SongList } from "../../containers";
 import "./PlaylistDetails.css";
 
@@ -24,6 +24,13 @@ export default function PlaylistDetails() {
         if (!id) navigate("/");
         else dispatch(getPlaylist(id))
     }, [dispatch, navigate, id ]);
+
+    useEffect(() => {
+        if (playlist === false) {
+            dispatch(reset());
+            navigate("/playlists");
+        }
+    }, [playlist])
 
     function ctaClick() {
         const ids = [];
@@ -53,12 +60,22 @@ export default function PlaylistDetails() {
         hideEditTitle()
     }
 
+    function showDeletePopup() {
+        const confirm = document.querySelector(".confirm-popup");
+        if (!confirm) return;
+        confirm.classList.add("shown");
+    }
+
+    function confirmDelete() {
+        dispatch(deletePlaylist(playlist._id))
+    }
+
     if (!playlist) return (
-        <>
+        <section className="playlist-details">
             <h1 className="h1">There is nothing here!</h1>
             <h2 className="h2">But is should</h2>
             <p>Wait a few second to load the playlist!</p>
-        </>
+        </section>
     )
     return (
         <>
@@ -79,7 +96,12 @@ export default function PlaylistDetails() {
                 </header>
                 <article className="playlist-actions">
                     <PlayCta clickAction={ctaClick}/>
-                    <button className="btn"><FontAwesomeIcon icon="fa-solid fa-share" /> Share</button>
+                    <ShareBtn />
+                    {playlist.owner._id === user._id &&
+                        <button onClick={showDeletePopup} className="btn-cta btn-fail delete">
+                            <FontAwesomeIcon icon="fa-solid fa-trash" /> Delete
+                        </button>
+                    }
                 </article>
                 <article className="playlist-song-list">
                     <SongList musics={playlist.content} />
@@ -87,6 +109,7 @@ export default function PlaylistDetails() {
             </section>
             
             {playlist.owner._id === user._id &&
+            <>
                 <div className="edit-title-modal hidden" ref={editPopup} onMouseDown={(e) => {if (e.target === editPopup.current) hideEditTitle()}}>
                     <form className="edit-title-form" onSubmit={submitTitle}>
                         <h2 className="h2">Edit title</h2>
@@ -109,6 +132,8 @@ export default function PlaylistDetails() {
                         <button className="btn-cta">Update</button>
                     </form>
                 </div>
+                <ConfirmPopup text={`to delete playlist ${playlist.name}`} confirm={confirmDelete} cancel={() => {}} />
+            </>
             }
             <Loader />
         </>

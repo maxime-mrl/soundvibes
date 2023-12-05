@@ -56,6 +56,7 @@ export const musicsSlice = createSlice({
         })
         .addCase(getMusic.rejected, (state, action) => {
             state.isLoading = false;
+            state.infos = false;
             state.isError = true;
             state.message = action.payload;
         })

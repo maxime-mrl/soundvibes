@@ -161,6 +161,10 @@ html {
   transition: background-color var(--transition-duration) ease-out;
 }
 
+.btn-fail-text {
+  color: var(--fail);
+}
+
 .btn-white {
   background-color: var(--text);
 }

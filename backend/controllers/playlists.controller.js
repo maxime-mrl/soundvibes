@@ -124,7 +124,10 @@ exports.deletePlaylist = asyncHandler(async (req, res) => {
     /* --------------------------------- DELETE --------------------------------- */
     const query = await playlistModel.deleteOne({ _id: id });
     if (query.deletedCount !== 1) throw new Error(query);
-    res.status(200).json({ deleted: id });
+    res.status(200).json({
+        status: "Successfully deleted playlist!",
+        _id: id
+    });
 });
 
 exports.playlistFrom = asyncHandler(async (req, res) => {

@@ -16,3 +16,4 @@ export { default as MusicCircle } from "./musicCircle/MusicCircle";
 export { default as FileInput } from "./fileInput/FileInput";
 export { default as Loader } from "./loader/Loader";
 export { default as ConfirmPopup } from "./confirmPopup/ConfirmPopup";
+export { default as ShareBtn } from "./shareBtn/ShareBtn";

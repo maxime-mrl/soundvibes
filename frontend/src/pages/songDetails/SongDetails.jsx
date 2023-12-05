@@ -2,10 +2,10 @@ import { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getMusic } from "../../features/musics/musicsSlice";
+import { getMusic, reset } from "../../features/musics/musicsSlice";
 import { getSimilar } from "../../features/playlists/playlistsSlice";
 import Datactx from "../../context/DataContext";
-import { CoverImage, Loader, PlayCta } from "../../components";
+import { CoverImage, Loader, PlayCta, ShareBtn } from "../../components";
 import { SongList } from "../../containers";
 import "./SongDetails.css";
 
@@ -23,6 +23,13 @@ export default function SongDetails() {
         if (!id) navigate("/");
         else dispatch(getMusic(id));
     }, [dispatch, navigate, id ]);
+
+    useEffect(() => {
+        if (infos === false) {
+            dispatch(reset());
+            navigate("/");
+        }
+    }, [infos])
     
     useEffect(() => {
         if (infos && infos.artist) dispatch(getSimilar({artist: infos.artist}));
@@ -35,11 +42,11 @@ export default function SongDetails() {
     }
 
     if (!infos) return (
-        <>
+        <section className="music-details">
             <h1 className="h1">There is nothing here!</h1>
             <h2 className="h2">But is should</h2>
             <p>Wait a few second to load the music!</p>
-        </>
+        </section>
     )
     return (
         <>
@@ -55,7 +62,7 @@ export default function SongDetails() {
                 <article className="music-actions">
                     <PlayCta clickAction={() => {playNewMusic({ ids: [id] })}}/>
                     <button className="btn" onClick={(e) => {setAddPlaylist({ids: [id], e})}}><FontAwesomeIcon icon="fa-solid fa-plus" /> Add to playlist</button>
-                    <button className="btn"><FontAwesomeIcon icon="fa-solid fa-share" /> Share</button>
+                    <ShareBtn />
                 </article>
             </section>
             <section className="music-similar">

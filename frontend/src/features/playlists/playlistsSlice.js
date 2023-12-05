@@ -29,6 +29,7 @@ export const playlistsSlice = createSlice({
         .addCase(getOwn.pending, state => { state.isLoading = true })
         .addCase(newPlaylist.pending, state => { state.isLoading = true })
         .addCase(updatePlaylist.pending, state => { state.isLoading = true })
+        .addCase(deletePlaylist.pending, state => { state.isLoading = true })
     // success
         .addCase(getSimilar.fulfilled, (state, action) => {
             state.isLoading = false;
@@ -61,6 +62,13 @@ export const playlistsSlice = createSlice({
             if (state.playlist && state.playlist._id === action.payload._id) state.playlist = action.payload;
             state.message = `Successfully updated playlist "${action.payload.name}!`;
         })
+        .addCase(deletePlaylist.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.playlists = state.playlists.filter(playlist => action.payload._id !== playlist._id);
+            if (state.playlist && state.playlist._id === action.payload._id) state.playlist = false;
+            state.message = `Successfully deleted playlist!`;
+        })
     // rejected
         .addCase(getSimilar.rejected, (state, action) => {
             state.isLoading = false;
@@ -69,6 +77,7 @@ export const playlistsSlice = createSlice({
         })
         .addCase(getPlaylist.rejected, (state, action) => {
             state.isLoading = false;
+            state.playlist = false;
             state.isError = true;
             state.message = action.payload;
         })
@@ -83,6 +92,11 @@ export const playlistsSlice = createSlice({
             state.message = action.payload;
         })
         .addCase(updatePlaylist.rejected, (state, action) => {
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload;
+        })
+        .addCase(deletePlaylist.rejected, (state, action) => {
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload;
@@ -133,6 +147,16 @@ export const newPlaylist = createAsyncThunk("playlist/new", async (query, thunkA
 export const updatePlaylist = createAsyncThunk("playlist/update", async (query, thunkAPI) => {
     try {
         return await playlistsService.put(`/update/${query.id}`, thunkAPI.getState().auth.user.token, query);
+    } catch (err) {
+        if (err.response && err.response.data.error) return thunkAPI.rejectWithValue(err.response.data.error);
+        else if (err.message) return thunkAPI.rejectWithValue(err.message);
+        else return thunkAPI.rejectWithValue(err.toString());
+    }
+})
+
+export const deletePlaylist = createAsyncThunk("playlist/delete", async (id, thunkAPI) => {
+    try {
+        return await playlistsService.del(`/delete/${id}`, thunkAPI.getState().auth.user.token);
     } catch (err) {
         if (err.response && err.response.data.error) return thunkAPI.rejectWithValue(err.response.data.error);
         else if (err.message) return thunkAPI.rejectWithValue(err.message);
