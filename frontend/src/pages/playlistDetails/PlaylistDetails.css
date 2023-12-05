@@ -38,6 +38,10 @@
     font-weight: bold;
 }
 
+.playlist-name-edit {
+    font-size: 0.9em;
+}
+
 .playlist-header h2 {
     font-size: 1.2rem;
     font-weight: bold;
@@ -46,4 +50,48 @@
 .playlist-actions {
     display: flex;
     gap: 1em;
+}
+
+.edit-title-modal {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 100% !important;
+    max-width: unset !important;
+    height: 100vh;
+    height: 100dvh;
+    padding: 1em;
+    backdrop-filter: var(--blur);
+    background-color: var(--bg-85);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-title-modal.hidden {
+    display: none;
+}
+
+.edit-title-form {
+    max-width: 500px;
+    width: 95%;
+    margin: 2em auto;
+    padding: 1em;
+    border: var(--main-border-bg);
+    backdrop-filter: var(--blur);
+    background-color: var(--bg-85);
+    border-radius: var(--radius);
+    display: grid;
+    gap: 2em;
+}
+
+.edit-title-form .close-btn {
+    position: absolute;
+    font-size: var(--h2-size);
+    top: 0.5rem;
+    padding-top: 0.5rem;
+    right: 1em;
 }

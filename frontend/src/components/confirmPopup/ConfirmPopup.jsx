@@ -4,12 +4,10 @@ import "./ConfirmPopup.css";
 export default function ConfirmPopup({text, customText, cancel, confirm}) {
     const popup = useRef();
     function handleConfirm() {
-        console.log(popup)
         popup.current.classList.remove("shown");
         confirm();
     }
     function handleCancel() {
-        console.log(popup)
         popup.current.classList.remove("shown");
         cancel();
     }

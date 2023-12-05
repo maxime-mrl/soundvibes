@@ -57,7 +57,8 @@ export const playlistsSlice = createSlice({
         .addCase(updatePlaylist.fulfilled, (state, action) => {
             state.isLoading = false;
             state.isSuccess = true;
-            state.playlists = state.playlists.map(playlist => action.payload._id === playlist._id ? action.payload : playlist)
+            state.playlists = state.playlists.map(playlist => action.payload._id === playlist._id ? action.payload : playlist);
+            if (state.playlist && state.playlist._id === action.payload._id) state.playlist = action.payload;
             state.message = `Successfully updated playlist "${action.payload.name}!`;
         })
     // rejected
