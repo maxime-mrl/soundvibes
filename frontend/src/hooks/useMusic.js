@@ -5,7 +5,10 @@ import { getHistory } from "../features/auth/authSlice";
 
 export default function useMusic() {
     const dispatch = useDispatch();
-    const getAudio = () =>  document.querySelector(".audio-player");
+    const getAudio = () =>  {
+        if (document.querySelector(".audio-player")) return document.querySelector(".audio-player");
+        else return new Audio();
+    };
     const localMusic = JSON.parse(localStorage.getItem("music"));
     const { user, history } = useSelector(state => state.auth);
     const [music, setMusic] = useState({
@@ -21,7 +24,7 @@ export default function useMusic() {
         autoPlay: false,
         isPlaying: false,
         prevLoading: false,
-        nextloading: false,
+        nextLoading: false,
     });
     /* ---------------------------- VOLUME + STORAGE ---------------------------- */
     useEffect(() => {
@@ -56,6 +59,38 @@ export default function useMusic() {
         return () => { handlePause() }
     // eslint-disable-next-line
     }, [ music.isPlaying, music.isLoading ])
+    
+    /* ------------------------ HANDLE PREV AND NEXT SONG ----------------------- */
+    useEffect(() => { // prev
+        if (!music.prevLoading) return;
+        if (music.progress > 10) {
+            updateMusic({
+                prevLoading: false,
+            })
+            return getAudio().currentTime = 0
+        }
+        if (!history || history.length < 1) dispatch(getHistory());
+        else { // will change
+            const newlist = music.ids;
+            console.log(newlist)
+            let pos = 1; 
+            while (newlist[0] === history[pos]._id && pos < 10) pos++;
+            
+            newlist.unshift(history[pos]._id);
+            console.log(newlist)
+            playNewMusic({ids: newlist});
+        }
+        console.log(history)
+
+    }, [music.prevLoading, history])
+    
+    useEffect(() => { // next
+        if (music.ids.length > 1 && music.nextLoading) {
+            const newList = music.ids;
+            newList.shift();
+            playNewMusic({ ids: newList });
+        }
+    }, [music.nextLoading])
     
     /* ------------------------------ LOADING AUDIO ----------------------------- */
     useEffect(() => {
@@ -137,6 +172,8 @@ export default function useMusic() {
             navigator.mediaSession.setActionHandler('play', () => updateMusic({ isPlaying: true }));
             navigator.mediaSession.setActionHandler('pause', () => updateMusic({ isPlaying: false }));
             navigator.mediaSession.setActionHandler("seekto", (e) => audio.currentTime = e.seekTime);
+            navigator.mediaSession.setActionHandler("previoustrack", () => updateMusic({ prevLoading: true }));
+            navigator.mediaSession.setActionHandler("nexttrack", () => updateMusic({ nextLoading: true }));
         }
         updateMusic({
             audio: audio,
@@ -196,21 +233,10 @@ export default function useMusic() {
             autoPlay: false,
             isPlaying: false,
             prevLoading: false,
-            nextloading: false,
+            nextLoading: false,
         })
     }
 
-    useEffect(() => {
-        if (!music.prevLoading) return;
-        if (!history || history.length < 1) dispatch(getHistory());
-        else {
-            const newlist = music.ids;
-            newlist.unshift(history[0]._id);
-            playNewMusic({ids: newlist});
-        }
-        console.log(history)
-
-    }, [music.prevLoading, history])
 
     return [music, updateMusic, reset, playNewMusic];
 }

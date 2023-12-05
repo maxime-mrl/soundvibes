@@ -80,7 +80,7 @@ export default function AddPlaylist() {
 
     useEffect(() => {
         if (!playlists || !playlists[0]) dispatch(getOwn())
-    })
+    }, [])
 
     return (
         <div className="add-playlist-modal" ref={playlistModal}>

@@ -9,7 +9,7 @@
     background-color: var(--bg-85);
     backdrop-filter: var(--blur);
     border-radius: var(--radius);
-    border: var(--main-border-bg);
+    border: var(--main-border-text);
 
     display: none;
 }

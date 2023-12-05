@@ -8,8 +8,8 @@ export default function UserPlaylist() {
     const { playlists } = useSelector(state => state.playlists);
     const dispatch = useDispatch()
     useEffect(() => {
-        if (!playlists || !playlists[0]) dispatch(getOwn)
-    }, [playlists, dispatch])
+        if (!playlists || !playlists[0]) dispatch(getOwn())
+    }, [])
     return (
         <article className={`user-playlists ${playlists.length > 4 ? "" : "column"}`}>
             <h2 className="h2">Your playlists:</h2>
