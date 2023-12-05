@@ -17,24 +17,21 @@ export default function SongDetails() {
     const id = searchparams.get("id");
     const { playNewMusic, setAddPlaylist } = useContext(Datactx);
     const { infos } = useSelector(state => state.musics);
-    const { similar } = useSelector(state => state.playlists)
+    const { similar } = useSelector(state => state.playlists);
 
     useEffect(() => {
         if (!id) navigate("/");
-        else dispatch(getMusic(id))
+        else dispatch(getMusic(id));
     }, [dispatch, navigate, id ]);
     
     useEffect(() => {
-        if (infos && infos.artist) dispatch(getSimilar({artist: infos.artist}))
+        if (infos && infos.artist) dispatch(getSimilar({artist: infos.artist}));
     }, [dispatch, infos ])
 
     function playSimilarClicked() {
         const similarIds = [];
-        console.log(similar);
-        similar.forEach(song => {
-            similarIds.push(song._id)
-        })
-        playNewMusic({ ids: similarIds })
+        similar.forEach(song => similarIds.push(song._id));
+        playNewMusic({ ids: similarIds });
     }
 
     if (!infos) return (
@@ -63,9 +60,9 @@ export default function SongDetails() {
             </section>
             <section className="music-similar">
                 <div>
-                    <h1 className="h1">
+                    <h2 className="h1">
                         Featuring {infos.artist}
-                    </h1>
+                    </h2>
                     <PlayCta clickAction={playSimilarClicked}/>
                 </div>
                 <SongList musics={similar} />

@@ -74,7 +74,7 @@ export default function AddPlaylist() {
     useEffect(() => {
         if (addPlaylist) showModal();
         else hideModal();
-        return hideModal
+        return () => { hideModal() }
     // eslint-disable-next-line
     }, [addPlaylist]);
 

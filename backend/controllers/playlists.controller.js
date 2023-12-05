@@ -52,8 +52,9 @@ exports.getPlaylist = asyncHandler(async (req, res) => {
         status: 404
     };
     res.status(200).json({
+        _id: playlist._id,
         name: playlist.name,
-        owner: playlist.owner[0].username,
+        owner: playlist.owner,
         content: playlist.content
     });
     /* -------------------- PLAYLIST HEALTH CHECK AND REPAIR -------------------- */

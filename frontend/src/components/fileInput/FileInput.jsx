@@ -1,6 +1,6 @@
+import { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./FileInput.css";
-import { useRef } from "react";
 
 export default function AddMusic({name, label, accept, update}) {
     const inputRef = useRef({ files: [] });
@@ -11,7 +11,7 @@ export default function AddMusic({name, label, accept, update}) {
                 <i>
                     {
                         inputRef.current.files[0] ?
-                        (inputRef.current.files[0].name.slice(0, 12) + "...") :
+                        (inputRef.current.files[0].name.slice(0, label.length - 3) + "...") :
                         (label)
                     }
                 </i>

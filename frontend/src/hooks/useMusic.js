@@ -64,29 +64,26 @@ export default function useMusic() {
     useEffect(() => { // prev
         if (!music.prevLoading) return;
         if (music.progress > 10) {
-            updateMusic({
-                prevLoading: false,
-            })
-            return getAudio().currentTime = 0
+            updateMusic({ prevLoading: false });
+            getAudio().currentTime = 0;
+            return;
         }
         if (!history || history.length < 1) dispatch(getHistory());
         else { // will change
-            const newlist = music.ids;
-            console.log(newlist)
+            const newlist = [...music.ids];
             let pos = 1; 
             while (newlist[0] === history[pos]._id && pos < 10) pos++;
             
             newlist.unshift(history[pos]._id);
-            console.log(newlist)
             playNewMusic({ids: newlist});
         }
-        console.log(history)
 
     }, [music.prevLoading, history])
     
     useEffect(() => { // next
         if (music.ids.length > 1 && music.nextLoading) {
-            const newList = music.ids;
+            updateMusic({ nextLoading: false });
+            const newList = [...music.ids];
             newList.shift();
             playNewMusic({ ids: newList });
         }
@@ -152,7 +149,7 @@ export default function useMusic() {
 
     function handleEnd() {
         if (music.ids.length > 1) {
-            const newIds = music.ids;
+            const newIds = [...music.ids];
             newIds.shift();
             playNewMusic({ ids: newIds });
         } else {

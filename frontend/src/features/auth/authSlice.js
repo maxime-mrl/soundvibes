@@ -65,6 +65,7 @@ export const authSlice = createSlice({
             state.isLoading = false;
             state.isSuccess = true;
             state.user = action.payload;
+            state.message = "Account successfully updated!"
         })
         .addCase(infos.fulfilled, (state, action) => {
             state.isLoading = false;

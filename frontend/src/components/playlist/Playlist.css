@@ -9,6 +9,12 @@
     font-size: 1.1em;
 }
 
+.playlist-link {
+    display: inline-flex;
+    gap: 1em;
+    align-items: center;
+}
+
 .playlist-card.pc {
     display: flex;
     align-items: center;
