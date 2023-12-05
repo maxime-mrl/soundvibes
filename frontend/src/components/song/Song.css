@@ -31,3 +31,11 @@
     font-size: 1.2em;
     align-self: right;
 }
+
+.actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    gap: clamp(2em, 4vw, 3rem);
+}

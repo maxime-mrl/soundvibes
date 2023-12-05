@@ -48,7 +48,7 @@ export default function PlaylistDetails() {
     }
 
     function submitTitle(e) {
-        const contentIds = []
+        const contentIds = [];
         playlist.content.forEach(music => contentIds.push(music._id));
         e.preventDefault();
         const data = {
@@ -57,13 +57,25 @@ export default function PlaylistDetails() {
             musics: contentIds,
         }
         dispatch(updatePlaylist(data));
-        hideEditTitle()
+        hideEditTitle();
     }
 
     function showDeletePopup() {
         const confirm = document.querySelector(".confirm-popup");
         if (!confirm) return;
         confirm.classList.add("shown");
+    }
+
+    function deleteSong({ _id:id }) {
+        if (!id) return;
+        const contentIds = [];
+        playlist.content.forEach(music => {if (id !== music._id) contentIds.push(music._id)});
+        const data = {
+            id: playlist._id,
+            name: playlist.name,
+            musics: contentIds,
+        }
+        dispatch(updatePlaylist(data));
     }
 
     function confirmDelete() {
@@ -104,7 +116,7 @@ export default function PlaylistDetails() {
                     }
                 </article>
                 <article className="playlist-song-list">
-                    <SongList musics={playlist.content} />
+                    <SongList musics={playlist.content} actions={"both"} actionHandler={deleteSong} />
                 </article>
             </section>
             

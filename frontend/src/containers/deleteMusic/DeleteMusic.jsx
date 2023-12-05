@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ConfirmPopup, CoverImage, Loader, SearchBar } from "../../components";
 import { deleteSong } from "../../features/musics/musicsSlice";
 import "./DeleteMusic.css";
+import SongList from "../songList/SongList";
 
 export default function DeleteMusic() {
     const { musics } = useSelector(state => state.musics);
@@ -40,18 +41,7 @@ export default function DeleteMusic() {
                         <p>Check the spelling or try something else...</p>
                     </>
                     :
-                    (musics.map(music => (
-                        <div key={music._id} className="song">
-                            <div className="details">
-                                <CoverImage music={music} />
-                                <div className="text">
-                                    <h2>{music.title}</h2>
-                                    <h3 className="h3">{music.artist}</h3>
-                                </div>
-                            </div>
-                            <FontAwesomeIcon onClick={() => showConfirm(music)} className="delete-btn btn" icon={"fa-solid fa-trash"} />
-                        </div>
-                    )))
+                    <SongList musics={musics} actions={"delete"} actionHandler={showConfirm} />
                     )
                 :
                 <>
