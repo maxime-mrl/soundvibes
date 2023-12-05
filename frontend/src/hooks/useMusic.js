@@ -1,23 +1,32 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { getHistory } from "../features/auth/authSlice";
 
 export default function useMusic() {
-    const dispatch = useDispatch();
     const getAudio = () =>  {
         if (document.querySelector(".audio-player")) return document.querySelector(".audio-player");
         else return new Audio();
     };
-    const localMusic = JSON.parse(localStorage.getItem("music"));
+    const initialState = JSON.parse(localStorage.getItem("music")) ? JSON.parse(localStorage.getItem("music")) : {};
+    if (!initialState.ids) initialState.ids = [];
+    if (!initialState.pos) initialState.pos = 0;
+    if (!initialState.id) initialState.id = null;
+    if (!initialState.progress) initialState.progress = 0;
+    if (!initialState.title) initialState.title = "";
+    if (!initialState.artist) initialState.artist = "";
+    if (!initialState.volume) initialState.volume = 100;
+    if (!initialState.mode) initialState.mode = false;
+
     const { user, history } = useSelector(state => state.auth);
     const [music, setMusic] = useState({
-        ids: localMusic ? localMusic.ids : [],
-        id: localMusic ? localMusic.ids[0] : null,
-        progress: localMusic ? localMusic.progress : 0,
-        title: localMusic ? localMusic.title : "",
-        artist: localMusic ? localMusic.artist : "",
-        volume: localMusic ? localMusic.volume : 100,
+        ids: initialState.ids,
+        pos: initialState.pos,
+        id: initialState.id,
+        progress: initialState.progress,
+        title: initialState.title,
+        artist: initialState.artist,
+        volume: initialState.volume,
+        mode: initialState.mode,
         audio: null,
         duration: null,
         isLoading: true,
@@ -25,6 +34,7 @@ export default function useMusic() {
         isPlaying: false,
         prevLoading: false,
         nextLoading: false,
+        ended: false,
     });
     /* ---------------------------- VOLUME + STORAGE ---------------------------- */
     useEffect(() => {
@@ -34,11 +44,13 @@ export default function useMusic() {
         // update local storage
         const toSave = {
             ids: music.ids,
+            pos: music.pos,
             id: music.id,
             progress: music.progress,
             title: music.title,
             artist: music.artist,
             volume: music.volume,
+            mode: music.mode,
         };
         localStorage.setItem("music", JSON.stringify(toSave));
         // update media session
@@ -60,42 +72,47 @@ export default function useMusic() {
     // eslint-disable-next-line
     }, [ music.isPlaying, music.isLoading ])
     
-    /* ------------------------ HANDLE PREV AND NEXT SONG ----------------------- */
-    useEffect(() => { // prev
-        if (!music.prevLoading) return;
-        if (music.progress > 10) {
-            updateMusic({ prevLoading: false });
-            getAudio().currentTime = 0;
-            return;
+    /* ---------------------- HANDLE PREV / NEXT / END SONG --------------------- */
+    useEffect(() => {
+        if (music.nextLoading) {
+            updateMusic({nextLoading: false});
+            if (music.ids.length > 1 && music.pos + 1 < music.ids.length || music.mode) {
+                let pos = music.pos + 1;
+                if (music.mode === "shuffle") pos = getRandomPos();
+                if (music.mode === "loop") {
+                    if (music.ids.length === 1) pos = music.pos;
+                    else if (pos >= music.ids.length) pos = 0;
+                }
+                playNewMusic({ ids: music.ids, pos });
+            } else if (music.progress + 2 > music.duration) {
+                updateMusic({ isPlaying: false });
+            }
         }
-        if (!history || history.length < 1) dispatch(getHistory());
-        else { // will change
-            const newlist = [...music.ids];
-            let pos = 1; 
-            while (newlist[0] === history[pos]._id && pos < 10) pos++;
-            
-            newlist.unshift(history[pos]._id);
-            playNewMusic({ids: newlist});
+        else if (music.prevLoading) {
+            updateMusic({prevLoading: false});
+            if (music.progress > 10 || music.pos === 0) getAudio().currentTime = 0;
+            else playNewMusic({ ids: music.ids, pos: music.pos - 1 });
         }
-
-    }, [music.prevLoading, history])
-    
-    useEffect(() => { // next
-        if (music.ids.length > 1 && music.nextLoading) {
-            updateMusic({ nextLoading: false });
-            const newList = [...music.ids];
-            newList.shift();
-            playNewMusic({ ids: newList });
+        else if (music.ended) {
+            updateMusic({
+                nextLoading: true,
+                ended: false
+            });
         }
-    }, [music.nextLoading])
+        function getRandomPos() {
+            let pos = Math.floor(Math.random() * music.ids.length);
+            if (pos === music.pos) return getRandomPos();
+            return pos;
+        }
+    }, [music.nextLoading, music.ended, music.prevLoading])
     
     /* ------------------------------ LOADING AUDIO ----------------------------- */
     useEffect(() => {
         // check needed (user and id)
-        if (!music.ids || !music.ids[0]) return; // need a music ID
+        if (!music.id || !music.id) return; // need a music ID
         if (!user || !user.token) return toast.error("User not found!");
         // get audio (adapted from https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams)
-        fetch(`http://${window.location.hostname}:80/api/musics/play/${music.ids[0]}`, {
+        fetch(`http://${window.location.hostname}:80/api/musics/play/${music.id}`, {
             headers: { Authorization: `Bearer ${user.token}` }
         })
         .then((response) => { // read the whole stream
@@ -147,24 +164,15 @@ export default function useMusic() {
         audio.pause();
     }
 
-    function handleEnd() {
-        if (music.ids.length > 1) {
-            const newIds = [...music.ids];
-            newIds.shift();
-            playNewMusic({ ids: newIds });
-        } else {
-            updateMusic({ isPlaying: false })
-        }
-    }
-
     function addMetadata() { // metadata are everything that let the system know what audio is (to have music notification on mobile etc)
         const audio = getAudio();
-        audio.currentTime = music.progress;
+        if (music.progress + 10 > audio.duration) audio.currentTime = 0;
+        else audio.currentTime = music.progress;
         if (('mediaSession' in navigator)) {
             navigator.mediaSession.metadata = new MediaMetadata({
                 title: music.title,
                 artist: music.artist,
-                artwork: [ { src: `http://${window.location.hostname}:80/public/${music.ids[0]}/cover.jpg` } ]
+                artwork: [ { src: `http://${window.location.hostname}:80/public/${music.id}/cover.jpg` } ]
             });
             navigator.mediaSession.setActionHandler('play', () => updateMusic({ isPlaying: true }));
             navigator.mediaSession.setActionHandler('pause', () => updateMusic({ isPlaying: false }));
@@ -182,7 +190,7 @@ export default function useMusic() {
             isPlaying: true
         });
         audio.ontimeupdate = () => updateMusic({ progress: audio.currentTime });
-        audio.onended = handleEnd;
+        audio.onended = () => updateMusic({ ended: true });
     }
 
     function updateMusic(update) { // update the music
@@ -192,18 +200,20 @@ export default function useMusic() {
         }));
     }
 
-    async function playNewMusic({ ids }) {
-        if (music.ids && music.ids[0] && (ids.length === 1 && ids[0] === music.ids[0])) return; // do nothing if stop musics
-        reset();
+    async function playNewMusic({ ids, pos }) {
+        if (!pos) pos = 0;
+        if (ids.length === 1 && ids[0] === music.id && music.mode !== "loop") return; // do nothing if one music is the same as actual
         if (!user || !user.token) return toast.error("User not found!");
-        const resp = await fetch(`http://${window.location.hostname}:80/api/musics/get/${ids[0]}`, {
+        reset();
+        const resp = await fetch(`http://${window.location.hostname}:80/api/musics/get/${ids[pos]}`, {
             headers: { Authorization: `Bearer ${user.token}` }
         });
         const infos = await resp.json();
         if (!infos || !infos.artist || !infos.title) return toast.error("infos not found");
         updateMusic({
             ids,
-            id: ids[0],
+            pos,
+            id: ids[pos],
             autoPlay: true,
             title: infos.title,
             artist: infos.artist,
@@ -219,11 +229,11 @@ export default function useMusic() {
         audio.currentTime = 0;
         updateMusic({
             ids: [],
+            pos: 0,
             id: null,
             progress: 0,
             title: "",
             artist: "",
-            // volume: 100,
             audio: null,
             duration: null,
             isLoading: true,
@@ -231,6 +241,9 @@ export default function useMusic() {
             isPlaying: false,
             prevLoading: false,
             nextLoading: false,
+            ended: false,
+            // volume: 100,
+            // mode: false,
         })
     }
 

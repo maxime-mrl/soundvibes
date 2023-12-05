@@ -4,7 +4,7 @@ import Datactx from "../../context/DataContext";
 import "./MusicControls.css";
 
 export default function MusicsControls() {
-    const { music:{isPlaying}, updateMusic, previousSong } = useContext(Datactx);
+    const { music:{isPlaying}, updateMusic } = useContext(Datactx);
     return (
         <div className="musics-controls">
             <button className="btn" onClick={() => {updateMusic({ prevLoading: true })}}>

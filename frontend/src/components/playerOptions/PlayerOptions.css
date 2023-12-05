@@ -24,3 +24,20 @@
 .player-options i {
     margin-left: 0.8ch;
 }
+
+.active-mode {
+    color: var(--accent);
+    position: relative;
+}
+
+.active-mode::after {
+    content: "";
+    position: absolute;
+    bottom: 0.2em;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0.25em;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background-color: var(--accent);
+}
