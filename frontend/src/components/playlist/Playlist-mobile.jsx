@@ -5,7 +5,7 @@ export default function PlaylistMobile({ playlist }) {
     return (
         <Link to={`/details/playlist?id=${playlist._id}`} className="playlist-card mobile">
             <PlaylistCover playlist={playlist} />
-            <p>{playlist.name}</p>
+            <p><i>{playlist.name}</i></p>
         </Link>
     )
 }

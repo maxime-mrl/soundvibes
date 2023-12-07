@@ -24,8 +24,11 @@
     border-radius: var(--radius);
 }
 
-.music-header div {
+.pc .music-header div {
     width: 60%;
+}
+
+.music-header div {
     display: grid;
     gap: 0.8em;
 }
@@ -34,6 +37,8 @@
 .music-header h1 {
     font-size: 2rem;
     font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .music-header h2 {
     font-size: 1.2rem;
@@ -51,6 +56,12 @@
     justify-content: space-around;
     align-items: center;
     margin-bottom: 1em;
+    overflow: hidden;
+}
+
+.music-similar > div > * {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .music-similar h1 {

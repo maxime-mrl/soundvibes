@@ -12,6 +12,8 @@
 .playlist-link {
     display: inline-flex;
     gap: 1em;
+    width: 50%;
+    flex-grow: 1;
     align-items: center;
 }
 
@@ -25,6 +27,7 @@
 }
 
 .playlist-card.pc p {
+    text-overflow: ellipsis;
     overflow: hidden;
 }
 
@@ -54,4 +57,9 @@
     padding: 0 0.5em;
     text-align: center;
     background-color: var(--bg-solid);
+}
+
+.playlist-card.mobile i {
+    text-overflow: ellipsis;
+    overflow: hidden;
 }

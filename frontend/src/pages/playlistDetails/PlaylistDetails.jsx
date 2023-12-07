@@ -116,7 +116,7 @@ export default function PlaylistDetails() {
                     }
                 </article>
                 <article className="playlist-song-list">
-                    <SongList musics={playlist.content} actions={"both"} actionHandler={deleteSong} />
+                    <SongList musics={playlist.content} actions={playlist.owner._id === user._id && "both"} actionHandler={deleteSong} />
                 </article>
             </section>
             

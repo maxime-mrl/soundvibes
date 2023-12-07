@@ -91,7 +91,12 @@
     width: 4.5em;
 }
 
-.navbar-pc .text {
+.navbar.pc .text {
+    overflow: hidden;
+}
+
+.navbar.pc .text > * {
+    text-overflow: ellipsis;
     overflow: hidden;
 }
 
