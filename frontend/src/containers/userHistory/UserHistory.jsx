@@ -8,7 +8,7 @@ export default function UserHistory() {
     const dispatch = useDispatch();
     const { history } = useSelector(state => state.auth);
     useEffect(() => {
-        if (!history || history.length === 0) dispatch(getHistory());
+        dispatch(getHistory());
     }, [])
     return (
         <article className="user-history">

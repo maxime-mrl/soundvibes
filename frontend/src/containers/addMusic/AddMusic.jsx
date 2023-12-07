@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { addMusic } from "../../features/musics/musicsSlice";
 import { FileInput, TextInput } from "../../components";
+import Datactx from "../../context/DataContext";
 import "./AddMusic.css";
 
 export default function AddMusic() {
     const dispatch = useDispatch();
+    const { setSearch } = useContext(Datactx);
 
     const [{ title, artist, tags, year }, setFormData] = useState({
         title: ["", false],
@@ -67,6 +69,7 @@ export default function AddMusic() {
         data.append("audio", musicFile);
         data.append("cover", coverFile);
         dispatch(addMusic(data));
+        setSearch("");
     }
 
     return (

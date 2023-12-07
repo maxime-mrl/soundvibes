@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ConfirmPopup, CoverImage, Loader, SearchBar } from "../../components";
+import { ConfirmPopup, Loader, SearchBar } from "../../components";
 import { deleteSong } from "../../features/musics/musicsSlice";
 import "./DeleteMusic.css";
 import SongList from "../songList/SongList";

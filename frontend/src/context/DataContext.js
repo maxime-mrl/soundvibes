@@ -10,13 +10,15 @@ export function DataProvider({ children }) {
     const windowSize = useWindowSize();
     const mobileWidth = 700;
     const [music, updateMusic, resetMusic, playNewMusic] = useMusic();
-    const [addPlaylist, setAddPlaylist] = useState(false)
+    const [addPlaylist, setAddPlaylist] = useState(false);
+    const [search, setSearch] = useState("");
 
     return (
         <Datactx.Provider value={{
             windowSize, mobileWidth,
             music, updateMusic, resetMusic, playNewMusic,
-            addPlaylist, setAddPlaylist
+            addPlaylist, setAddPlaylist,
+            search, setSearch
         }} >
             {children}
         </Datactx.Provider>

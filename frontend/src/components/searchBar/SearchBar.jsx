@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useContext } from "react";
 import { useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { reset, searchMusics } from "../../features/musics/musicsSlice";
+import Datactx from "../../context/DataContext";
 import "./SearchBar.css";
 
 export default function SearchBar() {
-    const dispatch = useDispatch()
-    const [search, setSearch] = useState("");
+    const dispatch = useDispatch();
+    const {search, setSearch} = useContext(Datactx)
     useEffect(() => {
         if (search === "") dispatch(reset());
         else dispatch(searchMusics(search));

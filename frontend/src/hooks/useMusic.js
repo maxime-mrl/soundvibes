@@ -5,7 +5,10 @@ import { toast } from "react-toastify";
 export default function useMusic() {
     const getAudio = () =>  {
         if (document.querySelector(".audio-player")) return document.querySelector(".audio-player");
-        else return new Audio();
+        else {
+            resetState();
+            return new Audio();
+        };
     };
     const initialState = JSON.parse(localStorage.getItem("music")) ? JSON.parse(localStorage.getItem("music")) : {};
     if (!initialState.ids) initialState.ids = [];
@@ -76,7 +79,7 @@ export default function useMusic() {
     useEffect(() => {
         if (music.nextLoading) {
             updateMusic({nextLoading: false});
-            if (music.ids.length > 1 && music.pos + 1 < music.ids.length || music.mode) {
+            if (music.ids.length > 1 && music.pos + 1 < music.ids.length || music.mode === "loop") {
                 let pos = music.pos + 1;
                 if (music.mode === "shuffle") pos = getRandomPos();
                 if (music.mode === "loop") {
@@ -222,11 +225,14 @@ export default function useMusic() {
 
     function reset() { // reset to default stage
         handlePause();
-        let audio = document.querySelector(".audio-player");
+        let audio = getAudio();
         audio.onended = null;
         audio.onloadedmetadata = null;
         audio.ontimeupdate = null;
         audio.currentTime = 0;
+        resetState()
+    }
+    function resetState() {
         updateMusic({
             ids: [],
             pos: 0,

@@ -47,6 +47,8 @@ export const musicsSlice = createSlice({
             state.isLoading = false;
             state.isSuccess = true;
             state.message = action.payload.status;
+            state.musics = state.musics.filter(music => action.payload._id !== music._id);
+            if (state.musics.length === 0) state.musics = ["No musics found"]
         })
     // rejected
         .addCase(searchMusics.rejected, (state, action) => {
