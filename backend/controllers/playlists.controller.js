@@ -1,12 +1,12 @@
 const asyncHandler = require("express-async-handler");
 const playlistModel = require("../models/playlists.model");
 const musicsModel = require("../models/musics.model");
+const recommendationsModel = require("../models/recommendations.model");
 
 exports.createPlaylist = asyncHandler(async (req, res) => {
     /* ------------------------------ INPUTS CHECK ------------------------------ */
     const { name, musics } = req.body;
     const { id:owner } = req.user;
-    console.log(owner)
     if (!musics || (typeof musics !== "object" && !JSON.parse(musics)) || !name  || !owner) throw { // check that everything is here
         message: "Missing data",
         status: 400
@@ -147,7 +147,11 @@ exports.playlistFrom = asyncHandler(async (req, res) => {
     res.status(200).json(musics);
 });
 
-exports.test = asyncHandler(require("./test"))
+exports.getRecomendations = asyncHandler(async (req, res) => {
+    const recommendations = await createRecomendation(req.user.fullHistory);
+    console.log(recommendations)
+    res.end();
+})
 
 // called when one or more music id isn't existing, update the playlist -- non existing music id can mainly happen in the case of a deleted musics
 async function repairPlaylist({id, content:playlist, name, owner}) { // no user return: the user arleady got his playlist w/ all valid musics, this is only used to help the database stay clean
@@ -156,4 +160,42 @@ async function repairPlaylist({id, content:playlist, name, owner}) { // no user 
         playlist.forEach(music => validIds.push(music._id)); // push every id that we have got from the populate which are all the valid musics
         await playlistModel.findByIdAndUpdate(id, { name, content: validIds, owner });
     } catch (err) { console.error(err) }; // since there is no infos of this happening to the user simply log the error on the server
+}
+
+async function createRecomendation(history) {
+    /* -------------------- GENERATE NEW USER RECOMENDATIONS -------------------- */
+    // get at least five of the mosts listened musics
+    let minimumListened = 10;
+    let filteredHistory = history.filter(music => music.count > minimumListened).map(music => music.id);
+    while (filteredHistory.length < 5 && minimumListened > 0) {
+        minimumListened--;
+        filteredHistory = history.filter(music => music.count > minimumListened).map(music => music.id);
+    }
+    // trim the top listened randomly to three ids
+    while (filteredHistory.length > 3) filteredHistory.splice(Math.floor(Math.random() * filteredHistory.length), 1)
+    // get the similars from db
+    const similars = await musicsModel.find({ '_id': { $in: filteredHistory } }).select("similar");
+    // parse a bit
+    for (let i = 0; i < similars.length; i++) {
+        let similar = similars[i].similar
+        if (similar.length < 15) { // if too few, add some
+            let minListened = 10;
+            let filtredSimilar = similar.filter(music => music[1] > minimumListened)
+            while (filtredSimilar.length < 5 && minListened >= 0) {
+                minListened--;
+                filtredSimilar = similar.filter(music => music[1] > minListened)
+            }
+            const more = await musicsModel.findById(filtredSimilar[Math.floor(Math.random() * filtredSimilar.length)][0]).select("similar");
+            if (more && more.similar) similar.push(...more.similar);
+        } else if (similar.length > 30) { // if too much remove some id based on listening count
+            let minListened = 0;
+            while (similar.length > 30) {
+                minListened++;
+                similar = similar.filter(music => music.count > minimumListened);
+            }
+        }
+        // get only the ids
+        similars[i] = similar.map(music => music[0]);
+    }
+    return similars
 }
