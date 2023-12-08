@@ -136,7 +136,7 @@ exports.playMusic = asyncHandler(async (req, res) => {
     const lastListend = req.user.recentHistory[0]; // req.user didn't got updated -> most recent song from it is the song before this one
     if (!lastListend) return; // if user hasn't ever listened something
     // either create a new line for "similar" or increment the music
-    const existingIndex = music.similar.findIndex(similar => similar[0] === lastListend);
+    const existingIndex = music.similar.findIndex(similar => lastListend.equals(similar[0]));
     if (existingIndex >= 0) music.similar[existingIndex][1]++;
     else music.similar.push([ lastListend, 1 ]);
     // update the music in db

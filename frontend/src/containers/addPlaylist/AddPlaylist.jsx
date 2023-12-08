@@ -50,7 +50,6 @@ export default function AddPlaylist() {
         // set position (for pc)
         const { clientX, clientY } = addPlaylist.e;
         let position = "";
-        console.log(addPlaylist.e.clientX);
         if (clientX > windowSize.width / 2) position += `--right: ${windowSize.width - clientX}px; `;
         else position += `--left: ${clientX}px; `;
         if (clientY > windowSize.height / 2) position += `--bottom: ${windowSize.height - clientY}px; `;

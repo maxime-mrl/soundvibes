@@ -41,7 +41,7 @@ export default function App() {
 const LoggedRoutes = ({user}) => {
   const { windowSize: {width}, mobileWidth } = useContext(Datactx);
   return (
-  user ? // using localstorage because useSelector will update as soon as there is a change thus preventing success toast
+  user ?
   <div className={width < mobileWidth ? "page mobile" : "page pc"}>
     <ScrollTop />
     <AddPlaylist />
@@ -57,7 +57,7 @@ const LoggedRoutes = ({user}) => {
 }
 
 const LoggoutRoutes = ({user}) => (
-  !user ? 
+  !user ?
   <>
     <Outlet />
   </> 

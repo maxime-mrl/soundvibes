@@ -30,7 +30,6 @@ export async function del(endpoint, token, data) {
         headers: { Authorization: `Bearer ${token}` },
         data
     };
-    console.log(config)
     const resp = await axios.delete(API_URL + endpoint, config);
     if (resp.data && resp.data.error) throw new Error(resp.data.error);
     return resp.data;

@@ -9,9 +9,6 @@ exports.protect = asyncHandler(async (req, res, next) => { // check if user is l
     /* ----------------------------- retrieve token ----------------------------- */
     let token;
     if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) token = req.headers.authorization.split(" ")[1]; // get token from bearer header
-    else if (req.cookies && req.cookies.token) token = req.cookies.token; // get token from cookies
-    // console.log(`url: ${req.url} token: ${token}`)
-    // console.log(req.cookies)
     if (!token) throw tokenError;
     /* ------------------------------ verify token ------------------------------ */
     try {
