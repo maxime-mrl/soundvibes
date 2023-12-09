@@ -5,6 +5,7 @@ const initialState = {
     playlists: [],
     playlist: null,
     similar: [],
+    recommendations: [],
     isSuccess: false,
     isError: false,
     isLoading: false,
@@ -30,6 +31,7 @@ export const playlistsSlice = createSlice({
         .addCase(newPlaylist.pending, state => { state.isLoading = true })
         .addCase(updatePlaylist.pending, state => { state.isLoading = true })
         .addCase(deletePlaylist.pending, state => { state.isLoading = true })
+        .addCase(getRecommendations.pending, state => { state.isLoading = true })
     // success
         .addCase(getSimilar.fulfilled, (state, action) => {
             state.isLoading = false;
@@ -69,6 +71,11 @@ export const playlistsSlice = createSlice({
             if (state.playlist && state.playlist._id === action.payload._id) state.playlist = false;
             state.message = `Successfully deleted playlist!`;
         })
+        .addCase(getRecommendations.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.recommendations = action.payload;
+        })
     // rejected
         .addCase(getSimilar.rejected, (state, action) => {
             state.isLoading = false;
@@ -97,6 +104,12 @@ export const playlistsSlice = createSlice({
             state.message = action.payload;
         })
         .addCase(deletePlaylist.rejected, (state, action) => {
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload;
+        })
+        .addCase(getRecommendations.rejected, (state, action) => {
+            state.recommendations = [];
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload;
@@ -157,6 +170,16 @@ export const updatePlaylist = createAsyncThunk("playlist/update", async (query, 
 export const deletePlaylist = createAsyncThunk("playlist/delete", async (id, thunkAPI) => {
     try {
         return await playlistsService.del(`/delete/${id}`, thunkAPI.getState().auth.user.token);
+    } catch (err) {
+        if (err.response && err.response.data.error) return thunkAPI.rejectWithValue(err.response.data.error);
+        else if (err.message) return thunkAPI.rejectWithValue(err.message);
+        else return thunkAPI.rejectWithValue(err.toString());
+    }
+})
+
+export const getRecommendations = createAsyncThunk("playlist/recommendations", async (_, thunkAPI) => {
+    try {
+        return await playlistsService.get(`/recommendations`, thunkAPI.getState().auth.user.token);
     } catch (err) {
         if (err.response && err.response.data.error) return thunkAPI.rejectWithValue(err.response.data.error);
         else if (err.message) return thunkAPI.rejectWithValue(err.message);

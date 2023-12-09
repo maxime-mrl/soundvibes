@@ -79,7 +79,7 @@ export default function useMusic() {
     useEffect(() => {
         if (music.nextLoading) {
             updateMusic({nextLoading: false});
-            if (music.ids.length > 1 && (music.pos + 1 < music.ids.length || music.mode === "shuffle") || music.mode === "loop") {
+            if ((music.ids.length > 1 && (music.pos + 1 < music.ids.length || music.mode === "shuffle")) || music.mode === "loop") {
                 let pos = music.pos + 1;
                 if (music.mode === "shuffle") pos = getRandomPos();
                 if (music.mode === "loop") {

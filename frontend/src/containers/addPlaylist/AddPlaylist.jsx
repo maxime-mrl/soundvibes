@@ -32,6 +32,7 @@ export default function AddPlaylist() {
         dispatch(newPlaylist(data))
         setAddPlaylist(false);
     }
+    
     function addToPlaylist(playlist) {
         const contentIds = []
         playlist.content.forEach(music => contentIds.push(music._id));

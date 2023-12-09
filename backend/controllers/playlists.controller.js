@@ -147,13 +147,9 @@ exports.playlistFrom = asyncHandler(async (req, res) => {
     res.status(200).json(musics);
 });
 
-exports.getRecomendations = asyncHandler(async (req, res) => {
+exports.getRecommendations = asyncHandler(async (req, res) => {
     /* -------------------- GET THE EXISTING RECOMMENDATIONS -------------------- */
-    const existingRecomendations = await recommendationsModel.find({ targetUser: req.user._id })
-    .populate({
-        path: "content",
-        select: "title artist genre year"
-    });
+    const existingRecomendations = await recommendationsModel.find({ targetUser: req.user._id });
     /* -------------------- CHECK IF EXISTING AND NOT EXPIRED ------------------- */
     if (existingRecomendations && existingRecomendations.length > 1 && existingRecomendations[0].name) {
         // recomendations are here
@@ -163,7 +159,7 @@ exports.getRecomendations = asyncHandler(async (req, res) => {
             const lastUpdate = new Date(recomendation.updatedAt).getTime();
             if (lastUpdate - limitDate <= 0) expired = true;
         });
-        if (!expired) return res.status(200).json(existingRecomendations);
+        if (!expired) return sendRecommendations(existingRecomendations, res)
         // remove the existing recommendations if expired
         // don't update to avoid all problems with incorrect count (ex less than 3 music etc)
         await recommendationsModel.deleteMany({ targetUser: req.user._id });
@@ -210,12 +206,7 @@ exports.getRecomendations = asyncHandler(async (req, res) => {
     }
     /* ------------------------- SAVE NEW RECOMMANDATION ------------------------ */
     const added = await recommendationsModel.insertMany(similars);
-    const recomendations = await recommendationsModel.populate(added, {
-        path: "content",
-        select: "title artist genre year"
-    });
-    console.log(recomendations)
-    res.status(200).json(recomendations)
+    sendRecommendations(added, res);
 })
 
 // called when one or more music id isn't existing, update the playlist -- non existing music id can mainly happen in the case of a deleted musics
@@ -225,4 +216,17 @@ async function repairPlaylist({id, content:playlist, name, owner}) { // no user 
         playlist.forEach(music => validIds.push(music._id)); // push every id that we have got from the populate which are all the valid musics
         await playlistModel.findByIdAndUpdate(id, { name, content: validIds, owner });
     } catch (err) { console.error(err) }; // since there is no infos of this happening to the user simply log the error on the server
+}
+
+async function sendRecommendations(rawRecomendations, res) {
+    const recomendations = (await recommendationsModel.populate(rawRecomendations, {
+        path: "content",
+        select: "title artist genre year"
+    })).map(recomendation => ({
+        _id: recomendation._id,
+        name: recomendation.name,
+        content: recomendation.content
+    }));
+
+    res.status(200).json(recomendations)
 }
