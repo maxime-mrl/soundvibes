@@ -148,22 +148,29 @@ exports.playlistFrom = asyncHandler(async (req, res) => {
 });
 
 exports.getRecomendations = asyncHandler(async (req, res) => {
-    const recommendations = await createRecomendation(req.user.fullHistory);
-    console.log(recommendations)
-    res.end();
-})
-
-// called when one or more music id isn't existing, update the playlist -- non existing music id can mainly happen in the case of a deleted musics
-async function repairPlaylist({id, content:playlist, name, owner}) { // no user return: the user arleady got his playlist w/ all valid musics, this is only used to help the database stay clean
-    try {
-        const validIds = [];
-        playlist.forEach(music => validIds.push(music._id)); // push every id that we have got from the populate which are all the valid musics
-        await playlistModel.findByIdAndUpdate(id, { name, content: validIds, owner });
-    } catch (err) { console.error(err) }; // since there is no infos of this happening to the user simply log the error on the server
-}
-
-async function createRecomendation(history) {
+    /* -------------------- GET THE EXISTING RECOMMENDATIONS -------------------- */
+    const existingRecomendations = await recommendationsModel.find({ targetUser: req.user._id })
+    .populate({
+        path: "content",
+        select: "title artist genre year"
+    });
+    /* -------------------- CHECK IF EXISTING AND NOT EXPIRED ------------------- */
+    if (existingRecomendations && existingRecomendations.length > 1 && existingRecomendations[0].name) {
+        // recomendations are here
+        const limitDate = new Date().getTime() - 8.64 * 10**7;
+        let expired = false;
+        existingRecomendations.forEach(recomendation => {
+            const lastUpdate = new Date(recomendation.updatedAt).getTime();
+            if (lastUpdate - limitDate <= 0) expired = true;
+        });
+        if (!expired) return res.status(200).json(existingRecomendations);
+        // remove the existing recommendations if expired
+        // don't update to avoid all problems with incorrect count (ex less than 3 music etc)
+        await recommendationsModel.deleteMany({ targetUser: req.user._id });
+    }
+    // At this point either if because deleted or not, no recomendations left -- create some new
     /* -------------------- GENERATE NEW USER RECOMENDATIONS -------------------- */
+    let history = req.user.fullHistory;
     // get at least five of the mosts listened musics
     let minimumListened = 10;
     let filteredHistory = history.filter(music => music.count > minimumListened).map(music => music.id);
@@ -194,8 +201,28 @@ async function createRecomendation(history) {
                 similar = similar.filter(music => music.count > minimumListened);
             }
         }
-        // get only the ids
-        similars[i] = similar.map(music => music[0]);
+        // update to the well parsed similar
+        similars[i] = {
+            name: `Daily mix ${i + 1}`,
+            targetUser: req.user._id,
+            content: similar.map(music => music[0]),
+        };
     }
-    return similars
+    /* ------------------------- SAVE NEW RECOMMANDATION ------------------------ */
+    const added = await recommendationsModel.insertMany(similars);
+    const recomendations = await recommendationsModel.populate(added, {
+        path: "content",
+        select: "title artist genre year"
+    });
+    console.log(recomendations)
+    res.status(200).json(recomendations)
+})
+
+// called when one or more music id isn't existing, update the playlist -- non existing music id can mainly happen in the case of a deleted musics
+async function repairPlaylist({id, content:playlist, name, owner}) { // no user return: the user arleady got his playlist w/ all valid musics, this is only used to help the database stay clean
+    try {
+        const validIds = [];
+        playlist.forEach(music => validIds.push(music._id)); // push every id that we have got from the populate which are all the valid musics
+        await playlistModel.findByIdAndUpdate(id, { name, content: validIds, owner });
+    } catch (err) { console.error(err) }; // since there is no infos of this happening to the user simply log the error on the server
 }
