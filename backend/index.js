@@ -16,10 +16,7 @@ app.use(cors({
     credentials: true,
     origin: '*'
 }));
-app.use("/", (req, res, next) => {
-    // console.log("incoming request " + req.url);
-    next();
-}, router);
+app.use("/", router);
 
 // start the server
 db.connect()

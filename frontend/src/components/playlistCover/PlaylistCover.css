@@ -4,5 +4,11 @@
     grid-template-rows: auto auto;
     max-width: 100%;
     aspect-ratio: 1;
+    overflow: hidden;
+    flex-shrink: 0;
     border-radius: var(--radius);
+}
+
+.playlist-img .cover-img {
+    border-radius: 0;
 }

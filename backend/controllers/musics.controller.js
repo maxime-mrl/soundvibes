@@ -207,7 +207,7 @@ exports.searchMusic = asyncHandler(async (req, res) => {
         filteredMusics = await musicFinder({ textQuery, regexQuery: lastWord });
     }
     /* ----------------------------- RESPONSE RESULT ---------------------------- */
-    if (filteredMusics.length > 0) res.status(200).json(filteredMusics);
+    if (filteredMusics.length > 0) res.status(200).json(filteredMusics.slice(0, 30));
     else res.status(200).json([ "No musics found" ]);
 });
 

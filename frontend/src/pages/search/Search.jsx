@@ -1,10 +1,17 @@
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getHistory } from "../../features/auth/authSlice";
 import { Loader, SearchBar } from "../../components";
 import { SongList } from "../../containers";
 import "./Search.css";
 
 export default function Search() {
+    const dispatch = useDispatch();
     const { musics } = useSelector(state => state.musics);
+    const { history } = useSelector(state => state.auth);
+    useEffect(() => {
+        dispatch(getHistory());
+    }, [])
     return (
         <>
             <section className="search">
@@ -23,7 +30,10 @@ export default function Search() {
                 :
                 <>
                     <Loader />
-                    <h2 className="h2">Search something</h2>
+                    <div className="history">
+                        <h2 className="h2">Recently listened</h2>
+                        <SongList musics={history} />
+                    </div>
                 </>
                 }
             </section>

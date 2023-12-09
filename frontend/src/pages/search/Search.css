@@ -8,3 +8,7 @@ section.search {
     background-color: var(--bg-85);
     border-radius: var(--radius);
 }
+
+.search .history {
+    margin-top: 2em;
+}
