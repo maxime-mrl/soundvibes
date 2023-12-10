@@ -68,7 +68,6 @@ exports.getHistory = asyncHandler(async (req, res) => {
             path: "recentHistory",
             select: "title artist genre year"
         })
-    console.log()
     /* ---------------------------- RETURN USER INFOS --------------------------- */
     res.status(200).json([
         ...user.recentHistory
@@ -135,7 +134,6 @@ exports.deleteUser = asyncHandler(async (req, res) => {
     /* ------------------------------ INPUTS CHECK ------------------------------ */
     const { confirmPassword } = req.body;
     const user = await usersModel.findOne({_id: req.user._id});
-    console.log(user)
     // necessary datas are presents
     if (!confirmPassword || !user) throw {
         message: "Missing data",
@@ -147,8 +145,9 @@ exports.deleteUser = asyncHandler(async (req, res) => {
         status: 400
     };
     /* ------------------------ DELETE SELF USER ACCOUNT ------------------------ */
-    const query = await usersModel.deleteOne({_id: req.user._id});
+    const query = await usersModel.deleteOne({_id: user._id });
     await playlistsModel.deleteMany({ owner: user._id });
+    await recommendationsModel.deleteMany({ targetUser: user._id });
     if (!query.acknowledged) throw new Error(query);
     res.status(200).json({ deleted: req.user.mail });
 });

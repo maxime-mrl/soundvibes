@@ -6,7 +6,7 @@ export default function useMusic() {
     const getAudio = () =>  {
         if (document.querySelector(".audio-player")) return document.querySelector(".audio-player");
         else {
-            resetState();
+            if (music && music.id) resetState();
             return new Audio();
         };
     };

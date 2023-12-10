@@ -5,19 +5,17 @@ module.exports = (err, doc, next) => { // detect and handle specific errors thro
         err.status = 200;
     }
     if (err.errors && err.errors[Object.keys(err.errors)]) {
-        if (err.errors[Object.keys(err.errors)].kind === 'minlength') { // input too short
-            const details = err.errors[Object.keys(err.errors)];
-            err = new Error(`Your ${details.path} ${details.value} is too short! It must be at least ${details.properties.minlength} characters long.`);
+        const error = err.errors[Object.keys(err.errors)];
+        if (error.kind === 'minlength') { // input too short
+            err = new Error(`Your ${error.path} ${error.value} is too short! It must be at least ${error.properties.minlength} characters long.`);
             err.status = 400;
         }
-        if (err.errors[Object.keys(err.errors)].kind === 'maxlength') { // input too big
-            const details = err.errors[Object.keys(err.errors)];
-            err = new Error(`Your ${details.path} ${details.value} is too long! It shouldn't be more than ${details.properties.maxlength} characters long.`);
+        if (error.kind === 'maxlength') { // input too big
+            err = new Error(`Your ${error.path} ${error.value} is too long! It shouldn't be more than ${error.properties.maxlength} characters long.`);
             err.status = 400;
         }
-        if (err.errors[Object.keys(err.errors)].kind === 'string') { // invalid input format
-            const details = err.errors[Object.keys(err.errors)];
-            err = new Error(`Your ${details.path} is not a valid format.`);
+        if (error.kind === 'string') { // invalid input format
+            err = new Error(`Your ${error.path} is not a valid format.`);
             err.status = 400;
         }
     }

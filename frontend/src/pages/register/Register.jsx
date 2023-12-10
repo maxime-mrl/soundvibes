@@ -78,7 +78,7 @@ export default function Register() {
                         placeholder: "Your username",
                         autoComplete: "username",
                     }}
-                    validation={"^[-a-z0-9]{2,}$"}
+                    validation={"^[-a-z0-9]{3,}$"}
                     valueState={username[0]}
                     updateForm={updateForm}
                 />

@@ -10,7 +10,6 @@ export default function Home() {
     const dispatch = useDispatch();
     useEffect(() => {
         if (!recommendations || !recommendations[0]) dispatch(getRecommendations())
-
     }, [])
     return (
         <section className="home">

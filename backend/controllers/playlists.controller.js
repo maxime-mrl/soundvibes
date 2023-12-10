@@ -181,7 +181,9 @@ exports.getRecommendations = asyncHandler(async (req, res) => {
     // parse a bit
     for (let i = 0; i < similars.length; i++) {
         let similar = similars[i].similar
-        if (similar.length < 15) { // if too few, add some
+        let iteration = 0
+        while (similar.length < 20 && iteration < 10) { // if too few, add some
+            iteration++
             let minListened = 10;
             let filtredSimilar = similar.filter(music => music[1] > minimumListened)
             while (filtredSimilar.length < 5 && minListened >= 0) {
@@ -189,8 +191,13 @@ exports.getRecommendations = asyncHandler(async (req, res) => {
                 filtredSimilar = similar.filter(music => music[1] > minListened)
             }
             const more = await musicsModel.findById(filtredSimilar[Math.floor(Math.random() * filtredSimilar.length)][0]).select("similar");
-            if (more && more.similar) similar.push(...more.similar);
-        } else if (similar.length > 30) { // if too much remove some id based on listening count
+            if (more && more.similar) {
+                more.similar.forEach(toAdd => {
+                    if (!similar.filter(music => music[0].equals(toAdd[0])).length > 0) similar.push(toAdd);
+                })
+            };
+        }
+        if (similar.length > 30) { // if too much remove some id based on listening count
             let minListened = 0;
             while (similar.length > 30) {
                 minListened++;
