@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import * as authService from "./authService";
+import authService from "./authService";
 
 const user = JSON.parse(localStorage.getItem("user"))
 

@@ -6,11 +6,14 @@ import PlaylistPC from "./Playlist-pc";
 import "./Playlist.css";
 
 export default function Playlist({ playlist, role }) {
-    const { windowSize: {width}, mobileWidth } = useContext(Datactx);
+    const { isMobile } = useContext(Datactx);
     return (
         <>
-            {
-                width < mobileWidth ? <PlaylistMobile playlist={playlist} role={role} /> : <PlaylistPC playlist={playlist} role={role} />
+            { isMobile
+            ?
+                <PlaylistMobile playlist={playlist} role={role} />
+            : 
+                <PlaylistPC playlist={playlist} role={role} />
             }
         </>
     )

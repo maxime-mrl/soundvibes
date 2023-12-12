@@ -58,7 +58,12 @@ export default function Register() {
             toast.error("Please fill and validate all inputs!");
             return;
         }
-        const userData = { username: username[0], mail: mail[0], password: password[0], age: age[0] };
+        const userData = {
+            username: username[0],
+            mail: mail[0],
+            password: password[0],
+            age: age[0]
+        };
         dispatch(register(userData));
     }
     return (
@@ -141,7 +146,7 @@ export default function Register() {
                 />
                 <button type="submit" className="btn-cta">Sign up</button>
                 <div className="login-redirect">
-                    Arleady have an account? <Link to={"/login"}>Login</Link>
+                    Alraedy have an account? <Link to={"/login"}>Login</Link>
                 </div>
             </form>
             <Loader />

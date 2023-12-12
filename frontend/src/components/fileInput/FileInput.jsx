@@ -4,6 +4,7 @@ import "./FileInput.css";
 
 export default function AddMusic({name, label, accept, update}) {
     const inputRef = useRef({ files: [] });
+    
     return (
         <div className="file-input-container">
             <label htmlFor={name} className="file-label btn-cta">

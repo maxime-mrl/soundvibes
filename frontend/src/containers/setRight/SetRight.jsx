@@ -11,7 +11,6 @@ export default function SetRight() {
     const [userToUpdate, setUserToUpdate] = useState("");
     const [rightToUpdate, setrightToUpdate] = useState(0);
 
-
     function updateBtn(right) {
         setrightToUpdate(right);
         const btns = document.querySelector(".right-form .btns");
@@ -21,14 +20,14 @@ export default function SetRight() {
 
     function submitForm(e) {
         e.preventDefault();
-        if (!userToUpdate) {
-            toast.error("Please add an user to update!");
-            return;
-        }
+        if (!userToUpdate) return toast.error("Please add an user to update!");
         const data = {
             right: rightToUpdate,
             target: userToUpdate
-        }
+        };
+        
+        setUserToUpdate("");
+        setrightToUpdate("");
         dispatch(setRight(data));
     }
     

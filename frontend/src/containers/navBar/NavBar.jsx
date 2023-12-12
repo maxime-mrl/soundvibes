@@ -6,11 +6,14 @@ import NavBarMobile from "./NavBar-mobile";
 import "./NavBar.css";
 
 export default function NavBar() {
-    const { windowSize: {width}, mobileWidth } = useContext(Datactx);
+    const { isMobile } = useContext(Datactx);
     return (
         <>
-            {
-                width < mobileWidth ? <NavBarMobile /> : <NavBarPC />
+            { isMobile
+            ?
+                <NavBarMobile />
+            :
+                <NavBarPC />
             }
         </>
     )

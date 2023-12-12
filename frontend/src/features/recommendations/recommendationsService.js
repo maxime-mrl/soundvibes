@@ -1,3 +1,3 @@
 import RequestServices from "../RequestServices";
-const requestServices = new RequestServices("api/playlists");
+const requestServices = new RequestServices("api/recommendations");
 export default requestServices;

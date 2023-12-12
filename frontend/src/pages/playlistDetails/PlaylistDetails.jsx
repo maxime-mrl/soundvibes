@@ -20,42 +20,32 @@ export default function PlaylistDetails() {
     
     const id = searchparams.get("id");
 
-    useEffect(() => {
-        if (!id) navigate("/");
-        else dispatch(getPlaylist(id))
-    }, [dispatch, navigate, id ]);
 
-    useEffect(() => {
-        if (playlist === false) {
-            dispatch(reset());
-            navigate("/playlists");
-        }
-    }, [playlist])
+    const hideEditTitle = () => { if (editPopup.current) editPopup.current.classList.add("hidden") }
 
     function ctaClick() {
         const ids = [];
         playlist.content.forEach(music => ids.push(music._id));
-        playNewMusic({ids})
+        playNewMusic({ids});
     }
+
     function showEditTitle() {
         if (!editPopup.current) return;
         setEditionTitle(playlist.name);
         editPopup.current.classList.remove("hidden");
     }
-    function hideEditTitle() {
-        if (!editPopup.current) return;
-        editPopup.current.classList.add("hidden");
-    }
 
     function submitTitle(e) {
+        e.preventDefault();
+        // parse the id to create formdata
         const contentIds = [];
         playlist.content.forEach(music => contentIds.push(music._id));
-        e.preventDefault();
         const data = {
             id: playlist._id,
             name: editionTitle,
             musics: contentIds,
         }
+        // submit
         dispatch(updatePlaylist(data));
         hideEditTitle();
     }
@@ -68,8 +58,10 @@ export default function PlaylistDetails() {
 
     function deleteSong({ _id:id }) {
         if (!id) return;
+        // parse the new id array
         const contentIds = [];
         playlist.content.forEach(music => {if (id !== music._id) contentIds.push(music._id)});
+        // form data for update then send request
         const data = {
             id: playlist._id,
             name: playlist.name,
@@ -77,10 +69,18 @@ export default function PlaylistDetails() {
         }
         dispatch(updatePlaylist(data));
     }
+    
+    useEffect(() => {
+        if (!id) navigate("/");
+        else dispatch(getPlaylist(id))
+    }, [dispatch, navigate, id ]);
 
-    function confirmDelete() {
-        dispatch(deletePlaylist(playlist._id))
-    }
+    useEffect(() => {
+        if (playlist === false) {
+            dispatch(reset());
+            navigate("/playlists");
+        }
+    }, [playlist, dispatch, navigate])
 
     if (!playlist) return (
         <section className="playlist-details">
@@ -116,7 +116,7 @@ export default function PlaylistDetails() {
                     }
                 </article>
                 <article className="playlist-song-list">
-                    <SongList musics={playlist.content} actions={playlist.owner._id === user._id && "both"} actionHandler={deleteSong} />
+                    <SongList musics={playlist.content} actions={playlist.owner._id === user._id && "both"} actionHandler={playlist.content.length > 1 ? deleteSong : showDeletePopup} />
                 </article>
             </section>
             
@@ -144,7 +144,7 @@ export default function PlaylistDetails() {
                         <button className="btn-cta">Update</button>
                     </form>
                 </div>
-                <ConfirmPopup text={`to delete playlist ${playlist.name}`} confirm={confirmDelete} cancel={() => {}} />
+                <ConfirmPopup text={`to delete playlist ${playlist.name}`} confirm={() => dispatch(deletePlaylist(playlist._id))} cancel={() => {}} />
             </>
             }
             <Loader />

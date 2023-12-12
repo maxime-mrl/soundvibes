@@ -6,8 +6,8 @@ import "./PlayerOptions.css";
 export default function PlayerOptions({ isExtended }) {
     const { music:{id, mode}, updateMusic, setAddPlaylist } = useContext(Datactx);
     function modeUpdate(newMode) {
-        if (mode === newMode) updateMusic({ mode: false });
-        else updateMusic({ mode: newMode });
+        if (mode === newMode) updateMusic({ mode: false }); // if click again on one actived, desactivate special option
+        else updateMusic({ mode: newMode }); // else apply options
     }
 
     return (

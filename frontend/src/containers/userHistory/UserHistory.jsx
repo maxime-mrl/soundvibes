@@ -7,9 +7,11 @@ import "./UserHistory.css";
 export default function UserHistory() {
     const dispatch = useDispatch();
     const { history } = useSelector(state => state.auth);
+
     useEffect(() => {
         dispatch(getHistory());
-    }, [])
+    }, [dispatch])
+    
     return (
         <article className="user-history">
             <h2 className="h2">Recently listened:</h2>

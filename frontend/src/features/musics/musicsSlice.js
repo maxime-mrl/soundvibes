@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import * as musicsService from "./musicsService";
+import musicsService from "./musicsService";
 
 const initialState = {
     musics : [],

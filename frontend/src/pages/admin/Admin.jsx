@@ -13,7 +13,6 @@ export default function Admin() {
         if (!user || !user.right || user.right < 1) navigate("/");
     }, [user, navigate])
 
-
     return (
         <>
             <header className="admin-header">

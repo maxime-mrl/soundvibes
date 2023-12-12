@@ -19,27 +19,27 @@ export default function SongDetails() {
     const { infos } = useSelector(state => state.musics);
     const { similar } = useSelector(state => state.playlists);
 
-    useEffect(() => {
+    function playSimilarClicked() {
+        const similarIds = [];
+        similar.forEach(song => similarIds.push(song._id));
+        playNewMusic({ ids: similarIds });
+    }
+
+    useEffect(() => { // check that we have an id in the req params
         if (!id) navigate("/");
         else dispatch(getMusic(id));
     }, [dispatch, navigate, id ]);
 
-    useEffect(() => {
+    useEffect(() => { // check that we find some infos
         if (infos === false) {
             dispatch(reset());
             navigate("/");
         }
     }, [infos])
     
-    useEffect(() => {
+    useEffect(() => { // when we get the infos get the similar musics
         if (infos && infos.artist) dispatch(getSimilar({artist: infos.artist}));
     }, [dispatch, infos ])
-
-    function playSimilarClicked() {
-        const similarIds = [];
-        similar.forEach(song => similarIds.push(song._id));
-        playNewMusic({ ids: similarIds });
-    }
 
     if (!infos) return (
         <section className="music-details">

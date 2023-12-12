@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 
-export default function ScrollTop() {
+export default function ScrollTop() { // automaticly scroll to top
   const { pathname } = useLocation();
   const [searchparams] = useSearchParams();
 

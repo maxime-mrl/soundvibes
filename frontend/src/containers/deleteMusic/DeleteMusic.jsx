@@ -6,8 +6,9 @@ import "./DeleteMusic.css";
 import SongList from "../songList/SongList";
 
 export default function DeleteMusic() {
-    const { musics } = useSelector(state => state.musics);
     const dispatch = useDispatch();
+    const { musics } = useSelector(state => state.musics);
+
     const [deleteTarget, setDeleteTarget] = useState("");
 
     function showConfirm(music) {
@@ -21,13 +22,10 @@ export default function DeleteMusic() {
         dispatch(deleteSong(deleteTarget));
         setDeleteTarget("");
     }
-    function handleCancel() {
-        setDeleteTarget("");
-    }
 
     return (
         <>
-            <ConfirmPopup text={`to delete music`} confirm={handleDelete} cancel={handleCancel} customText={true} />
+            <ConfirmPopup text={`to delete music`} confirm={handleDelete} cancel={() => setDeleteTarget("")} customText={true} />
             <section className="delete-music">
                 <h2 className="h2">Delete a music:</h2>
                 <SearchBar />

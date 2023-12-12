@@ -7,7 +7,8 @@ import "./SearchBar.css";
 
 export default function SearchBar() {
     const dispatch = useDispatch();
-    const {search, setSearch} = useContext(Datactx)
+    const {search, setSearch} = useContext(Datactx);
+
     useEffect(() => {
         if (search === "") dispatch(reset());
         else dispatch(searchMusics(search));
@@ -16,7 +17,7 @@ export default function SearchBar() {
     return (
         <div className="search-input">
             <input className="search-bar" type="text" name="search" id="search" placeholder="Search something" value={search} onChange={(e) => setSearch(e.target.value)} />
-            <label className="search-label" htmlFor="search"><FontAwesomeIcon icon={"fa-solid fa-search"} /></label>
+            <label className="search-label" htmlFor="search"><FontAwesomeIcon icon={"fa-solid fa-search"} aria-label="Search something"/></label>
         </div>
     )
 }

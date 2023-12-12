@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSwipeable } from "react-swipeable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,7 +14,7 @@ export default function AddPlaylist() {
     const { addPlaylist, setAddPlaylist, windowSize } = useContext(Datactx);
     const { ref } = useSwipeable({ onSwipedDown: () => setAddPlaylist(false) });
 
-    function toggleplayer(e) {
+    const toggleplayer = useCallback(e => {
         let elem = e.target;
         while (!(elem instanceof HTMLBodyElement)) {
             if (!elem || !elem.parentNode) break;
@@ -22,19 +22,19 @@ export default function AddPlaylist() {
             elem = elem.parentNode;
         }
         setAddPlaylist(false);
-    }
+    }, [setAddPlaylist])
 
     function createPlaylist() {
         const data = {
             name: "New playlist",
             musics: addPlaylist.ids
         }
-        dispatch(newPlaylist(data))
+        dispatch(newPlaylist(data));
         setAddPlaylist(false);
     }
     
     function addToPlaylist(playlist) {
-        const contentIds = []
+        const contentIds = [];
         playlist.content.forEach(music => contentIds.push(music._id));
         addPlaylist.ids.forEach(id => contentIds.push(id));
         const updatedPlaylist = {
@@ -46,40 +46,40 @@ export default function AddPlaylist() {
         setAddPlaylist(false);
     }
 
-    function showModal() {
-        const modal = playlistModal.current;
-        // set position (for pc)
-        const { clientX, clientY } = addPlaylist.e;
-        let position = "";
-        if (clientX > windowSize.width / 2) position += `--right: ${windowSize.width - clientX}px; `;
-        else position += `--left: ${clientX}px; `;
-        if (clientY > windowSize.height / 2) position += `--bottom: ${windowSize.height - clientY}px; `;
-        else position += `--top: ${clientY}px; `;
-        // display
-        modal.classList.add("shown");
-        modal.style = position;
-        document.body.addEventListener("mousedown", toggleplayer);
-        
-        ref(document);
-    }
-
-    function hideModal() {
-        const modal = playlistModal.current;
-        if (!modal) return;
-        modal.classList.remove("shown");
-        document.body.removeEventListener("mousedown", toggleplayer);
-        ref({});
-    }
-
     useEffect(() => {
         if (addPlaylist) showModal();
         else hideModal();
         return () => { hideModal() }
-    // eslint-disable-next-line
-    }, [addPlaylist]);
+        
+        function showModal() {
+            const modal = playlistModal.current;
+            // set position (for pc)
+            const { clientX, clientY } = addPlaylist.e;
+            let position = "";
+            if (clientX > windowSize.width / 2) position += `--right: ${windowSize.width - clientX}px; `;
+            else position += `--left: ${clientX}px; `;
+            if (clientY > windowSize.height / 2) position += `--bottom: ${windowSize.height - clientY}px; `;
+            else position += `--top: ${clientY}px; `;
+            // display
+            modal.classList.add("shown");
+            modal.style = position;
+            document.body.addEventListener("mousedown", toggleplayer);
+            
+            ref(document);
+        }
+
+        function hideModal() {
+            const modal = playlistModal.current;
+            if (!modal) return;
+            modal.classList.remove("shown");
+            document.body.removeEventListener("mousedown", toggleplayer);
+            ref({});
+        }
+    }, [addPlaylist, ref, toggleplayer, windowSize.height, windowSize.width]);
 
     useEffect(() => {
         if (!playlists || !playlists[0]) dispatch(getOwn())
+    // eslint-disable-next-line
     }, [])
 
     return (

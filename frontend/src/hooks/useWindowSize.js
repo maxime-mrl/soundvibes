@@ -5,18 +5,21 @@ export default function useWindowSize() {
         width: undefined,
         height: undefined
     });
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
-        function handleResize() {
-            setWindowSize({
-                width: window.innerWidth,
-                height: window.innerHeight,
-            })
-        };
         handleResize();
         window.addEventListener('resize', handleResize);
         return () => { window.removeEventListener('resize' , handleResize) };
     }, [])
 
-    return windowSize
+    function handleResize() {
+        setWindowSize({
+            width: window.innerWidth,
+            height: window.innerHeight,
+        })
+        setIsMobile(window.innerWidth < 700);
+    };
+
+    return [windowSize, isMobile]
 }

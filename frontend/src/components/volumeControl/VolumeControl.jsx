@@ -6,6 +6,7 @@ import "./VolumeControl.css";
 
 export default function VolumeControl() {
     const { music:{volume}, updateMusic } = useContext(Datactx);
+    
     return (
         <div className="volume-control">
             <FontAwesomeIcon icon="fa-solid fa-volume-high" />

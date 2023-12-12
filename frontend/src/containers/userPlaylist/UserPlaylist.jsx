@@ -7,9 +7,11 @@ import "./UserPlaylist.css";
 export default function UserPlaylist() {
     const { playlists } = useSelector(state => state.playlists);
     const dispatch = useDispatch()
+
     useEffect(() => {
-        if (!playlists || !playlists[0]) dispatch(getOwn())
-    }, [])
+        dispatch(getOwn())
+    }, [dispatch])
+
     return (
         <article className={`user-playlists ${playlists.length > 4 ? "" : "column"}`}>
             <h2 className="h2">Your playlists:</h2>

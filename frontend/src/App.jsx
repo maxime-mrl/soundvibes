@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { Admin, Home, Login, PlaylistDetails, Playlists, Profile, RecommendationDetails, Register, Search, SongDetails } from "./pages";
 import { AddPlaylist, NavBar, Player } from "./containers";
 import { useContext } from "react";
-import { MusicCircle, ScrollTop } from "./components";
+import { ScrollTop } from "./components";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
@@ -40,15 +40,14 @@ export default function App() {
 }
 
 const LoggedRoutes = ({user}) => {
-  const { windowSize: {width}, mobileWidth } = useContext(Datactx);
+  const { isMobile } = useContext(Datactx);
   return (
   user ?
-  <div className={width < mobileWidth ? "page mobile" : "page pc"}>
+  <div className={isMobile ? "page mobile" : "page pc"}>
     <ScrollTop />
     <AddPlaylist />
     <NavBar />
     <div className="content">
-    {/* { width > mobileWidth && <MusicCircle /> } */}
       <Outlet />
     </div>
     <Player />

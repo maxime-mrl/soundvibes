@@ -9,9 +9,11 @@ export default function Search() {
     const dispatch = useDispatch();
     const { musics } = useSelector(state => state.musics);
     const { history } = useSelector(state => state.auth);
+
     useEffect(() => {
         dispatch(getHistory());
-    }, [])
+    }, [dispatch])
+
     return (
         <>
             <section className="search">

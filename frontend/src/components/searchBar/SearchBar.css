@@ -28,6 +28,12 @@
     transition: color var(--transition-duration) ease-out;
 }
 
+.search-label i {
+    opacity: 0;
+    width: 0.1px;
+    overflow: hidden;
+}
+
 .search-bar:hover::placeholder,
 .search-bar:focus::placeholder,
 .search-bar:hover ~ .search-label,

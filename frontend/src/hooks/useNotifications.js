@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-import { statusReset as resetUser } from "../features/auth/authSlice";
+import { logout, statusReset as resetUser } from "../features/auth/authSlice";
 import { statusReset as resetMusic } from "../features/musics/musicsSlice";
 import { statusReset as resetPlaylist } from "../features/playlists/playlistsSlice";
 
@@ -14,6 +14,10 @@ export default function useNotification() {
     // user notification
     useEffect(() => {
         if (user.message) {
+            if (/token/.test(user.message)) {
+                dispatch(logout());
+                return;
+            };
             dispatch(resetUser());
             if (user.isError) toast.error(user.message);
             else toast.success(user.message);
@@ -22,6 +26,10 @@ export default function useNotification() {
     // music notification
     useEffect(() => {
         if (music.message) {
+            if (/token/.test(music.message)) {
+                dispatch(logout());
+                return;
+            };
             dispatch(resetMusic());
             if (music.isError) toast.error(music.message);
             else toast.success(music.message);
@@ -30,6 +38,10 @@ export default function useNotification() {
     // playlist notification
     useEffect(() => {
         if (playlist.message) {
+            if (/token/.test(playlist.message)) {
+                dispatch(logout());
+                return;
+            };
             dispatch(resetPlaylist());
             if (playlist.isError) toast.error(playlist.message);
             else toast.success(playlist.message);

@@ -17,18 +17,6 @@ export default function Profile() {
         password: ["", false],
         confirm_password: ["", false],
     });
-
-    useEffect(() => {
-        if (!user) navigate("/");
-        else if (!user.mail) dispatch(infos());
-        else setFormData(prevState => ({
-            ...prevState,
-            username: [user.username, true],
-            mail: [user.mail, true],
-        }));
-        dispatch(reset());
-    }, [user, navigate, dispatch])
-
     
     function updateForm(e) {
         let isValidated = false;
@@ -76,11 +64,6 @@ export default function Profile() {
         const confirm = document.querySelector(".confirm-popup");
         confirm.classList.add("shown");
     }
-    function delteAccount() {
-        dispatch(deleteAccount({
-            confirmPassword: confirm_password[0]
-        }));
-    }
     
     function confirmPass() {
         if (!confirm_password[1]) {
@@ -89,6 +72,17 @@ export default function Profile() {
         }
         return true;
     }
+
+    useEffect(() => {
+        if (!user) navigate("/");
+        else if (!user.mail) dispatch(infos());
+        else setFormData(prevState => ({
+            ...prevState,
+            username: [user.username, true],
+            mail: [user.mail, true],
+        }));
+        dispatch(reset());
+    }, [user, navigate, dispatch])
 
     return (
         <>
@@ -169,7 +163,7 @@ export default function Profile() {
                     }
                 </form>
             </section>
-            <ConfirmPopup text={"to delete your account"} confirm={delteAccount} cancel={() => {}} />
+            <ConfirmPopup text={"to delete your account"} confirm={() => dispatch(deleteAccount({ confirmPassword: confirm_password[0] }))} cancel={() => {}} />
             <Loader />
         </>
     )

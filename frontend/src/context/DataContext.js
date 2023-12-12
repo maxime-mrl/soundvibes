@@ -7,15 +7,14 @@ const Datactx = createContext({});
 
 export function DataProvider({ children }) {
     useNotification();
-    const windowSize = useWindowSize();
-    const mobileWidth = 700;
+    const [windowSize, isMobile] = useWindowSize();
     const [music, updateMusic, resetMusic, playNewMusic] = useMusic();
     const [addPlaylist, setAddPlaylist] = useState(false);
     const [search, setSearch] = useState("");
 
     return (
         <Datactx.Provider value={{
-            windowSize, mobileWidth,
+            windowSize, isMobile,
             music, updateMusic, resetMusic, playNewMusic,
             addPlaylist, setAddPlaylist,
             search, setSearch

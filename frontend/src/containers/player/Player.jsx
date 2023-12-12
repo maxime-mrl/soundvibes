@@ -4,16 +4,21 @@ import Datactx from "../../context/DataContext";
 import PlayerMobile from "./Player-mobile";
 import PlayerPC from "./Player-pc";
 import "./Player.css";
+// import { MusicCircle } from "../../components";
 
 export default function Player() {
-    const { windowSize: {width}, mobileWidth } = useContext(Datactx);
+    const { isMobile } = useContext(Datactx);
     return (
         <>
             <audio className="audio-player">
                 <source type="audio/mpeg"/>
             </audio>
-            {
-                width < mobileWidth ? <PlayerMobile /> : <PlayerPC />
+            {/* <MusicCircle /> */}
+            { isMobile
+            ?
+                <PlayerMobile />
+            :
+                <PlayerPC />
             }
         </>
     )
