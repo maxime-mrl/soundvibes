@@ -136,7 +136,7 @@ export const { reset, statusReset } = authSlice.actions;
 
 export const register = createAsyncThunk("auth/register", async (user, thunkAPI) => {
     try {
-        return await authService.post("/register", user);
+        return await authService.post("/register", false, user);
     } catch (err) {
         if (err.response && err.response.data.error) return thunkAPI.rejectWithValue(err.response.data.error);
         else if (err.message) return thunkAPI.rejectWithValue(err.message);
@@ -146,7 +146,7 @@ export const register = createAsyncThunk("auth/register", async (user, thunkAPI)
 
 export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
     try {
-        return await authService.post("/login", user);
+        return await authService.post("/login", false, user);
     } catch (err) {
         if (err.response && err.response.data.error) return thunkAPI.rejectWithValue(err.response.data.error);
         else if (err.message) return thunkAPI.rejectWithValue(err.message);

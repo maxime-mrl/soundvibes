@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const playlistModel = require("../models/playlists.model");
+const musicsModel = require("../models/musics.model");
 
 exports.createPlaylist = asyncHandler(async (req, res) => {
     /* ------------------------------ INPUTS CHECK ------------------------------ */

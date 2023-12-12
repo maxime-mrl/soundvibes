@@ -1,6 +1,12 @@
+const cron = require('node-cron');
 const asyncHandler = require("express-async-handler");
 const musicsModel = require("../models/musics.model");
 const recommendationsModel = require("../models/recommendations.model");
+
+exports.getTrending = asyncHandler(async (req, res) => {
+    const trending = await recommendationsModel.find({public: true});
+    await sendRecommendations(trending, res)
+})
 
 exports.getRecommendations = asyncHandler(async (req, res) => {
     /* -------------------- GET THE EXISTING RECOMMENDATIONS -------------------- */
@@ -32,15 +38,26 @@ exports.getRecommendations = asyncHandler(async (req, res) => {
     // trim the top listened randomly to three ids
     while (filteredHistory.length > 3) filteredHistory.splice(Math.floor(Math.random() * filteredHistory.length), 1)
     // get the similars from db
-    const similars = await musicsModel.find({ '_id': { $in: filteredHistory } }).select("similar");
+    const rawSimilars = await musicsModel.find({ '_id': { $in: filteredHistory } }).select("similar");
     // parse a bit
+    const similars = await parseSimilar(rawSimilars, req);
+    /* ------------------------- SAVE NEW RECOMMANDATION ------------------------ */
+    if ((await recommendationsModel.find({ targetUser: req.user._id }))) { // since it take some times to do the logic possible with double request to create duplicate -> limit that
+        await recommendationsModel.deleteMany({ targetUser: req.user._id });
+    }
+    const added = await recommendationsModel.insertMany(similars);
+    sendRecommendations(added, res);
+})
+
+async function parseSimilar(similars, req) {
     for (let i = 0; i < similars.length; i++) {
         let similar = similars[i].similar
+        let name = similars[i].title;
         let iteration = 0
         while (similar.length < 15 && iteration < 10) { // if too few, add some
             iteration++
             let minListened = 10;
-            let filtredSimilar = similar.filter(music => music[1] > minimumListened)
+            let filtredSimilar = similar.filter(music => music[1] > minListened)
             while (filtredSimilar.length < 5 && minListened >= 0) {
                 minListened--;
                 filtredSimilar = similar.filter(music => music[1] > minListened)
@@ -56,23 +73,26 @@ exports.getRecommendations = asyncHandler(async (req, res) => {
             let minListened = 0;
             while (similar.length > 30) {
                 minListened++;
-                similar = similar.filter(music => music.count > minimumListened);
+                similar = similar.filter(music => music.count > minListened);
             }
         }
         // update to the well parsed similar
-        similars[i] = {
-            name: `Daily mix ${i + 1}`,
-            targetUser: req.user._id,
-            content: similar.map(music => music[0]),
-        };
+        if (req) {
+            similars[i] = {
+                name: `Daily mix ${i + 1}`,
+                targetUser: req.user._id,
+                content: similar.map(music => music[0]),
+            };
+        } else {
+            similars[i] = {
+                name: `${name} mix`,
+                public: true,
+                content: similar.map(music => music[0]),
+            };
+        }
     }
-    /* ------------------------- SAVE NEW RECOMMANDATION ------------------------ */
-    if ((await recommendationsModel.find({ targetUser: req.user._id }))) { // since it take some times to do the logic possible with double request to create duplicate -> limit that
-        await recommendationsModel.deleteMany({ targetUser: req.user._id });
-    }
-    const added = await recommendationsModel.insertMany(similars);
-    sendRecommendations(added, res);
-})
+    return similars
+}
 
 async function sendRecommendations(rawRecomendations, res) {
     const recomendations = (await recommendationsModel.populate(rawRecomendations, {
@@ -86,3 +106,18 @@ async function sendRecommendations(rawRecomendations, res) {
 
     res.status(200).json(recomendations)
 }
+
+async function createDailyTrending() {
+    console.log(new Date())
+    try {
+        await recommendationsModel.deleteMany({ public: true });
+        const musics = await musicsModel.find({}).sort([["listenedCount", -1]]).limit(20);
+        while (musics.length > 6) musics.splice(Math.floor(Math.random() * musics.length), 1);
+        const similars = await parseSimilar(musics, false);
+        await recommendationsModel.insertMany(similars);
+    } catch (err) {
+        console.error(err)
+    }
+}
+
+cron.schedule('0 0 * * *', createDailyTrending);

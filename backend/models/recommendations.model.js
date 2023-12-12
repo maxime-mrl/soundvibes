@@ -7,6 +7,10 @@ const recommendationsSchema = mongoose.Schema({
     targetUser: {
         type: mongoose.Schema.Types.ObjectId,
     },
+    public: {
+        type: Boolean,
+        default: false,
+    },
     content: {
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Musics" }],
     },

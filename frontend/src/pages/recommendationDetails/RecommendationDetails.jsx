@@ -13,7 +13,7 @@ export default function RecommendationDetails() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [searchparams] = useSearchParams();
-    const { recommendations } = useSelector(state => state.recommendations);
+    const { recommendations, topListened } = useSelector(state => state.recommendations);
     const { playNewMusic } = useContext(Datactx);
 
     const [details, setDetails] = useState();
@@ -43,12 +43,13 @@ export default function RecommendationDetails() {
     }, [dispatch, navigate, id ]);
 
     useEffect(() => {
-        if (recommendations && recommendations.length > 0) {
-            const target = recommendations.find(recommendation => recommendation._id === id)
+        const all = [...recommendations, ...topListened]
+        if (all && all.length > 0) {
+            const target = all.find(recommendation => recommendation._id === id)
             if (target) setDetails(target);
             else navigate("/")
         }
-    }, [recommendations, id, navigate])
+    }, [recommendations, topListened, id, navigate])
 
     if (!details) return (
         <section className="playlist-details">

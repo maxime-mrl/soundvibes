@@ -6,15 +6,16 @@
     text-align: center;
 }
 
-.daily-mix {
+.home-mix {
     padding: 2em 1em;
     border: var(--main-border-bg);
     backdrop-filter: var(--blur);
     background-color: var(--bg-85);
     border-radius: var(--radius);
+    max-width: 1000px;
 }
 
-.daily-mix .list {
+.home-mix .list {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
