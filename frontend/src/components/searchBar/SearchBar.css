@@ -2,7 +2,7 @@
     position: relative;
     display: flex;
     width: 95%;
-    margin: 1em auto;
+    margin: 1em 0;
     --padding-left: 0.8em;
 }
 .search-label {

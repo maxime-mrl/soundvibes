@@ -9,11 +9,15 @@
 /* ---------------------------------- INPUT --------------------------------- */
 
 .text-input {
-    padding: 0.2em 0.3em;
+    padding: 0.3em;
     outline: none;
-    border: 2px solid var(--text);
+    border: 2px solid var(--text-35);
     border-radius: var(--radius);
     transition: border var(--transition-duration) ease-out;
+}
+
+.text-input:hover {
+    border: 2px solid var(--text);
 }
 
 .text-input:focus { border-color: var(--accent); }

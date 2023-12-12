@@ -4,7 +4,6 @@
   "description": "backend for Soudvibes music platform",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
@@ -21,5 +20,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.6.3",
     "node-cron": "^3.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
   }
 }
