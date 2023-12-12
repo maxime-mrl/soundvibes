@@ -76,8 +76,8 @@ input[type=number] {
   --success: #44CF6C;
 
   --blur: blur(5px);
-  --main-border-bg: 3px solid var(--bg-solid);
-  --main-border-text: 3px solid var(--text-50);
+  --main-border-bg: 2px solid var(--bg-solid);
+  --main-border-text: 2px solid var(--text-50);
   --radius: 0.5rem;
 
   --transition-duration: 200ms;

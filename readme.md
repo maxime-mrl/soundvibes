@@ -2,11 +2,11 @@
 
 ## What is it?
 
-SoundVibes is a music streaming platform, using MERN stack.
+SoundVibes is a music streaming platform built using the MERN stack.
 
 ## Why?
 
-This is a scool project made entierly myself to learn React and have fun
+This is a solo project undertaken entirely by myself to learn React and have some fun.
 
 ## Table of Contents
 
@@ -50,7 +50,7 @@ npm run dev
 Navigate to the `frontend` directory and launch the react app
 
 ```bash
-cd backend
+cd frontend
 npm start
 ```
 

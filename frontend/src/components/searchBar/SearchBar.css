@@ -15,10 +15,14 @@
 .search-bar {
     padding: 0.2em 0.3em 0.2em calc(1em + 1.5*var(--padding-left));
     outline: none;
-    border: 2px solid var(--text);
+    border: var(--main-border-text);
     border-radius: var(--radius);
     transition: border var(--transition-duration) ease-out;
     width: 100%;
+}
+
+.search-bar:hover {
+    border-color: var(--text);
 }
 
 .search-bar:focus { border-color: var(--accent); }

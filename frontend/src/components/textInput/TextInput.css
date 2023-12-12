@@ -11,7 +11,7 @@
 .text-input {
     padding: 0.3em;
     outline: none;
-    border: 2px solid var(--text-35);
+    border: var(--main-border-text);
     border-radius: var(--radius);
     transition: border var(--transition-duration) ease-out;
 }
