@@ -19,10 +19,6 @@ const playlistSchema = mongoose.Schema({
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Musics" }],
         default: []
     },
-    contentLength: {
-        type: Number,
-        default: 0
-    }
 }, { timestamps: true });
 
 // check to make sure playlist format are good

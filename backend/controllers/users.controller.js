@@ -6,12 +6,15 @@ const usersModel = require("../models/users.model");
 const playlistsModel = require("../models/playlists.model");
 const recommendationsModel = require("../models/recommendations.model");
 
+/* -------------------------------------------------------------------------- */
+/*                             CREATE NEW ACCOUNT                             */
+/* -------------------------------------------------------------------------- */
 exports.registerUser = asyncHandler(async (req, res) => {
     /* ------------------------------ INPUTS CHECK ------------------------------ */
     const { username, mail, password, age } = req.body;
     // check everything is here
     if (!username || !mail || !age || !password) throw {
-        message: `Fields missing: ${(!username ? "username " : "")}${(!mail ? "mail " : "")}${(!age ? "age " : "")}${(!password ? "password" : "")}`,
+        message: "At least one missing field",
         status: 400
     };
     // check age
@@ -31,12 +34,15 @@ exports.registerUser = asyncHandler(async (req, res) => {
     else throw new Error("User can't be created right now");
 });
 
+/* -------------------------------------------------------------------------- */
+/*                                    LOGIN                                   */
+/* -------------------------------------------------------------------------- */
 exports.loginUser = asyncHandler(async (req, res) => {
     /* ------------------------------ INPUTS CHECK ------------------------------ */
     const { mail, password } = req.body;
     // check everything is here
     if (!mail || !password) throw {
-        message: `Fields missing: ${(!mail ? "mail " : "")}${(!password ? "password" : "")}`,
+        message: "At least one missing field",
         status: 400
     };
     /* --------------------------- MAIL AND PASS CHECK -------------------------- */
@@ -53,6 +59,9 @@ exports.loginUser = asyncHandler(async (req, res) => {
     };
 });
 
+/* -------------------------------------------------------------------------- */
+/*                               GET USER INFOS                               */
+/* -------------------------------------------------------------------------- */
 exports.getUser = asyncHandler(async (req, res) => {
     /* ---------------------------- RETURN USER INFOS --------------------------- */
     res.status(200).json({
@@ -63,6 +72,9 @@ exports.getUser = asyncHandler(async (req, res) => {
     });
 });
 
+/* -------------------------------------------------------------------------- */
+/*                              GET USRE HISTORY                              */
+/* -------------------------------------------------------------------------- */
 exports.getHistory = asyncHandler(async (req, res) => {
     const user = await usersModel.findOne({ _id: req.user._id })
         .populate({
@@ -70,18 +82,19 @@ exports.getHistory = asyncHandler(async (req, res) => {
             select: "title artist genre year"
         })
     /* ---------------------------- RETURN USER INFOS --------------------------- */
-    res.status(200).json([
-        ...user.recentHistory
-    ]);
+    res.status(200).json(user.recentHistory);
 });
 
+/* -------------------------------------------------------------------------- */
+/*                             UPDATE USER ACCOUNT                            */
+/* -------------------------------------------------------------------------- */
 exports.updateUser = asyncHandler(async (req, res) => {
     /* ------------------------------ INPUTS CHECK ------------------------------ */
     const { username, mail, password, confirmPassword } = req.body;
     const user = await usersModel.findOne(req.user);
     // necessary datas are presents
     if (!confirmPassword || !user) throw {
-        message: "Missing data",
+        message: "At least one missing field",
         status: 400
     };
     // password check
@@ -103,6 +116,9 @@ exports.updateUser = asyncHandler(async (req, res) => {
     });
 });
 
+/* -------------------------------------------------------------------------- */
+/*                               SET USER RIGHT                               */
+/* -------------------------------------------------------------------------- */
 exports.setRight = asyncHandler(async (req, res) => {
     /* ------------------------------ CHECK RIGHTS ------------------------------ */
     if (!req.user.right || req.user.right < 2) throw {
@@ -110,12 +126,12 @@ exports.setRight = asyncHandler(async (req, res) => {
         status: 403
     };
     const { target, right } = req.body;
-    /* ------------------------- CHECK IF ENOUGH IS HERE ------------------------ */
+    /* ------------------------------- CHECK DATA ------------------------------- */
     if (isNaN(right) && typeof right !== 'number' || !target) throw {
         message: "invalid data",
         code: 400
     };
-    /* -------------------------- FIND THE TARGET USER -------------------------- */
+    /* -------------------- DETERMINATE THE SELECTION METHOD -------------------- */
     const targetParams = {};
     if (/^[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+$/.test(target)) targetParams.mail = target;
     else if (isValidObjectId(target)) targetParams._id = target;
@@ -131,13 +147,16 @@ exports.setRight = asyncHandler(async (req, res) => {
     res.status(200).json({ status: `Successfully updated user ${updatedUser._id} to right ${updatedUser.right}` });
 })
 
+/* -------------------------------------------------------------------------- */
+/*                             DELETE USER ACCOUNT                            */
+/* -------------------------------------------------------------------------- */
 exports.deleteUser = asyncHandler(async (req, res) => {
     /* ------------------------------ INPUTS CHECK ------------------------------ */
     const { confirmPassword } = req.body;
     const user = await usersModel.findOne({_id: req.user._id});
     // necessary datas are presents
     if (!confirmPassword || !user) throw {
-        message: "Missing data",
+        message: "At least one missing field",
         status: 400
     };
     // password check
@@ -153,4 +172,5 @@ exports.deleteUser = asyncHandler(async (req, res) => {
     res.status(200).json({ deleted: req.user.mail });
 });
 
+// generate token
 const generateToken = id => jwt.sign({id}, process.env.JWT_SECRET, { expiresIn: "30d" });

@@ -19,7 +19,7 @@ exports.protect = asyncHandler(async (req, res, next) => { // check if user is l
         // user exist pass to next middleware w/ user object
         next();
     } catch(err) {
-        if (/token/.test(err.message)) err = tokenError; // catch error related to token to format them
+        if (/token|expired/.test(err.message)) err = tokenError; // catch error related to token to format them
         throw err;
     }
 })

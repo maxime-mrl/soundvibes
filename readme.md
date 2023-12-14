@@ -25,6 +25,8 @@ cd backend
 npm install
 ```
 
+Create the `.env` file following the structure of the example `.env~`.
+
 ### Frontend
 
 Navigate to the `frontend` directory and install the necessary dependencies.

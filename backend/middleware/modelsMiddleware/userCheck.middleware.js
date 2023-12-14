@@ -14,26 +14,21 @@ module.exports = async function(next) {
         user.password = await bcrypt.hash(user.password, salt);
     }
     /* ------------------------- check username validity ------------------------ */
-    if (user.username) { // when updating every data arn't required so check before its existence
-        if (!/^[-a-z0-9]+$/i.test(user.username)) throw { // don't check length because arleady handled by model - this way is easier to change
-            message: `Please enter a valid username`,
-            status: 400
-        };
-    }
+    // when updating every data aren't required so check before its existence
+    if (user.username && !/^[-a-z0-9]+$/i.test(user.username)) throw { // don't check length because arleady handled by model - this way is easier to change
+        message: `Please enter a valid username`,
+        status: 400
+    };
     /* --------------------------- check mail validity -------------------------- */
-    if (user.mail) {
-        if (!/^[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+$/.test(user.mail)) throw { // regex from ihateregex.io
-            message: `Please enter a valid email`,
-            status: 400
-        };
-    }
+    if (user.mail && !/^[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+$/.test(user.mail)) throw { // regex from ihateregex.io
+        message: `Please enter a valid email`,
+        status: 400
+    };
     /* -------------------------- check right validity -------------------------- */
-    if (user.right) {
-        if (!/^[0-9]$/.test(user.right)) throw {
-            message: `Please enter a valid right`,
-            status: 400
-        };
-    }
+    if (user.right && !/^[0-9]$/.test(user.right)) throw {
+        message: `Please enter a valid right`,
+        status: 400
+    };
     /* ----------------- everythings is good => save user to db ----------------- */
     next();
 }

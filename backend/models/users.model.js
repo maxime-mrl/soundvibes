@@ -4,7 +4,7 @@ const errorsHandler = require("../middleware/modelsMiddleware/errorsHandler.midd
 
 
 const historySchema = new mongoose.Schema({
-    // would've like to do it like recentHistory, but couldn't make it work
+    // would've like to do it like recentHistory, but couldn't make it work for some obscure reason
     id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Musics',
@@ -43,14 +43,7 @@ const userSchema = mongoose.Schema({
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Musics" }],
         default: []
     },
-    
-    fullHistory: [historySchema],
-    // Alternatively, if you want to allow an array of arrays
-    // fullHistory: [[{
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: 'Music',
-    //   required: true,
-    // }, Number]],
+    fullHistory: [ historySchema ],
 }, { timestamps: true });
 
 // check to make sure user format are good

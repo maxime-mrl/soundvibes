@@ -1,7 +1,9 @@
 const asyncHandler = require("express-async-handler");
 const playlistModel = require("../models/playlists.model");
-const musicsModel = require("../models/musics.model");
 
+/* -------------------------------------------------------------------------- */
+/*                             CREATE NEW PLAYLIST                            */
+/* -------------------------------------------------------------------------- */
 exports.createPlaylist = asyncHandler(async (req, res) => {
     /* ------------------------------ INPUTS CHECK ------------------------------ */
     const { name, musics } = req.body;
@@ -12,7 +14,7 @@ exports.createPlaylist = asyncHandler(async (req, res) => {
     }
     const content = typeof musics === "object" ? musics : JSON.parse(musics);
     /* ----------------------------- CREATE PLAYLIST ---------------------------- */
-    let newPlaylist = await playlistModel.create({ name, content, owner })
+    let newPlaylist = await playlistModel.create({ name, content, owner });
     newPlaylist = await newPlaylist.populate({
         path: "content",
         select: "title artist genre year"
@@ -29,6 +31,9 @@ exports.createPlaylist = asyncHandler(async (req, res) => {
     });
 });
 
+/* -------------------------------------------------------------------------- */
+/*                           GET A SPECIFIC PLAYLIST                          */
+/* -------------------------------------------------------------------------- */
 exports.getPlaylist = asyncHandler(async (req, res) => {
     /* ------------------------------ INPUTS CHECK ------------------------------ */
     const { id } = req.params;
@@ -37,19 +42,24 @@ exports.getPlaylist = asyncHandler(async (req, res) => {
         status: 400
     };
     /* ------------------------------ FIND PLAYLIST ----------------------------- */
-    const playlist = await playlistModel.findOne({ _id: id })
-        .populate({
-            path: "content",
-            select: "title artist genre year"
-        })
-        .populate({
-            path: "owner",
-            select: "username"
-        });
+    let playlist = await playlistModel.findOne({ _id: id });
     if (!playlist) throw {
         message: "Playlist not found",
         status: 404
     };
+    const contentLength = playlist.content.length;
+    /* ----------------------------- POPULATE FIELDS ---------------------------- */
+    playlist = await playlistModel.populate(playlist, [
+        {
+            path: "content",
+            select: "title artist genre year"
+        },
+        {
+            path: "owner",
+            select: "username"
+        }
+    ]);
+    /* ------------------------------ SEND RESPONSE ----------------------------- */
     res.status(200).json({
         _id: playlist._id,
         name: playlist.name,
@@ -57,23 +67,29 @@ exports.getPlaylist = asyncHandler(async (req, res) => {
         content: playlist.content
     });
     /* -------------------- PLAYLIST HEALTH CHECK AND REPAIR -------------------- */
-    if (playlist.contentLength !== playlist.content.length) repairPlaylist(playlist);
+    if (contentLength !== playlist.content.length) repairPlaylist(playlist);
 });
 
+/* -------------------------------------------------------------------------- */
+/*                      GET EVERY PLAYLISTS OWNED BY USER                     */
+/* -------------------------------------------------------------------------- */
 exports.userPlaylist = asyncHandler(async (req, res) => {
-    const playlists = await playlistModel.find({ owner: req.user._id })
-    .populate({
-        path: "content",
-        select: "title artist genre year"
-    })
-    .populate({
-        path: "owner",
-        select: "username"
-    })
-    .select("name content owner");
+    const playlists = await playlistModel.find({ owner: req.user._id }).populate([
+        {
+            path: "content",
+                select: "title artist genre year"
+        },
+        {
+            path: "owner",
+            select: "username"
+        }
+    ]).select("name content owner");
     res.status(200).json(playlists);
 })
 
+/* -------------------------------------------------------------------------- */
+/*                               UPDATE PLAYLIST                              */
+/* -------------------------------------------------------------------------- */
 exports.updatePlaylist = asyncHandler(async (req, res) => {
     /* ------------------------------ INPUTS CHECK ------------------------------ */
     const { id } = req.params;
@@ -90,7 +106,7 @@ exports.updatePlaylist = asyncHandler(async (req, res) => {
     };
     const content = typeof musics === "object" ? musics : JSON.parse(musics);
     /* ----------------------------- UPDATE PLAYLIST ---------------------------- */
-    const updatedPlaylist = await playlistModel.findByIdAndUpdate(id, { name, content, owner }, {new: true})
+    const updatedPlaylist = await playlistModel.findByIdAndUpdate(id, { name, content, owner }, { new: true })
     .populate({
         path: "content",
         select: "title artist genre year"
@@ -107,6 +123,9 @@ exports.updatePlaylist = asyncHandler(async (req, res) => {
     });
 });
 
+/* -------------------------------------------------------------------------- */
+/*                               DELETE PLAYLIST                              */
+/* -------------------------------------------------------------------------- */
 exports.deletePlaylist = asyncHandler(async (req, res) => {
     /* ------------------------------ INPUTS CHECK ------------------------------ */
     const { id } = req.params;
@@ -129,28 +148,11 @@ exports.deletePlaylist = asyncHandler(async (req, res) => {
     });
 });
 
-exports.playlistFrom = asyncHandler(async (req, res) => {
-    /* -------------------------- CHECK INPUTS VALIDITY ------------------------- */
-    if (!req.body || Object.keys(req.body).length !== 1 || !/^[-a-z0-9\s]+$/i.test(req.body[Object.keys(req.body)[0]])) throw {
-        message: "Invalid data",
-        status: 400
-    };
-    /* ------------------------------- FIND MUSICS ------------------------------ */
-    const musics = await musicsModel.find(req.body)
-        .sort([["listenedCount", -1]])
-        .select("title artist year genre");
-    if (!musics || musics.length < 1) throw {
-        message: "musics not found",
-        status: 200
-    };
-    res.status(200).json(musics);
-});
-
-// called when one or more music id isn't existing, update the playlist -- non existing music id can mainly happen in the case of a deleted musics
+// called when one or more music id isn't pointing to a music, update the playlist -- invalid music id can mainly happen in the case of a deleted musics
 async function repairPlaylist({id, content:playlist, name, owner}) { // no user return: the user arleady got his playlist w/ all valid musics, this is only used to help the database stay clean
     try {
         const validIds = [];
-        playlist.forEach(music => validIds.push(music._id)); // push every id that we have got from the populate which are all the valid musics
+        playlist.forEach(music => validIds.push(music._id)); // push every id that we have got from the populate (all valid musics)
         await playlistModel.findByIdAndUpdate(id, { name, content: validIds, owner });
     } catch (err) { console.error(err) }; // since there is no infos of this happening to the user simply log the error on the server
 }

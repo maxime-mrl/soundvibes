@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getMusic, reset } from "../../features/musics/musicsSlice";
-import { getSimilar } from "../../features/playlists/playlistsSlice";
+import { getSimilar } from "../../features/recommendations/recommendationsSlice";
 import Datactx from "../../context/DataContext";
 import { CoverImage, Loader, PlayCta, ShareBtn } from "../../components";
 import { SongList } from "../../containers";
@@ -17,7 +17,7 @@ export default function SongDetails() {
     const id = searchparams.get("id");
     const { playNewMusic, setAddPlaylist } = useContext(Datactx);
     const { infos } = useSelector(state => state.musics);
-    const { similar } = useSelector(state => state.playlists);
+    const { similar } = useSelector(state => state.recommendations);
 
     function playSimilarClicked() {
         const similarIds = [];
@@ -35,7 +35,7 @@ export default function SongDetails() {
             dispatch(reset());
             navigate("/");
         }
-    }, [infos])
+    }, [infos, dispatch, navigate])
     
     useEffect(() => { // when we get the infos get the similar musics
         if (infos && infos.artist) dispatch(getSimilar({artist: infos.artist}));

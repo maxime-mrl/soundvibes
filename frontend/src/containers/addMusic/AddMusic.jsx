@@ -85,7 +85,7 @@ export default function AddMusic() {
                     placeholder: "Music title",
                     autoComplete: "off",
                 }}
-                validation={"^[-a-z0-9\\s]+$"}
+                validation={"^[\\(\\)'-a-z0-9\\s]+$"}
                 valueState={title[0]}
                 updateForm={updateForm}
             />
@@ -99,7 +99,7 @@ export default function AddMusic() {
                     placeholder: "Artist name",
                     autoComplete: "off",
                 }}
-                validation={"^[-a-z0-9\\s]+$"}
+                validation={"^[\\(\\)'-a-z0-9\\s]+$"}
                 valueState={artist[0]}
                 updateForm={updateForm}
             />

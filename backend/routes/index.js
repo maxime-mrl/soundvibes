@@ -8,16 +8,14 @@ router.use("/api/users", require("./users.routes.js"));
 router.use("/api/musics", protect, require("./musics.routes.js"));
 router.use("/api/playlists", protect, require("./playlists.routes.js"));
 router.use("/api/recommendations", protect, require("./recommendations.routes.js"));
-router.use("/console", (req, res) => {
-    console.log(req.body);
-    res.end("ok")
-})
 
-// block direct access to audio, used to make harder the task of song downloading
-// router.use(/^\/.+\.mp3$/, () => { throw { status: 404 } });
+// block direct access to audio, used to limit unwanted access methods
+router.use(/^\/.+\.mp3$/, () => { throw { status: 404 } });
 // create public access to songs folder for the covers
 router.use("/public", express.static("songs"));
-// call the error handler
+// handle 404
+router.use("*", () => { throw { status: 404 } });
+// call the error handler/parser
 router.use(errorHandler);
 
 module.exports = router;
