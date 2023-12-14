@@ -8,11 +8,12 @@ export default function Loader() {
     const authLoading = useSelector(state => state.auth).isLoading;
     const musicsLoading = useSelector(state => state.musics).isLoading;
     const playlistsLoading = useSelector(state => state.playlists).isLoading;
+    const recommendationsLoading = useSelector(state => state.recommendations).isLoading;
 
     useEffect(() => { // check if anything load
-        if (authLoading || musicsLoading || playlistsLoading) setisSomethingLoading(true);
+        if (authLoading || musicsLoading || playlistsLoading || recommendationsLoading) setisSomethingLoading(true);
         else setisSomethingLoading(false);
-    }, [isSomethingLoading, authLoading, musicsLoading, playlistsLoading])
+    }, [isSomethingLoading, authLoading, musicsLoading, playlistsLoading, recommendationsLoading])
 
     if (isSomethingLoading) return (
         <div className="loader-container">

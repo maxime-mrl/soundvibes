@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { infos, reset, updateProfile, logout, deleteAccount } from "../../features/auth/authSlice";
+import { infos, reset, updateProfile, logout, deleteAccount } from "../../features/authSlice";
 import { ConfirmPopup, Loader, TextInput } from "../../components";
 import "./Profile.css";
 

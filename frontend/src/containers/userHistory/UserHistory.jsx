@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getHistory } from "../../features/auth/authSlice";
+import { getHistory } from "../../features/authSlice";
 import { SongList } from "../";
 import "./UserHistory.css";
 

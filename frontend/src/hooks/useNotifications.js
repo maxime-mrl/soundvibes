@@ -2,15 +2,17 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-import { logout, statusReset as resetUser } from "../features/auth/authSlice";
-import { statusReset as resetMusic } from "../features/musics/musicsSlice";
-import { statusReset as resetPlaylist } from "../features/playlists/playlistsSlice";
+import { logout, statusReset as resetUser } from "../features/authSlice";
+import { statusReset as resetMusic } from "../features/musicsSlice";
+import { statusReset as resetPlaylist } from "../features/playlistsSlice";
+import { statusReset as resetRecommendations } from "../features/recommendationsSlice";
 
 export default function useNotification() {
     const dispatch = useDispatch();
     const user = useSelector(state => state.auth);
     const music = useSelector(state => state.musics);
-    const playlist = useSelector(state => state.playlists);
+    const playlists = useSelector(state => state.playlists);
+    const recommendations = useSelector(state => state.recommendations);
     // user notification
     useEffect(() => {
         if (user.message) {
@@ -22,7 +24,7 @@ export default function useNotification() {
             if (user.isError) toast.error(user.message);
             else toast.success(user.message);
         }
-    }, [user, user.isError, user.isSuccess, user.message, dispatch]);
+    }, [user, dispatch]);
     // music notification
     useEffect(() => {
         if (music.message) {
@@ -34,19 +36,29 @@ export default function useNotification() {
             if (music.isError) toast.error(music.message);
             else toast.success(music.message);
         }
-    }, [music, music.isSuccess, music.isError, music.message, dispatch]);
+    }, [music, dispatch]);
     // playlist notification
     useEffect(() => {
-        if (playlist.message) {
-            if (/token/.test(playlist.message)) {
+        if (playlists.message) {
+            if (/token/.test(playlists.message)) {
                 dispatch(logout());
                 return;
             };
             dispatch(resetPlaylist());
-            if (playlist.isError) toast.error(playlist.message);
-            else toast.success(playlist.message);
+            if (playlists.isError) toast.error(playlists.message);
+            else toast.success(playlists.message);
         }
-    }, [playlist, playlist.isSuccess, playlist.isError, playlist.message, dispatch]);
-
-    return null;
+    }, [playlists, dispatch]);
+    // recommendations notification
+    useEffect(() => {
+        if (recommendations.message) {
+            if (/token/.test(recommendations.message)) {
+                dispatch(logout());
+                return;
+            };
+            dispatch(resetRecommendations());
+            if (recommendations.isError) toast.error(recommendations.message);
+            else toast.success(recommendations.message);
+        }
+    }, [recommendations, dispatch]);
 }

@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { deletePlaylist, getPlaylist, reset, updatePlaylist } from "../../features/playlists/playlistsSlice";
+import { deletePlaylist, getPlaylist, reset, updatePlaylist } from "../../features/playlistsSlice";
 import Datactx from "../../context/DataContext";
 import { ConfirmPopup, Loader, PlayCta, PlaylistCover, ShareBtn, TextInput } from "../../components";
 import { SongList } from "../../containers";

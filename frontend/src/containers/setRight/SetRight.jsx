@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { setRight } from "../../features/auth/authSlice";
+import { setRight } from "../../features/authSlice";
 import { TextInput } from "../../components";
 import "./SetRight.css";
 

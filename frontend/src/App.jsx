@@ -21,17 +21,19 @@ export default function App() {
               <Route path="/login" element={ <Login /> } />
               <Route path="/register" element={ <Register /> } />
             </Route>
+
             <Route element={ <LoggedRoutes user={user} /> }>
-              <Route path="/search/*" element={ <Search /> } />
-              <Route path="/details/" element={ <SongDetails /> } />
-              <Route path="/details/playlist/" element={ <PlaylistDetails /> } />
-              <Route path="/details/recommendation/" element={ <RecommendationDetails /> } />
-              <Route path="/profile/" element= { <Profile /> } />
-              <Route path="/playlists/" element= { <Playlists /> } />
-              <Route path="/admin/" element= { <Admin /> } />
+              <Route path="/search" element={ <Search /> } />
+              <Route path="/details" element={ <SongDetails /> } />
+              <Route path="/details/playlist" element={ <PlaylistDetails /> } />
+              <Route path="/details/recommendation" element={ <RecommendationDetails /> } />
+              <Route path="/profile" element= { <Profile /> } />
+              <Route path="/playlists" element= { <Playlists /> } />
+              <Route path="/admin" element= { <Admin /> } />
               <Route path="/" element={ <Home /> } />
             </Route>
-            <Route path="*" element={ <h1 className="h1">404 WIP</h1> } />
+            
+            <Route path="*" element={ <Navigate to="/" /> } />
           </Routes>
       </Router>
       <ToastContainer />

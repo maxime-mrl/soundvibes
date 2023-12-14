@@ -5,9 +5,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Datactx from "../../context/DataContext";
 import { Loader, PlayCta, PlaylistCover } from "../../components";
 import { SongList } from "../../containers";
-import { getRecommendations } from "../../features/recommendations/recommendationsSlice";
+import { getRecommendations } from "../../features/recommendationsSlice";
 import "./RecommendationDetails.css";
-import { newPlaylist } from "../../features/playlists/playlistsSlice";
+import { newPlaylist } from "../../features/playlistsSlice";
 
 export default function RecommendationDetails() {
     const navigate = useNavigate();

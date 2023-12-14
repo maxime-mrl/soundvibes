@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSwipeable } from "react-swipeable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getOwn, newPlaylist, updatePlaylist } from "../../features/playlists/playlistsSlice";
+import { getOwn, newPlaylist, updatePlaylist } from "../../features/playlistsSlice";
 import Datactx from "../../context/DataContext";
 import { PlaylistCover } from "../../components";
 import "./AddPlaylist.css";

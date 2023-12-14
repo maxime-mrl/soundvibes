@@ -73,7 +73,7 @@ exports.getUser = asyncHandler(async (req, res) => {
 });
 
 /* -------------------------------------------------------------------------- */
-/*                              GET USRE HISTORY                              */
+/*                              GET USER HISTORY                              */
 /* -------------------------------------------------------------------------- */
 exports.getHistory = asyncHandler(async (req, res) => {
     const user = await usersModel.findOne({ _id: req.user._id })

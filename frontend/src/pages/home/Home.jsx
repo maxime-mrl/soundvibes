@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Loader, Playlist } from "../../components";
-import { getRecommendations, getTrending } from "../../features/recommendations/recommendationsSlice";
+import { getRecommendations, getTrending } from "../../features/recommendationsSlice";
 import "./Home.css";
 
 export default function Home() {

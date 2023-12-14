@@ -1,7 +1,7 @@
 import { useEffect, useContext } from "react";
 import { useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { reset, searchMusics } from "../../features/musics/musicsSlice";
+import { reset, searchMusics } from "../../features/musicsSlice";
 import Datactx from "../../context/DataContext";
 import "./SearchBar.css";
 

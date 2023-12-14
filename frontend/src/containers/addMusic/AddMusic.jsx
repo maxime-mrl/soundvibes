@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { addMusic } from "../../features/musics/musicsSlice";
+import { addMusic } from "../../features/musicsSlice";
 import { FileInput, TextInput } from "../../components";
 import Datactx from "../../context/DataContext";
 import "./AddMusic.css";

@@ -91,6 +91,9 @@ input[type=number] {
   --toastify-text-color-light: var(--bg-solid) !important;
 }
 
+/* -------------------------------------------------------------------------- */
+/*                               GENERAL STYLING                              */
+/* -------------------------------------------------------------------------- */
 html {
   color: var(--text);
   font-family: 'Poppins', sans-serif;
