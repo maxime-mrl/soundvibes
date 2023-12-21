@@ -6,7 +6,7 @@
     overflow-y: auto;
 
     padding: 1em;
-    background-color: var(--bg-85);
+    background-color: var(--text-35);
     backdrop-filter: var(--blur);
     border-radius: var(--radius);
     border: var(--main-border-text);

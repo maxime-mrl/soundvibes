@@ -118,6 +118,7 @@ async function parseSimilar(similars, req) {
             };
         }
     }
+    if (similars.length < 1) console.log("ee")
     return similars;
 }
 
