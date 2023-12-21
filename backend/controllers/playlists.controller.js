@@ -154,5 +154,5 @@ async function repairPlaylist({id, content:playlist, name, owner}) { // no user 
         const validIds = [];
         playlist.forEach(music => validIds.push(music._id)); // push every id that we have got from the populate (all valid musics)
         await playlistModel.findByIdAndUpdate(id, { name, content: validIds, owner });
-    } catch (err) { console.error(err) }; // since there is no infos of this happening to the user simply log the error on the server
+    } catch (err) { console.error(err) } // since there is no infos of this happening to the user simply log the error on the server
 }

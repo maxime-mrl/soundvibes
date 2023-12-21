@@ -5,4 +5,5 @@ module.exports = (err, req, res, next) => { // https://reflectoring.io/express-e
         status: status,
         error: err.message
     });
-}
+    next();
+};

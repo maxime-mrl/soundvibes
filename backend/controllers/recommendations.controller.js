@@ -8,8 +8,8 @@ const recommendationsModel = require("../models/recommendations.model");
 /* -------------------------------------------------------------------------- */
 exports.getTrending = asyncHandler(async (req, res) => {
     const trending = await recommendationsModel.find({public: true});
-    await sendRecommendations(trending, res)
-})
+    await sendRecommendations(trending, res);
+});
 
 /* -------------------------------------------------------------------------- */
 /*                          GET USER RECOMMENDATIONS                          */
@@ -25,7 +25,7 @@ exports.getRecommendations = asyncHandler(async (req, res) => {
             const lastUpdate = new Date(recomendation.updatedAt).getTime();
             if (lastUpdate - limitDate <= 0) expired = true;
         });
-        if (!expired) return sendRecommendations(existingRecomendations, res)
+        if (!expired) return sendRecommendations(existingRecomendations, res);
         // remove the existing recommendations if expired -- don't update to avoid all problems with incorrect count (ex less than 3 music etc)
         await recommendationsModel.deleteMany({ targetUser: req.user._id });
     }
@@ -40,7 +40,7 @@ exports.getRecommendations = asyncHandler(async (req, res) => {
         filteredHistory = history.filter(music => music.count > minimumListened).map(music => music.id);
     }
     // trim the top listened randomly to three ids
-    while (filteredHistory.length > 3) filteredHistory.splice(Math.floor(Math.random() * filteredHistory.length), 1)
+    while (filteredHistory.length > 3) filteredHistory.splice(Math.floor(Math.random() * filteredHistory.length), 1);
     // get the similars from db
     const rawSimilars = await musicsModel.find({ '_id': { $in: filteredHistory } }).select("similar");
     // parse a bit
@@ -51,14 +51,14 @@ exports.getRecommendations = asyncHandler(async (req, res) => {
     }
     const added = await recommendationsModel.insertMany(similars);
     sendRecommendations(added, res);
-})
+});
 
 /* -------------------------------------------------------------------------- */
 /*                   GENERATE A PLAYLIST FROM A MUSIC INFOS                   */
 /* -------------------------------------------------------------------------- */
 exports.playlistFrom = asyncHandler(async (req, res) => {
     /* -------------------------- CHECK INPUTS VALIDITY ------------------------- */
-    if (!req.body || Object.keys(req.body).length !== 1 || !/^[\(\)'-a-z0-9\s]+$/i.test(req.body[Object.keys(req.body)[0]])) throw {
+    if (!req.body || Object.keys(req.body).length !== 1 || !/^[()'-a-z0-9\s]+$/i.test(req.body[Object.keys(req.body)[0]])) throw {
         message: "Invalid data",
         status: 400
     };
@@ -118,7 +118,6 @@ async function parseSimilar(similars, req) {
             };
         }
     }
-    if (similars.length < 1) console.log("ee")
     return similars;
 }
 
@@ -154,7 +153,7 @@ async function createDailyTrending() {
         const similars = await parseSimilar(musics, false);
         await recommendationsModel.insertMany(similars);
     } catch (err) {
-        console.error(err)
+        console.error(err);
     }
 }
 

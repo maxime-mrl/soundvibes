@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Datactx from "../../context/DataContext";
 import { CoverImage, SoundWaves } from "../../components";
+import { faBarsStaggered, faGears, faHouse, faMagnifyingGlass, faUser } from "@fortawesome/free-solid-svg-icons";
 
 
 export default function NavBarPC() {
@@ -14,20 +15,20 @@ export default function NavBarPC() {
         <nav className="navbar pc">
             <ul>
                 <li>
-                    <Link className="btn nav-item pc" to="/"><FontAwesomeIcon className={`nav-icon ${/^\W*$/.test(path) ? "active" : ""}`} icon="fa-solid fa-house" /> Home</Link>
+                    <Link className="btn nav-item pc" to="/"><FontAwesomeIcon className={`nav-icon ${/^\W*$/.test(path) ? "active" : ""}`} icon={faHouse} /> Home</Link>
                 </li>
                 <li>
-                    <Link className="btn nav-item pc" to="/search"><FontAwesomeIcon className={`nav-icon ${/search/.test(path) ? "active" : ""}`} icon="fa-solid fa-magnifying-glass" /> Search</Link>
+                    <Link className="btn nav-item pc" to="/search"><FontAwesomeIcon className={`nav-icon ${/search/.test(path) ? "active" : ""}`} icon={faMagnifyingGlass} /> Search</Link>
                 </li>
                 <li>
-                    <Link className="btn nav-item pc" to="/playlists"><FontAwesomeIcon className={`nav-icon ${/playlists/.test(path) ? "active" : ""}`} icon="fa-solid fa-bars-staggered" /> Playlists</Link>
+                    <Link className="btn nav-item pc" to="/playlists"><FontAwesomeIcon className={`nav-icon ${/playlists/.test(path) ? "active" : ""}`} icon={faBarsStaggered} /> Playlists</Link>
                 </li>
                 <li>
-                    <Link className="btn nav-item pc" to="/profile"><FontAwesomeIcon className={`nav-icon ${/profile/.test(path) ? "active" : ""}`} icon="fa-solid fa-user" /> Account</Link>
+                    <Link className="btn nav-item pc" to="/profile"><FontAwesomeIcon className={`nav-icon ${/profile/.test(path) ? "active" : ""}`} icon={faUser} /> Account</Link>
                 </li>
                 {(user && user.right && user.right > 0) ?
                     <li>
-                        <Link className="btn nav-item pc" to="/admin"><FontAwesomeIcon className={`nav-icon ${/admin/.test(path) ? "active" : ""}`} icon="fa-solid fa-gears" /> Manage musics</Link>
+                        <Link className="btn nav-item pc" to="/admin"><FontAwesomeIcon className={`nav-icon ${/admin/.test(path) ? "active" : ""}`} icon={faGears} /> Manage musics</Link>
                     </li>
                 :
                 ""

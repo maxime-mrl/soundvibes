@@ -4,7 +4,19 @@
   "icons": [
     {
       "src": "img/favicon.ico",
+      "sizes": "256x256",
       "type": "image/x-icon"
+    },
+    {
+      "src": "img/logo.png",
+      "type": "image/png",
+      "sizes": "256x256",
+      "purpose": "maskable"
+    },
+    {
+      "src": "img/logo-transparent.png",
+      "type": "image/png",
+      "sizes": "512x512"
     }
   ],
   "start_url": ".",

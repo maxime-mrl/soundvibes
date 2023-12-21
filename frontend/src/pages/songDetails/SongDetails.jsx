@@ -2,6 +2,7 @@ import { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { getMusic, reset } from "../../features/musicsSlice";
 import { getSimilar } from "../../features/recommendationsSlice";
 import Datactx from "../../context/DataContext";
@@ -61,7 +62,7 @@ export default function SongDetails() {
                 </header>
                 <article className="music-actions">
                     <PlayCta clickAction={() => {playNewMusic({ ids: [id] })}}/>
-                    <button className="btn" onClick={(e) => {setAddPlaylist({ids: [id], e})}}><FontAwesomeIcon icon="fa-solid fa-plus" /> Add to playlist</button>
+                    <button className="btn" onClick={(e) => {setAddPlaylist({ids: [id], e})}}><FontAwesomeIcon icon={faPlus} /> Add to playlist</button>
                     <ShareBtn />
                 </article>
             </section>

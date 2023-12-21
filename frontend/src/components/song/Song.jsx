@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronRight, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { CoverImage } from "../";
 import "./Song.css";
 
@@ -21,16 +22,16 @@ export default function Song({ details, actions, actionHandler }) {
             </div>
             {!actions
             ?
-            <FontAwesomeIcon className="more" icon={"fa-solid fa-chevron-right"} />
+            <FontAwesomeIcon className="more" icon={faChevronRight} />
             :
             (actions === "both"
             ?
             <div className="actions">
-                <FontAwesomeIcon onClick={trashClicked} className="btn btn-fail-text" icon={"fa-solid fa-trash"} />
-                <FontAwesomeIcon className="more" icon={"fa-solid fa-chevron-right"} />
+                <FontAwesomeIcon onClick={trashClicked} className="btn btn-fail-text" icon={faTrash} />
+                <FontAwesomeIcon className="more" icon={faChevronRight} />
             </div>
             :
-            <FontAwesomeIcon onClick={trashClicked} className="btn btn-fail-text" icon={"fa-solid fa-trash"} />
+            <FontAwesomeIcon onClick={trashClicked} className="btn btn-fail-text" icon={faTrash} />
             )
             }
         </Link>

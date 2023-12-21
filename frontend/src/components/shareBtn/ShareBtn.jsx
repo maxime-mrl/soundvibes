@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShare } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 
 export default function ShareBtn() {
@@ -10,7 +11,7 @@ export default function ShareBtn() {
 
     return (
         <button className="btn" onClick={copy}>
-            <FontAwesomeIcon icon="fa-solid fa-share" /> Share
+            <FontAwesomeIcon icon={faShare} /> Share
         </button>
     )
 }

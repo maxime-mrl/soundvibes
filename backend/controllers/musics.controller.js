@@ -7,7 +7,7 @@ const musicModel = require("../models/musics.model");
 const usersModel = require("../models/users.model");
 
 const musicFolder = path.join(rootPath, "songs");
-const musicTextRegex = /^[\(\)'-a-z0-9\s]+$/i;
+const musicTextRegex = /^[()'-a-z0-9\s]+$/i;
 
 /* -------------------------------------------------------------------------- */
 /*                                 ADD A MUSIC                                */

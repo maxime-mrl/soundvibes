@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { postMusic, deleteMusic, getInfos, searchMusic, playMusic } = require("../controllers/musics.controller");
+const { postMusic, deleteMusic, getInfos, searchMusic, playMusic } = require("../../controllers/musics.controller");
 
 router.get("/get/:id", getInfos);
 router.get("/play/:id", playMusic);

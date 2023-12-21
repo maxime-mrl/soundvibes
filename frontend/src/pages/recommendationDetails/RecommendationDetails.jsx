@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Datactx from "../../context/DataContext";
 import { Loader, PlayCta, PlaylistCover } from "../../components";
 import { SongList } from "../../containers";
@@ -70,7 +71,7 @@ export default function RecommendationDetails() {
                 </header>
                 <article className="playlist-actions">
                     <PlayCta clickAction={ctaClick}/>
-                    <button className="btn" onClick={createPlaylist}><FontAwesomeIcon icon="fa-solid fa-plus" /> Save as playlist</button>
+                    <button className="btn" onClick={createPlaylist}><FontAwesomeIcon icon={faPlus} /> Save as playlist</button>
                 </article>
                 <article className="playlist-song-list">
                     <SongList musics={details.content} />

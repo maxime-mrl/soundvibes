@@ -22,6 +22,10 @@ app.use("/", router);
 db.connect()
     .then(result => {
         console.log(result);
-        app.listen(port, () => console.log(`listening on port ${port}`));
+        app.listen(port, () => console.log(`listening on port ${port}`))
+        .on("error", err => {
+            if (err.code === 'EADDRINUSE') console.log('port busy');
+            else console.log(err);
+        });
     })
     .catch(err => console.error(err));

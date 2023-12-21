@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons'
 import "./FileInput.css";
 
 export default function AddMusic({name, label, accept, update}) {
@@ -8,7 +9,7 @@ export default function AddMusic({name, label, accept, update}) {
     return (
         <div className="file-input-container">
             <label htmlFor={name} className="file-label btn-cta">
-                <FontAwesomeIcon icon="fa-solid fa-arrow-up-from-bracket" />
+            <FontAwesomeIcon icon={faArrowUpFromBracket} />
                 <i>
                     {
                         inputRef.current.files[0] ?

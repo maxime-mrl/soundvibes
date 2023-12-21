@@ -1,18 +1,40 @@
-export { default as MusicControls } from "./musicControls/MusicControls";
-export { default as PlayCta } from "./playCta/PlayCta";
-export { default as Playlist } from "./playlist/Playlist";
-export { default as ProgressBar } from "./progressBar/ProgressBar";
-export { default as SearchBar } from "./searchBar/SearchBar";
-export { default as Song } from "./song/Song";
-export { default as VolumeControl } from "./volumeControl/VolumeControl";
-export { default as SoundWaves } from "./soundWaves/SoundWaves";
-export { default as PlayerOptions } from "./playerOptions/PlayerOptions";
-export { default as Slider } from "./Slider/Slider";
-export { default as CoverImage } from "./coverImage/CoverImage";
-export { default as PlaylistCover } from "./playlistCover/PlaylistCover";
-export { default as TextInput } from "./textInput/TextInput";
-export { default as ScrollTop } from "./scrollTop/ScrollTop";
-export { default as FileInput } from "./fileInput/FileInput";
-export { default as Loader } from "./loader/Loader";
-export { default as ConfirmPopup } from "./confirmPopup/ConfirmPopup";
-export { default as ShareBtn } from "./shareBtn/ShareBtn";
+import loadable from '@loadable/component';
+const MusicControls = loadable(() => import('./musicControls/MusicControls'));
+const PlayCta = loadable(() => import('./playCta/PlayCta'));
+const Playlist = loadable(() => import('./playlist/Playlist'));
+const ProgressBar = loadable(() => import('./progressBar/ProgressBar'));
+const SearchBar = loadable(() => import('./searchBar/SearchBar'));
+const Song = loadable(() => import('./song/Song'));
+const VolumeControl = loadable(() => import('./volumeControl/VolumeControl'));
+const SoundWaves = loadable(() => import('./soundWaves/SoundWaves'));
+const PlayerOptions = loadable(() => import('./playerOptions/PlayerOptions'));
+const Slider = loadable(() => import('./slider/Slider'));
+const CoverImage = loadable(() => import('./coverImage/CoverImage'));
+const PlaylistCover = loadable(() => import('./playlistCover/PlaylistCover'));
+const TextInput = loadable(() => import('./textInput/TextInput'));
+const ScrollTop = loadable(() => import('./scrollTop/ScrollTop'));
+const FileInput = loadable(() => import('./fileInput/FileInput'));
+const Loader = loadable(() => import('./loader/Loader'));
+const ConfirmPopup = loadable(() => import('./confirmPopup/ConfirmPopup'));
+const ShareBtn = loadable(() => import('./shareBtn/ShareBtn'));
+
+export {
+    MusicControls,
+    PlayCta,
+    Playlist,
+    ProgressBar,
+    SearchBar,
+    Song,
+    VolumeControl,
+    SoundWaves,
+    PlayerOptions,
+    Slider,
+    CoverImage,
+    PlaylistCover,
+    TextInput,
+    ScrollTop,
+    FileInput,
+    Loader,
+    ConfirmPopup,
+    ShareBtn
+}

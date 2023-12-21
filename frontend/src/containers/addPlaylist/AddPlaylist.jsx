@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSwipeable } from "react-swipeable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { getOwn, newPlaylist, updatePlaylist } from "../../features/playlistsSlice";
 import Datactx from "../../context/DataContext";
 import { PlaylistCover } from "../../components";
@@ -85,7 +86,7 @@ export default function AddPlaylist() {
     return (
         <div className="add-playlist-modal" ref={playlistModal}>
             <button className="close-btn btn">
-                <FontAwesomeIcon icon="fa-solid fa-xmark" onClick={() => setAddPlaylist(false)} />
+                <FontAwesomeIcon icon={faXmark} onClick={() => setAddPlaylist(false)} />
             </button>
             <h2 className="h2">Add to librairie</h2>
             <div className="playlists-list">

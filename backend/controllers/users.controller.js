@@ -80,7 +80,7 @@ exports.getHistory = asyncHandler(async (req, res) => {
         .populate({
             path: "recentHistory",
             select: "title artist genre year"
-        })
+        });
     /* ---------------------------- RETURN USER INFOS --------------------------- */
     res.status(200).json(user.recentHistory);
 });
@@ -145,7 +145,7 @@ exports.setRight = asyncHandler(async (req, res) => {
     /* ------------------------------- UPDATE USER ------------------------------ */
     const updatedUser = await usersModel.findByIdAndUpdate(targetUser._id, { right }, { new: true });
     res.status(200).json({ status: `Successfully updated user ${updatedUser._id} to right ${updatedUser.right}` });
-})
+});
 
 /* -------------------------------------------------------------------------- */
 /*                             DELETE USER ACCOUNT                            */

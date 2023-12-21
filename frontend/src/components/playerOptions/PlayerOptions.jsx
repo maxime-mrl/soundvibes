@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faRepeat, faShuffle } from "@fortawesome/free-solid-svg-icons";
 import Datactx from "../../context/DataContext";
 import "./PlayerOptions.css";
 
@@ -13,13 +14,13 @@ export default function PlayerOptions({ isExtended }) {
     return (
         <div className={isExtended ? "player-options extended" : "player-options"}>
             <button className="btn" onClick={(e) => {setAddPlaylist({ids: [id], e})}}>
-                <FontAwesomeIcon icon="fa-solid fa-plus" />{isExtended && <i>Add</i> }
+                <FontAwesomeIcon icon={faPlus} />{isExtended && <i>Add</i> }
             </button>
             <button className={mode === "loop" ? "btn active-mode" : "btn"} onClick={() => {modeUpdate("loop")}}>
-                <FontAwesomeIcon icon="fa-solid fa-repeat" />
+                <FontAwesomeIcon icon={faRepeat} />
             </button>
             <button className={mode === "shuffle" ? "btn active-mode" : "btn"} onClick={() => {modeUpdate("shuffle")}}>
-                <FontAwesomeIcon icon="fa-solid fa-shuffle" />
+                <FontAwesomeIcon icon={faShuffle} />
             </button>
         </div>
     )

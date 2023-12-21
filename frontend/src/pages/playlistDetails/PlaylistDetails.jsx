@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencil, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { deletePlaylist, getPlaylist, reset, updatePlaylist } from "../../features/playlistsSlice";
 import Datactx from "../../context/DataContext";
 import { ConfirmPopup, Loader, PlayCta, PlaylistCover, ShareBtn, TextInput } from "../../components";
@@ -99,7 +100,7 @@ export default function PlaylistDetails() {
                             {playlist.name}
                             {playlist.owner._id === user._id &&
                                 <button onClick={showEditTitle} className="playlist-name-edit btn">
-                                    <FontAwesomeIcon icon="fa-solid fa-pencil" />
+                                    <FontAwesomeIcon icon={faPencil} />
                                 </button>
                             }
                         </h1>
@@ -111,7 +112,7 @@ export default function PlaylistDetails() {
                     <ShareBtn />
                     {playlist.owner._id === user._id &&
                         <button onClick={showDeletePopup} className="btn-cta btn-fail delete">
-                            <FontAwesomeIcon icon="fa-solid fa-trash" /> Delete
+                            <FontAwesomeIcon icon={faTrash} /> Delete
                         </button>
                     }
                 </article>
@@ -126,7 +127,7 @@ export default function PlaylistDetails() {
                     <form className="edit-title-form" onSubmit={submitTitle}>
                         <h2 className="h2">Edit title</h2>
                         <button className="close-btn btn" type="button">
-                            <FontAwesomeIcon icon="fa-solid fa-xmark" onClick={hideEditTitle} />
+                            <FontAwesomeIcon icon={faXmark} onClick={hideEditTitle} />
                         </button>
                         <TextInput 
                             label={{
