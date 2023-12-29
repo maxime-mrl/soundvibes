@@ -22,16 +22,16 @@ export default function Song({ details, actions, actionHandler }) {
             </div>
             {!actions
             ?
-            <FontAwesomeIcon className="more" icon={faChevronRight} />
+            <FontAwesomeIcon className="more" icon={faChevronRight} aria-label="details" />
             :
             (actions === "both"
             ?
             <div className="actions">
-                <FontAwesomeIcon onClick={trashClicked} className="btn btn-fail-text" icon={faTrash} />
-                <FontAwesomeIcon className="more" icon={faChevronRight} />
+                <FontAwesomeIcon onClick={trashClicked} className="btn btn-fail-text" icon={faTrash} aria-label="delete" />
+                <FontAwesomeIcon className="more" icon={faChevronRight} aria-label="details" />
             </div>
             :
-            <FontAwesomeIcon onClick={trashClicked} className="btn btn-fail-text" icon={faTrash} />
+            <FontAwesomeIcon onClick={trashClicked} className="btn btn-fail-text" icon={faTrash} aria-label="delete" />
             )
             }
         </Link>

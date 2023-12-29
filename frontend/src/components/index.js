@@ -17,6 +17,7 @@ const FileInput = loadable(() => import('./fileInput/FileInput'));
 const Loader = loadable(() => import('./loader/Loader'));
 const ConfirmPopup = loadable(() => import('./confirmPopup/ConfirmPopup'));
 const ShareBtn = loadable(() => import('./shareBtn/ShareBtn'));
+const Logo = loadable(() => import('./logo/Logo'));
 
 export {
     MusicControls,
@@ -36,5 +37,6 @@ export {
     FileInput,
     Loader,
     ConfirmPopup,
-    ShareBtn
+    ShareBtn,
+    Logo
 }

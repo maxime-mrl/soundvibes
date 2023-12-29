@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { register } from "../../features/authSlice";
-import { Loader, TextInput } from "../../components";
+import { Loader, Logo, TextInput } from "../../components";
 import "./Register.css";
 
 export default function Register() {
@@ -69,7 +69,9 @@ export default function Register() {
     return (
         <>
             <section className="register-header">
-                <h1 className="h1">Soundvibes</h1>
+                <h1 className="h1">
+                    <Logo />    
+                </h1>
                 <h2 className="h2">Join the comunity</h2>
             </section>
             <form onSubmit={submitForm} className="register-form">

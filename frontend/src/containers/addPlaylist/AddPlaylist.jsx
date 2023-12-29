@@ -85,7 +85,7 @@ export default function AddPlaylist() {
 
     return (
         <div className="add-playlist-modal" ref={playlistModal}>
-            <button className="close-btn btn">
+            <button className="close-btn btn" aria-label="close">
                 <FontAwesomeIcon icon={faXmark} onClick={() => setAddPlaylist(false)} />
             </button>
             <h2 className="h2">Add to librairie</h2>

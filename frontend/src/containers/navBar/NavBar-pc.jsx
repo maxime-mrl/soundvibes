@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Datactx from "../../context/DataContext";
-import { CoverImage, SoundWaves } from "../../components";
+import { CoverImage, Logo, SoundWaves } from "../../components";
 import { faBarsStaggered, faGears, faHouse, faMagnifyingGlass, faUser } from "@fortawesome/free-solid-svg-icons";
 
 
@@ -44,8 +44,8 @@ export default function NavBarPC() {
                 <Link to={`/details?id=${music.id}`} className="music-infos">
                     <CoverImage music={music}/>
                     <div className="text">
-                        <h2 className="h2">{title}</h2>
-                        <h3 className="h3">{artist}</h3>
+                        {title && <h2 className="h2">{title}</h2>}
+                        {artist && <h3 className="h3">{artist}</h3>}
                     </div>
                 </Link>
             </div>

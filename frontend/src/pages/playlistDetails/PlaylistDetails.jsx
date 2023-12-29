@@ -99,7 +99,7 @@ export default function PlaylistDetails() {
                         <h1>
                             {playlist.name}
                             {playlist.owner._id === user._id &&
-                                <button onClick={showEditTitle} className="playlist-name-edit btn">
+                                <button onClick={showEditTitle} className="playlist-name-edit btn" aria-label="edit">
                                     <FontAwesomeIcon icon={faPencil} />
                                 </button>
                             }
@@ -126,7 +126,7 @@ export default function PlaylistDetails() {
                 <div className="edit-title-modal hidden" ref={editPopup} onMouseDown={(e) => {if (e.target === editPopup.current) hideEditTitle()}}>
                     <form className="edit-title-form" onSubmit={submitTitle}>
                         <h2 className="h2">Edit title</h2>
-                        <button className="close-btn btn" type="button">
+                        <button className="close-btn btn" type="button" aria-label="close">
                             <FontAwesomeIcon icon={faXmark} onClick={hideEditTitle} />
                         </button>
                         <TextInput 

@@ -18,7 +18,7 @@ export default function SearchBar() {
     return (
         <div className="search-input">
             <input className="search-bar" type="text" name="search" id="search" placeholder="Search something" value={search} onChange={(e) => setSearch(e.target.value)} />
-            <label className="search-label" htmlFor="search"><FontAwesomeIcon icon={faSearch} aria-label="Search something"/></label>
+            <label className="search-label" htmlFor="search" aria-label="Search something"><FontAwesomeIcon icon={faSearch} /></label>
         </div>
     )
 }

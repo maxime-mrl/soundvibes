@@ -28,18 +28,6 @@
     transition: var(--transition-duration);
 }
 
-.slider-label {
-    overflow: hidden;
-    width: 0;
-    height: 0;
-    opacity: 0;
-    position: absolute;
-    z-index: -1;
-    pointer-events: none;
-    user-select: none;
-}
-
-
 @media (hover: hover) {
     .slider-bar:hover {
         --color: var(--accent);

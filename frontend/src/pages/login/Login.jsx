@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { login } from "../../features/authSlice";
-import { Loader, TextInput } from "../../components"
+import { Loader, Logo, TextInput } from "../../components"
 import "./Login.css";
 
 export default function Login() {
@@ -62,7 +62,9 @@ export default function Login() {
     return (
         <>
             <section className="login-header">
-                <h1 className="h1">Soundvibes</h1>
+                <h1 className="h1">
+                    <Logo />    
+                </h1>
                 <h2 className="h2">Login</h2>
             </section>
             <form onSubmit={submitForm} className="login-form">
