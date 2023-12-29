@@ -59,11 +59,12 @@ export default function useMusic() {
         })
     }, []);
 
+    
     // get html audio element
     const getAudio = useCallback(() => {
         if (document.querySelector(".audio-player")) return document.querySelector(".audio-player");
         else { // if no audio
-            if (music && music.id) resetState();
+            if (music && music.id && music.audio) resetState();
             return new Audio();
         };
     }, [music, resetState]);

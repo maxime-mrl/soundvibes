@@ -41,6 +41,7 @@ export default function NavBarPC() {
                         <p>Now playing</p>
                     </div>
                 }
+                {music.id ?
                 <Link to={`/details?id=${music.id}`} className="music-infos">
                     <CoverImage music={music}/>
                     <div className="text">
@@ -48,6 +49,15 @@ export default function NavBarPC() {
                         {artist && <h3 className="h3">{artist}</h3>}
                     </div>
                 </Link>
+                :
+                <div className="music-infos">
+                    <CoverImage music={music}/>
+                    <div className="text">
+                        {title && <h2 className="h2">{title}</h2>}
+                        {artist && <h3 className="h3">{artist}</h3>}
+                    </div>
+                </div>
+                }
             </div>
         </nav>
     )
