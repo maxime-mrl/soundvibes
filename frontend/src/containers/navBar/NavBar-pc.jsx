@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Datactx from "../../context/DataContext";
-import { CoverImage, Logo, SoundWaves } from "../../components";
+import { CoverImage, SoundWaves } from "../../components";
 import { faBarsStaggered, faGears, faHouse, faMagnifyingGlass, faUser } from "@fortawesome/free-solid-svg-icons";
 
 
