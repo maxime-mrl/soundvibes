@@ -11,7 +11,7 @@ export default function VolumeControl() {
     return (
         <div className="volume-control">
             <FontAwesomeIcon icon={faVolumeHigh} />
-            <Slider value={volume} update={(e) => updateMusic({ volume: e.target.value })} />
+            <Slider value={volume} max={100} update={(e) => updateMusic({ volume: e.target.value })} />
         </div>
     )
 }

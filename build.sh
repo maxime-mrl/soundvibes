@@ -32,4 +32,4 @@ echo -e "${Yellow}Building client...${NC}"
 npm --prefix "./frontend" run build
 echo -e "${Yellow}Building server...${NC}"
 npm --prefix "./backend" run build
-echo -e "${Green}Build done, if no error you can execute node ./build/server to launch the app!${NC}"
+echo -e "${Green}Build done, you can launch server using 'node ./build/server'!${NC}"
