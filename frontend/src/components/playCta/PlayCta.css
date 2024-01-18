@@ -13,9 +13,6 @@
     flex-shrink: 0;
 }
 
-
-@media (hover: hover) { /* prevent hover animation to became active animation on mobile (wich often dosen't look good) */
-    .play-btn:hover {
-        transform: scale(1.05);
-    }
-  }
+.pc .play-btn:hover {
+    transform: scale(1.05);
+}

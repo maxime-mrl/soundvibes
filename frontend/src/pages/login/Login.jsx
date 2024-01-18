@@ -65,9 +65,9 @@ export default function Login() {
                 <h1 className="h1">
                     <Logo />    
                 </h1>
-                <h2 className="h2">Login</h2>
             </section>
             <form onSubmit={submitForm} className="login-form">
+                <h2 className="h2">Welcome back!</h2>
                 <TextInput 
                     label={{
                         regular: "Email:",

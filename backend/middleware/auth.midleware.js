@@ -25,4 +25,4 @@ exports.protect = asyncHandler(async (req, res, next) => { // check if user is l
         }
         throw err;
     }
-})
+});

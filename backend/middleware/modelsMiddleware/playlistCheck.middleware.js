@@ -9,8 +9,8 @@ module.exports = async function(next) {
     if (!Array.isArray(content) || content.length < 1) throw { // musics format is good
         message: "Invalid musics",
         status: 400
-    }
+    };
     // no need to check if music exist because done automaticlly on every playlist get
     /* -------------------- everythings is good => save to db ------------------- */
     next();
-}
+};

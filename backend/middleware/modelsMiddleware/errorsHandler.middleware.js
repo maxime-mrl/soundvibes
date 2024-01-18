@@ -21,11 +21,10 @@ module.exports = (err, doc, next) => { // detect and handle specific errors thro
             err.status = 400;
         }
         if (/objectid/i.test(error.kind)) { // invalid ObjectID
-            console.log(Object.keys(error))
             err = new Error(`Invalid identifiers in ${error.value}.`);
             err.status = 400;
         }
     }
     // others errors thrown as is
     throw err;
-}
+};

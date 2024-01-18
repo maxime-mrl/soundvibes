@@ -15,6 +15,6 @@
     padding-right: 0.5em;
 }
 
-.file-label:hover {
+.pc .file-label:hover {
     background-color: var(--accent);
 }

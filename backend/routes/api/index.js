@@ -3,6 +3,7 @@ const { protect } = require("../../middleware/auth.midleware");
 const errorHandler = require("../../middleware/errors.middleware");
 const router = express.Router();
 
+
 // different router categories
 router.use("/users", require("./users.routes.js"));
 router.use("/musics", protect, require("./musics.routes.js"));

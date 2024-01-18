@@ -180,15 +180,15 @@ html {
   background-color: var(--success);
 }
 
+/* Hover only on pc */
 
-@media (hover: hover) { /* prevent hover animation to became active animation on mobile (wich often dosen't look good) */
-  .btn:hover {
-    color: var(--accent);
-  }
-  .btn-cta:hover {
-    background-color: var(--text);
-  }
-  .btn-white:hover {
-    background-color: var(--accent);
-  }
+.pc .btn:hover {
+  color: var(--accent);
+}
+.pc .btn-cta:hover {
+  background-color: var(--text);
+}
+
+.pc .btn-white:hover {
+  background-color: var(--accent);
 }

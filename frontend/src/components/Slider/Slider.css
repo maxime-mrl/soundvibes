@@ -28,9 +28,7 @@
     transition: var(--transition-duration);
 }
 
-@media (hover: hover) {
-    .slider-bar:hover {
-        --color: var(--accent);
-        transform: scaleY(1.5);
-    }
+.pc .slider-bar:hover {
+    --color: var(--accent);
+    transform: scaleY(1.5);
 }

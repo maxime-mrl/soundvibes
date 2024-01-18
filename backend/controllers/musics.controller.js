@@ -17,10 +17,10 @@ exports.postMusic = asyncHandler(async (req, res) => {
     if (req.user.right < 1) throw {
         message: `You are not authorized to do this!`,
         status: 403
-    }
+    };
     /* ------------------------------ INPUTS CHECK ------------------------------ */
     const { title, artist, tags } = req.body;
-    const year = parseInt(req.body.year)
+    const year = parseInt(req.body.year);
     if (!title || !artist || !year || !tags || !req.files || !req.files.audio || !req.files.cover) throw { // check everything is here
         message: "At least one missing field", // no specific error since the frontend should arleady warn
         status: 400
@@ -95,7 +95,7 @@ exports.playMusic = asyncHandler(async (req, res) => {
         if ((typeof start !== 'string' && start.length > 1) || (typeof end !== 'string' && end.length > 1)) throw {
             message: "Incomplete chunked encoding",
             status: 500,
-        }
+        };
         start = parseInt(start);
         end = end ? parseInt(end) : length - 1;
         // add the length/range headers
@@ -161,11 +161,11 @@ exports.deleteMusic = asyncHandler(async (req, res) => {
             message: `You are not authorized to do this!`,
             status: 403
         };
-        const { id } = req.params
+        const { id } = req.params;
         if (!id || !await musicModel.findById(id)) throw {
             message: "Invalid music id",
             status: 400
-        }
+        };
         /* --------------------------------- DELETE --------------------------------- */
         // db
         const query = await musicModel.deleteOne({ _id: id });
@@ -193,7 +193,7 @@ exports.getInfos = asyncHandler(async (req, res) => {
         title: music.title,
         artist: music.artist,
         year: music.year
-    })
+    });
 });
 
 /* -------------------------------------------------------------------------- */

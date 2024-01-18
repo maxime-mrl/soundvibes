@@ -31,4 +31,4 @@ module.exports = async function(next) {
     };
     /* ----------------- everythings is good => save user to db ----------------- */
     next();
-}
+};

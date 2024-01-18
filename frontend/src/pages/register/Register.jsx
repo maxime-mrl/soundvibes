@@ -72,9 +72,9 @@ export default function Register() {
                 <h1 className="h1">
                     <Logo />    
                 </h1>
-                <h2 className="h2">Join the comunity</h2>
             </section>
             <form onSubmit={submitForm} className="register-form">
+                <h2 className="h2">Join the comunity</h2>
                 <TextInput 
                     label={{
                         regular: "Username:",

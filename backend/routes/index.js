@@ -8,7 +8,7 @@ const rootPath = require("../rootPath");
 router.use("/api", require("./api"));
 
 // block direct access to audio, used to limit unwanted access methods
-router.use(/^\/.+\.mp3$/, () => { throw { status: 404 }; });
+router.use(/^\/.+\.mp3$/, (req, res) => res.status(404).end());
 // create public access to songs folder for the covers
 router.use("/public", express.static(path.join(rootPath, 'songs')));
 
@@ -20,6 +20,6 @@ if (fs.existsSync(path.join(rootPath, 'client'))) {
 } else {
     console.error("No client folder detected, continuing with only backend. This is normal for a development environement");
     // replace client by 404
-    router.use("*", () => { throw { status: 404 }; });
+    router.use("*", (req, res) => res.status(404).end());
 }
 module.exports = router;
