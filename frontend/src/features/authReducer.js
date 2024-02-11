@@ -44,6 +44,11 @@ export const authSlice = createSlice({
             state.user = null;
             state.message = "successfully signed out!";
         })
+        .addCase(expiredToken.fulfilled, (state) => {
+            state.user = null;
+            state.isError = true;
+            state.message = "Session expired, please login back.";
+        })
         .addCase(infos.fulfilled, (state, action) => {
             state.user = {
                 ...state.user,
@@ -171,6 +176,7 @@ export const deleteAccount = createAsyncThunk("auth/delete", async(data, thunkAP
 
 /* --------------------------------- LOGOUT --------------------------------- */
 export const logout = createAsyncThunk("auth/logout", async () => localStorage.removeItem('user'));
+export const expiredToken = createAsyncThunk("auth/expiredToken", async () => localStorage.removeItem('user'));
 
 function parseError(err) {
     if (err.response && err.response.data.error) return err.response.data.error;

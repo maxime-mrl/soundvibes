@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { register } from "../../features/authSlice";
+import { register } from "../../features/authReducer";
 import { Loader, Logo, TextInput } from "../../components";
 import "./Register.css";
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ConfirmPopup, Loader, SearchBar } from "../../components";
-import { deleteSong } from "../../features/musicsSlice";
+import { deleteSong } from "../../features/musicsReducer";
 import "./DeleteMusic.css";
 import SongList from "../songList/SongList";
 

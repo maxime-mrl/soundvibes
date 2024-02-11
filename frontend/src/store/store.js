@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from "../features/authSlice";
-import musicsReducer from '../features/musicsSlice';
-import playlistsReducer from '../features/playlistsSlice';
-import recommendationsReducer from '../features/recommendationsSlice';
+import authReducer from "../features/authReducer";
+import musicsReducer from '../features/musicsReducer';
+import playlistsReducer from '../features/playlistsReducer';
+import recommendationsReducer from '../features/recommendationsReducer';
 
 export const store = configureStore({
   reducer: {

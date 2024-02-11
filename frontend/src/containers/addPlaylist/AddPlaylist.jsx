@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useSwipeable } from "react-swipeable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { getOwn, newPlaylist, updatePlaylist } from "../../features/playlistsSlice";
+import { getOwn, newPlaylist, updatePlaylist } from "../../features/playlistsReducer";
 import Datactx from "../../context/DataContext";
 import { PlaylistCover } from "../../components";
 import "./AddPlaylist.css";

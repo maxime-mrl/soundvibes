@@ -2,7 +2,7 @@ import { useEffect, useContext } from "react";
 import { useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { reset, searchMusics } from "../../features/musicsSlice";
+import { reset, searchMusics } from "../../features/musicsReducer";
 import Datactx from "../../context/DataContext";
 import "./SearchBar.css";
 

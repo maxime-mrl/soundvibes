@@ -72,7 +72,6 @@ export const searchMusics = createAsyncThunk("musics/search", async (query, thun
     try {
         return await musicsService.get(`/search/${query}`, thunkAPI.getState().auth.user.token)
     } catch (err) {
-        console.log("erruer")
         return thunkAPI.rejectWithValue(parseError(err));
     }
 });

@@ -1,11 +1,11 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-import { logout, statusReset as resetUser } from "../features/authSlice";
-import { statusReset as resetMusic } from "../features/musicsSlice";
-import { statusReset as resetPlaylist } from "../features/playlistsSlice";
-import { statusReset as resetRecommendations } from "../features/recommendationsSlice";
+import { expiredToken, statusReset as resetUser } from "../features/authReducer";
+import { statusReset as resetMusic } from "../features/musicsReducer";
+import { statusReset as resetPlaylists } from "../features/playlistsReducer";
+import { statusReset as resetRecommendations } from "../features/recommendationsReducer";
 
 export default function useNotification() {
     const dispatch = useDispatch();
@@ -13,52 +13,43 @@ export default function useNotification() {
     const music = useSelector(state => state.musics);
     const playlists = useSelector(state => state.playlists);
     const recommendations = useSelector(state => state.recommendations);
+    const cooldown = {
+        message: "",
+        last: Date.now()
+    }
+
+    const displayNotification = useCallback((state, reset) => {
+        if (!state.message) return; // check if notif
+        if (/token/.test(state.message)) { // token expired
+            dispatch(expiredToken());
+            return;
+        };
+        dispatch(reset()); // reset the message and status of concerned state
+        // check cooldown
+        if (cooldown.message === state.message && Date.now() - cooldown.last < 2000) return;
+        cooldown.message = state.message;
+        cooldown.last = Date.now();
+        // display notification
+        if (state.isError) toast.error(state.message);
+        else toast.success(state.message);
+    // eslint-disable-next-line
+    }, [dispatch])
+
+    /* --------------------------- Useeffect listener --------------------------- */
     // user notification
     useEffect(() => {
-        if (user.message) {
-            if (/token/.test(user.message)) {
-                dispatch(logout());
-                return;
-            };
-            dispatch(resetUser());
-            if (user.isError) toast.error(user.message);
-            else toast.success(user.message);
-        }
-    }, [user, dispatch]);
+        displayNotification(user, resetUser);
+    }, [user, displayNotification]);
     // music notification
     useEffect(() => {
-        if (music.message) {
-            if (/token/.test(music.message)) {
-                dispatch(logout());
-                return;
-            };
-            dispatch(resetMusic());
-            if (music.isError) toast.error(music.message);
-            else toast.success(music.message);
-        }
-    }, [music, dispatch]);
+        displayNotification(music, resetMusic);
+    }, [music, displayNotification]);
     // playlist notification
     useEffect(() => {
-        if (playlists.message) {
-            if (/token/.test(playlists.message)) {
-                dispatch(logout());
-                return;
-            };
-            dispatch(resetPlaylist());
-            if (playlists.isError) toast.error(playlists.message);
-            else toast.success(playlists.message);
-        }
-    }, [playlists, dispatch]);
+        displayNotification(playlists, resetPlaylists);
+    }, [playlists, displayNotification]);
     // recommendations notification
     useEffect(() => {
-        if (recommendations.message) {
-            if (/token/.test(recommendations.message)) {
-                dispatch(logout());
-                return;
-            };
-            dispatch(resetRecommendations());
-            if (recommendations.isError) toast.error(recommendations.message);
-            else toast.success(recommendations.message);
-        }
-    }, [recommendations, dispatch]);
+        displayNotification(recommendations, resetRecommendations);
+    }, [recommendations, displayNotification]);
 }

@@ -6,9 +6,9 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Datactx from "../../context/DataContext";
 import { Loader, PlayCta, PlaylistCover } from "../../components";
 import { SongList } from "../../containers";
-import { getRecommendations } from "../../features/recommendationsSlice";
+import { getRecommendations } from "../../features/recommendationsReducer";
 import "./RecommendationDetails.css";
-import { newPlaylist } from "../../features/playlistsSlice";
+import { newPlaylist } from "../../features/playlistsReducer";
 
 export default function RecommendationDetails() {
     const navigate = useNavigate();

@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getOwn } from "../../features/playlistsSlice";
+import { getOwn } from "../../features/playlistsReducer";
 import { Playlist } from "../../components";
 import "./UserPlaylist.css";
 
