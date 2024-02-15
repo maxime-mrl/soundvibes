@@ -116,6 +116,7 @@ serve -s
 ## Links
 
 - 📡[Github](https://github.com/maxime-mrl/soundvibes)
+- 📡[Behance](https://www.behance.net/gallery/191523351/Soundvibes-Music-streaming-platform)
 
 ##
 
