@@ -45,7 +45,7 @@ Navigate to the `backend` directory and execute `index.js`:
 
 ```bash
 cd backend
-npm run dev
+npm start
 ```
 
 ### Frontend
