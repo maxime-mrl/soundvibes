@@ -3,14 +3,16 @@
     justify-content: center;
     align-items: center;
     font-size: 1.2em;
+    /* force ratio */
     width: 2.1em;
+    height: 2.1em;
     aspect-ratio: 1;
+    flex-shrink: 0;
     background-color: var(--accent);
     color: var(--bg-solid);
     border-radius: 50%;
     cursor: pointer;
     transition: transform var(--transition-duration) ease-out;
-    flex-shrink: 0;
 }
 
 .pc .play-btn:hover {
